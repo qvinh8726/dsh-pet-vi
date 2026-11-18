@@ -30,6 +30,7 @@ import { ensureDshSpeechProvider } from './voice/builtin-dsh.ts';
 import { ensureEdgeProvider } from './voice/builtin-edge.ts';
 import { credentialRef } from '@deepseek-ai/dsh-credentials';
 import { createVoiceService } from './voice/speak.ts';
+import { createChineseSpeechPolicy, configuredChineseTranslator } from './voice/chinese-text.ts';
 import { createHearService } from './voice/hear.ts';
 import { listChatMemoryProviders } from './chat-memory-provider.ts';
 import { TODO_FILE_NAME, TodoStore } from './todo/store.ts';
@@ -190,6 +191,7 @@ export function apply(ctx: any): void {
     voice: createVoiceService({
       userRoot,
       log,
+      speechText: createChineseSpeechPolicy(configuredChineseTranslator(ctx)),
       configuredVoice: () => {
         const name = readAllConfig(configPaths).main?.voiceName;
         return typeof name === 'string' && name ? name : undefined;

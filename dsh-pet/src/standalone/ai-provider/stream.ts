@@ -3,13 +3,13 @@
  *
  * 不组装请求（归 ./request）、不定义限额（归 ./limits）、不管服务生命周期（归 ./create）。
  * 失败一律归一成固定文案：SDK 错误可能带地址、请求头或正文，只能进 cause 与日志。
- * 必须始终成立：同一时刻只有一个在途请求；返回或抛错前一定释放控制器并关闭传输。
+ * 必须始终成立：同一时刻只有一个未取消请求；只有槽位主人可释放运行态，每个请求负责关闭自己的传输。
  * @module dsh-pet/src/standalone/ai-provider/stream
  */
 import { isAuthenticationFailure, isRateLimitFailure, sdkTextStream, type AiTransportEvent } from '../ai-transport.ts';
 import { MAX_EVENTS, MAX_OUTPUT_CHARS } from './limits.ts';
 import { abortable, parseRequest } from './request.ts';
-import type { AiRuntime } from './types.ts';
+import type { AiRuntime, AiStreamPriority } from './types.ts';
 
 /** 本层自己写的固定文案：只有这些能原样透出给调用方。 */
 const OWN_MESSAGES: readonly string[] = [
@@ -20,15 +20,15 @@ const OWN_MESSAGES: readonly string[] = [
 
 /** 把传输层异常归一成可示人的错误；鉴权失败顺带置位暂停，等用户重新保存设置。 */
 function normalizeFailure(runtime: AiRuntime, controller: AbortController, error: unknown): Error {
+  if (controller.signal.aborted) {
+    return new Error('Yêu cầu AI độc lập đã bị hủy hoặc quá thời gian.', { cause: error });
+  }
   if (isAuthenticationFailure(error)) {
     runtime.paused = true;
     runtime.logger.warn('Standalone AI authentication failed; save settings again to resume.');
     return new Error('Xác thực AI độc lập thất bại. Hãy kiểm tra khóa API và lưu lại cài đặt.', {
       cause: error,
     });
-  }
-  if (controller.signal.aborted) {
-    return new Error('Yêu cầu AI độc lập đã bị hủy hoặc quá thời gian.', { cause: error });
   }
   if (isRateLimitFailure(error)) {
     return new Error('Nhà cung cấp AI độc lập đã giới hạn tần suất yêu cầu. Vui lòng đợi một chút.', { cause: error });
@@ -38,22 +38,33 @@ function normalizeFailure(runtime: AiRuntime, controller: AbortController, error
   return new Error('Yêu cầu AI độc lập thất bại. Hãy kiểm tra địa chỉ API và cài đặt mô hình.', { cause: error });
 }
 
+/** 先交接槽位再中止旧后台；旧请求的延迟清理不能释放新主人的控制器。 */
+function claimSlot(runtime: AiRuntime, priority: AiStreamPriority): AbortController {
+  const previous = runtime.active;
+  if (previous && (priority !== 'foreground' || runtime.activePriority !== 'background')) {
+    throw new Error('AI độc lập đang bận. Vui lòng đợi một chút.');
+  }
+  const controller = new AbortController();
+  runtime.active = controller;
+  runtime.activePriority = priority;
+  previous?.abort();
+  return controller;
+}
+
 /**
  * 造生成函数。
  * @param runtime - 共享运行态（就绪判定、限流窗口、在途控制器）。
- * @returns 接受 DSH 请求对象、产出文本增量的异步序列。
+ * @returns 接受 DSH 请求对象与可选优先级、产出文本增量的异步序列。
  */
 export function createTextStream(
   runtime: AiRuntime,
-): (options: unknown) => AsyncIterable<{ type: 'text'; text: string }> {
-  return async function* stream(options) {
+): (options: unknown, priority?: AiStreamPriority) => AsyncIterable<{ type: 'text'; text: string }> {
+  return async function* stream(options, priority = 'foreground') {
     if (!runtime.ready()) throw new Error('AI độc lập chưa sẵn sàng. Hãy cấu hình và bật mô hình trước.');
     const settings = runtime.store.current();
     const { request, signal: callerSignal } = parseRequest(options, settings.model);
     if (callerSignal?.aborted) throw new Error('Yêu cầu AI độc lập đã bị hủy.');
-    if (runtime.active) throw new Error('AI độc lập đang bận. Vui lòng đợi một chút.');
-    const controller = new AbortController();
-    runtime.active = controller;
+    const controller = claimSlot(runtime, priority);
     const abort = () => controller.abort();
     callerSignal?.addEventListener('abort', abort, { once: true });
     const timer = setTimeout(abort, settings.timeoutMs);
@@ -82,7 +93,10 @@ export function createTextStream(
       clearTimeout(timer);
       callerSignal?.removeEventListener('abort', abort);
       controller.abort();
-      if (runtime.active === controller) runtime.active = undefined;
+      if (runtime.active === controller) {
+        runtime.active = undefined;
+        runtime.activePriority = undefined;
+      }
       // return() 可能等待挂起的读取；只观察结果，绝不阻塞取消。
       void iterator.return?.().catch(() => runtime.logger.debug('Standalone AI transport closed.'));
     }

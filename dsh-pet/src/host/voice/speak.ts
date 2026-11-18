@@ -42,7 +42,7 @@ export type SpeakResult =
 /** 语音服务：路由层只依赖这两个方法。 */
 export interface VoiceService {
   /** 合成一段文本；同一输入命中缓存时不再调用实现。 */
-  speak(raw: unknown): Promise<SpeakResult>;
+  speak(raw: unknown, signal?: AbortSignal): Promise<SpeakResult>;
   /** 当前音色目录（由注册表提供）。 */
   list(): VoiceCatalog;
 }
@@ -108,21 +108,16 @@ export function isQueueStale(queuedMs: number, nowMs: number, waitMs: number = S
   return nowMs - queuedMs > waitMs;
 }
 
-/** 给一个 Promise 套超时；超时 reject，原 Promise 不被取消（实现自己该处理放弃）。 */
-function withTimeout<T>(task: Promise<T>, timeoutMs: number): Promise<T> {
+/** 等待/转换/合成共用总预算，比客户端的 30 秒上限更短。 */
+const TOTAL_REQUEST_MS = 28_000;
+
+/** 取消或总预算耗尽时立即收尾，即使自定义实现不理 signal 也不占住调用方。 */
+function withSignal<T>(task: Promise<T>, signal: AbortSignal): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('Nhà cung cấp giọng nói phản hồi quá thời gian')), timeoutMs);
-    timer.unref?.();
-    task.then(
-      (value) => {
-        clearTimeout(timer);
-        resolve(value);
-      },
-      (error) => {
-        clearTimeout(timer);
-        reject(error);
-      },
-    );
+    const abort = () => reject(signal.reason);
+    if (signal.aborted) abort();
+    else signal.addEventListener('abort', abort, { once: true });
+    task.then(resolve, reject).finally(() => signal.removeEventListener('abort', abort));
   });
 }
 
@@ -143,6 +138,16 @@ async function writeAtomically(target: string, bytes: Uint8Array): Promise<void>
   }
 }
 
+/** 展示文案与朗读文案分离；转换只发生在合成旁路，不回写气泡或聊天历史。 */
+export interface SpeechTextPolicy {
+  /** 缓存语义版本，防止升级后复用旧语言的音频。 */
+  readonly cacheId: string;
+  /** 准备朗读文案的独立超时，不吞掉 provider 的合成预算。 */
+  readonly timeoutMs: number;
+  /** 返回传给 TTS 的正文；失败须抛错，不能回落朗读未转换的展示文本。 */
+  prepare(displayText: string, signal: AbortSignal): Promise<string>;
+}
+
 /** 造语音服务。 */
 export function createVoiceService(options: {
   /** 用户数据根；缓存落在 `<userRoot>/voice-cache/`。 */
@@ -153,8 +158,12 @@ export function createVoiceService(options: {
   configuredVoice?: () => string | undefined;
   /** 容许的最长排队时间（ms）；缺省 {@link STALE_WAIT_MS}，测试用它把丢弃分支逼出来。 */
   staleWaitMs?: number;
+  /** 可选的朗读语言策略；整个准备过程占用原有串行队列名额。 */
+  speechText?: SpeechTextPolicy;
+  /** 测试注入的整个请求预算；生产固定小于客户端 30 秒上限。 */
+  totalTimeoutMs?: number;
 }): VoiceService {
-  const { userRoot, log, configuredVoice } = options;
+  const { userRoot, log, configuredVoice, speechText } = options;
   const staleWaitMs = options.staleWaitMs ?? STALE_WAIT_MS;
   /** 已占用的队列名额（含正在跑的那个）。 */
   let queueUsed = 0;
@@ -208,37 +217,62 @@ export function createVoiceService(options: {
       rate,
       resolved,
       format,
-      target: cachePath(userRoot, cacheKey(limitedId, rate, text), format),
+      target: cachePath(
+        userRoot,
+        cacheKey(limitedId, rate, speechText ? `${speechText.cacheId}\0${text}` : text),
+        format,
+      ),
       contentType: FORMAT_INFO[format].mime,
     };
   }
 
   /** 排队、合成、原子落盘；失败已归一成结论，不向外抛。 */
-  async function runSynthesis(call: Extract<PreparedCall, { ok: true }>): Promise<SpeakResult> {
+  async function runSynthesis(call: Extract<PreparedCall, { ok: true }>, signal: AbortSignal): Promise<SpeakResult> {
     const { text, rate, resolved, target } = call;
     const { provider, voice } = resolved;
     const queue = { dropped: false };
     const queuedMs = Date.now();
     const startedMs = queuedMs;
     try {
-      await enqueue(async () => {
-        if (isQueueStale(queuedMs, Date.now(), staleWaitMs)) {
-          queue.dropped = true;
-          return;
-        }
-        const dir = await ensureCacheDir(userRoot);
-        const timeoutMs = provider.timeoutMs ?? DEFAULT_PROVIDER_TIMEOUT_MS;
-        // signal 让实现能提前收手；withTimeout 兜住「它根本不理这个 signal」的情况
-        const bytes = await withTimeout(
-          provider.synthesize({ text, voice: voice.id, rate, signal: AbortSignal.timeout(timeoutMs) }),
-          timeoutMs,
-        );
-        // 空字节按失败处理：0 字节文件会被缓存命中逻辑反复重合成，白烧上游
-        if (bytes.length === 0) throw new Error('Nhà cung cấp giọng nói trả về âm thanh rỗng');
-        await writeAtomically(target, bytes);
-        // 淘汰放在成功之后：失败时不该为腾地方而删掉还能用的缓存
-        await pruneCache(dir);
-      });
+      await withSignal(
+        enqueue(async () => {
+          signal.throwIfAborted();
+          if (isQueueStale(queuedMs, Date.now(), staleWaitMs)) {
+            queue.dropped = true;
+            return;
+          }
+          const prepareSignal = speechText
+            ? AbortSignal.any([signal, AbortSignal.timeout(speechText.timeoutMs)])
+            : signal;
+          const utterance = {
+            displayText: text,
+            speechText: speechText ? await withSignal(speechText.prepare(text, prepareSignal), prepareSignal) : text,
+          };
+          if (!utterance.speechText.trim() || utterance.speechText.length > MAX_TEXT_CHARS) {
+            throw new Error('Lời đọc không hợp lệ');
+          }
+          signal.throwIfAborted();
+          const dir = await ensureCacheDir(userRoot);
+          const timeoutMs = provider.timeoutMs ?? DEFAULT_PROVIDER_TIMEOUT_MS;
+          const synthesisSignal = AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]);
+          const bytes = await withSignal(
+            provider.synthesize({
+              text: utterance.speechText,
+              voice: voice.id,
+              rate,
+              signal: synthesisSignal,
+            }),
+            synthesisSignal,
+          );
+          signal.throwIfAborted();
+          // 空字节按失败处理：0 字节文件会被缓存命中逻辑反复重合成，白烧上游
+          if (bytes.length === 0) throw new Error('Nhà cung cấp giọng nói trả về âm thanh rỗng');
+          await writeAtomically(target, bytes);
+          // 淘汰放在成功之后：失败时不该为腾地方而删掉还能用的缓存
+          await pruneCache(dir);
+        }),
+        signal,
+      );
     } catch (error) {
       // 上游细节（含 URL、状态码）不外泄，只留在日志里
       log?.warn?.(
@@ -261,11 +295,21 @@ export function createVoiceService(options: {
     return { ok: true, file: target, contentType: call.contentType };
   }
 
-  async function speak(raw: unknown): Promise<SpeakResult> {
+  async function speak(raw: unknown, callerSignal?: AbortSignal): Promise<SpeakResult> {
     const call = prepareCall(raw);
     if (!call.ok) return call.result;
-
+    const signal = AbortSignal.any([
+      AbortSignal.timeout(options.totalTimeoutMs ?? TOTAL_REQUEST_MS),
+      ...(callerSignal ? [callerSignal] : []),
+    ]);
+    const cancelled = (): SpeakResult => ({
+      ok: false,
+      reason: 'generate-error',
+      message: 'Đã hủy tạo giọng nói hoặc quá thời gian',
+    });
+    if (signal.aborted) return cancelled();
     const cached = await findCached(call.target);
+    if (signal.aborted) return cancelled();
     if (cached) {
       log?.info?.(`[dsh-pet] voice speak: cache=hit chars=${call.text.length} voice=${call.resolved.limitedId}`);
       return { ok: true, file: cached, contentType: call.contentType };
@@ -277,7 +321,7 @@ export function createVoiceService(options: {
       );
       return { ok: false, reason: 'voice-busy', message: 'Hàng đợi giọng nói đã đầy, vui lòng thử lại sau' };
     }
-    return runSynthesis(call);
+    return runSynthesis(call, signal);
   }
 
   return { list: listCatalog, speak };

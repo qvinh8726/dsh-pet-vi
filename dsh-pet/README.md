@@ -1,8 +1,8 @@
 # DSH Pet Việt 🐳
 
-Thú cưng màn hình với giao diện, thông báo và lời thoại tiếng Việt. Bản Windows độc lập đã kèm Electron và tài nguyên, không yêu cầu Node.js hay DeepSeek Harness trên máy người dùng.
+Thú cưng màn hình với giao diện, thông báo và chữ trên bong bóng tiếng Việt; giọng nói dùng tiếng Trung gốc. Bản Windows độc lập đã kèm Electron và tài nguyên, không yêu cầu Node.js hay DeepSeek Harness trên máy người dùng.
 
-- [Tải bộ cài và bản giải nén](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.0-vi).
+- [Tải bộ cài và bản giải nén](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.1-vi).
 - [Hướng dẫn đầy đủ bằng tiếng Việt](https://github.com/qvinh8726/dsh-pet-vi#readme).
 - [Báo lỗi bản Việt](https://github.com/qvinh8726/dsh-pet-vi/issues).
 

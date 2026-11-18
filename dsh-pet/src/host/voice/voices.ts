@@ -14,15 +14,13 @@ export interface VoiceInfo {
   readonly default: boolean;
 }
 
-/** 内置越南语音色及兼容既有配置的中文音色；恰好一个标记为默认。 */
+/** 内置实现的四个中文音色；标记 `default` 的那个是缺省值。 */
 export const VOICES: readonly VoiceInfo[] = [
-  { id: 'vi-VN-HoaiMyNeural', name: 'Hoài My', tag: 'Nữ · tiếng Việt', default: true },
-  { id: 'vi-VN-NamMinhNeural', name: 'Nam Minh', tag: 'Nam · tiếng Việt', default: false },
   { id: 'zh-CN-XiaoxiaoNeural', name: 'Xiaoxiao', tag: 'Nữ · Phổ thông · tiếng Trung', default: false },
-  { id: 'zh-CN-XiaoyiNeural', name: 'Xiaoyi', tag: 'Nữ · Năng động · tiếng Trung', default: false },
+  { id: 'zh-CN-XiaoyiNeural', name: 'Xiaoyi', tag: 'Nữ · Năng động · tiếng Trung', default: true },
   { id: 'zh-CN-YunxiNeural', name: 'Yunxi', tag: 'Nam · Trẻ trung · tiếng Trung', default: false },
   { id: 'zh-CN-YunjianNeural', name: 'Yunjian', tag: 'Nam · Trầm ổn · tiếng Trung', default: false },
 ];
 
 /** 默认音色 id；内置实现用它做 ensure 的探针，必须与 {@link VOICES} 里 `default` 标记的那个一致。 */
-export const DEFAULT_VOICE = 'vi-VN-HoaiMyNeural';
+export const DEFAULT_VOICE = 'zh-CN-XiaoyiNeural';

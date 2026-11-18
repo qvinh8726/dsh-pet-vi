@@ -1,12 +1,12 @@
 # Cài đặt DSH Pet Việt
 
-[Quay về giới thiệu](<README.md>) · [Tải bản v1.0.0-vi](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.0-vi)
+[Quay về giới thiệu](<README.md>) · [Tải bản v1.0.1-vi](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.1-vi)
 
 ## Người dùng Windows: không cần môi trường lập trình
 
 ### Bộ cài được khuyên dùng
 
-1. Tải `DSH-Pet-Viet-1.0.0-vi-Windows-x64-Setup.exe` từ Release của **qvinh8726/dsh-pet-vi**.
+1. Tải `DSH-Pet-Viet-1.0.1-vi-Windows-x64-Setup.exe` từ Release của **qvinh8726/dsh-pet-vi**.
 2. Kiểm tra mã SHA-256 với `SHA256SUMS.txt` nếu muốn xác minh tệp.
 3. Chạy bộ cài. Ứng dụng cài cho tài khoản hiện tại, tạo lối tắt và mở pet.
 4. Chuột phải vào pet để mở menu. Muốn thoát, chọn **Thoát** ở khay hệ thống.
@@ -15,14 +15,14 @@ Hỗ trợ Windows 10/11 x64. Không cần cài Node.js, Git, Python, pnpm, Elec
 
 ### Bản ZIP
 
-Tải `DSH-Pet-Viet-1.0.0-vi-Windows-x64.zip`, giải nén toàn bộ rồi chạy `dsh-pet-vi.exe`. Giữ nguyên tất cả tệp và thư mục đi kèm. Bản ZIP không đăng ký gỡ cài đặt hay tự tạo lối tắt.
+Tải `DSH-Pet-Viet-1.0.1-vi-Windows-x64.zip`, giải nén toàn bộ rồi chạy `dsh-pet-vi.exe`. Giữ nguyên tất cả tệp và thư mục đi kèm. Bản ZIP không đăng ký gỡ cài đặt hay tự tạo lối tắt.
 
 ### Sử dụng lần đầu
 
 - Pet có thể chạy hoạt ảnh và tương tác cơ bản ngay, kể cả khi chưa có tài khoản AI.
 - Nhấp vào pet để tương tác, kéo rồi thả để ném, chuột phải để đổi hành vi hoặc mở các bảng điều khiển.
 - **Trò chuyện/lẩm bẩm AI:** mở **Mở cài đặt AI**, nhập thông tin dịch vụ của bạn, chọn mô hình rồi lưu. Không có khóa API tặng kèm; phí sử dụng phụ thuộc nhà cung cấp.
-- **Giọng đọc:** cần Internet, chọn giọng tiếng Việt khi bật đọc thành tiếng. Mặc định bản Việt dùng Hoài My, nhưng cấu hình bạn đã lưu từ trước không bị ghi đè.
+- **Giọng đọc:** cần Internet; mặc định dùng giọng Trung gốc **Hiểu Y — `edge/zh-CN-XiaoyiNeural`**. Bong bóng vẫn tiếng Việt. Câu cố định đọc nguyên văn Trung từ bản gốc; câu AI hoặc câu tùy chỉnh được chuyển riêng sang Trung bằng mô hình đã cấu hình (có thể thêm thời gian chờ và phí). Nếu không tạo được lời Trung, ứng dụng giữ chữ Việt và báo không đọc được, không đọc Việt thay thế. Hai giọng Hoài My/Nam Minh của bản 1.0.0 được chuyển sang Hiểu Y khi nạp cấu hình; không tự sửa tệp người dùng trên đĩa.
 - **Thông báo và trạng thái DSH:** chức năng liên quan phiên DSH chỉ hoạt động khi chạy tích hợp với DSH; ứng dụng độc lập không giả lập một phiên làm việc DSH.
 - **Thời tiết/số dư:** cần kết nối và cấu hình phù hợp với dịch vụ; lỗi kết nối được báo rõ.
 

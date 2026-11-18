@@ -101,7 +101,7 @@
   "voiceEnabled": false,
   // 用哪个音色念：`provider/音色` 形态，取值见 /voice/voices（内置的是 edge/<音色>）。
   // 写错或留空即解析不到 → 合成失败并告警，不会替你换一个嗓子。
-  "voiceName": "edge/vi-VN-HoaiMyNeural",
+  "voiceName": "edge/zh-CN-XiaoyiNeural",
   // 语音输入用哪个实现转写：取值见 GET /voice/hear-providers（内置的是 dsh）。
   // 写错或留空即解析不到 → 识别失败并告警，不会替你换一个实现。
   "speechProvider": "dsh",

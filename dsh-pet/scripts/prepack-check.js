@@ -167,7 +167,9 @@ const walk = (dir) => {
       // 跳过不会进 npm 包的目录
       // dist-app 是 electron-builder 的本地产物（.gitignore 已忽略、不进包），不参与体积估算。
       if (
-        !['node_modules', '.git', 'scripts', 'step01', 'step02', 'step03', 'preview', 'dist-app'].includes(entry.name)
+        !['node_modules', '.git', 'scripts', 'step01', 'step02', 'step03', 'preview', 'dist-app', 'temp'].includes(
+          entry.name,
+        )
       ) {
         walk(p);
       }

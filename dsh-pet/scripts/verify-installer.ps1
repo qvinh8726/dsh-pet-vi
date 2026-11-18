@@ -1,4 +1,4 @@
-﻿param([string]$Installer = 'dist-app/DSH-Pet-Viet-1.0.0-vi-Windows-x64-Setup.exe')
+﻿param([string]$Installer = 'dist-app/DSH-Pet-Viet-1.0.1-vi-Windows-x64-Setup.exe')
 $ErrorActionPreference = 'Stop'
 $packageRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $installerPath = (Resolve-Path (Join-Path $packageRoot $Installer)).Path

@@ -47,6 +47,9 @@ export interface DiscoveredModel {
 export type ModelDiscoveryResult =
   { ok: true; models: DiscoveredModel[] } | { ok: false; code: string; message: string };
 
+/** 单槽位调度：前台可中止后台，后台在任何请求占位时立即失败。 */
+export type AiStreamPriority = 'foreground' | 'background';
+
 /**
  * 生成通道与连接测试共享的运行态：可变字段集中在装配根，子模块只读写自己那份。
  *
@@ -65,6 +68,8 @@ export interface AiRuntime {
   saving: boolean;
   /** 在途请求的控制器；非空即表示忙碌。 */
   active: AbortController | undefined;
+  /** 当前控制器的优先级；未声明时按前台处理，仅由生成通道维护。 */
+  activePriority?: AiStreamPriority;
 }
 
 /** 独立模式 AI 服务的对外形状。 */
@@ -81,8 +86,8 @@ export interface StandaloneAiService {
     model?: string,
     signal?: AbortSignal,
   ): Promise<undefined | { id: string; name: string }>;
-  /** 以异步序列返回文本增量。 */
-  stream(options: unknown): AsyncIterable<{ type: 'text'; text: string }>;
+  /** 以异步序列返回文本增量；省略优先级时按前台调度。 */
+  stream(options: unknown, priority?: AiStreamPriority): AsyncIterable<{ type: 'text'; text: string }>;
   /** 取脱敏后的当前设置。 */
   getSettings(): StandaloneAiPublicSettings;
   /** 校验并保存设置，成功后解除认证失败造成的暂停。 */

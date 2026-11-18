@@ -5,6 +5,7 @@
  * 必须始终成立：所有读取都经 readAllConfig，模块外不得自行拼路径。
  * @module dsh-pet/src/host/config/read
  */
+import { DEFAULT_VOICE } from '../voice/voices.ts';
 import { existsSync, readdirSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
 import { warnOnce } from './constants.ts';
@@ -97,6 +98,11 @@ export function readAllConfig(paths: ConfigPaths): Record<string, Record<string,
       continue;
     }
     out[file.prefix] = mergeEntry(filePetBase, parsed, file.prefix + '-config.json', basePets, seenIds);
+  }
+  for (const conf of Object.values(out)) {
+    if (conf.voiceName === 'edge/vi-VN-HoaiMyNeural' || conf.voiceName === 'edge/vi-VN-NamMinhNeural') {
+      conf.voiceName = `edge/${DEFAULT_VOICE}`;
+    }
   }
   return out;
 }

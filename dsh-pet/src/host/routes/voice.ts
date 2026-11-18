@@ -26,7 +26,7 @@ export async function handleVoiceRoutes(deps: PetRouteDeps, input: RouteInput): 
     } catch {
       return invalidJson();
     }
-    const result = await deps.voice.speak(parsed);
+    const result = await deps.voice.speak(parsed, signal);
     if (!result.ok) return failResult(result.reason, result.message);
     return { kind: 'file', file: result.file, contentType: result.contentType };
   }

@@ -11,8 +11,8 @@ Bản Việt hóa do [qvinh8726](https://github.com/qvinh8726) duy trì, phát t
 
 ### Cách dễ nhất: bộ cài Windows
 
-1. Mở **[trang phát hành v1.0.0-vi](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.0-vi)**.
-2. Tải `DSH-Pet-Viet-1.0.0-vi-Windows-x64-Setup.exe` trong phần tệp đính kèm.
+1. Mở **[trang phát hành v1.0.1-vi](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.1-vi)**.
+2. Tải `DSH-Pet-Viet-1.0.1-vi-Windows-x64-Setup.exe` trong phần tệp đính kèm.
 3. Chạy bộ cài. Ứng dụng được cài cho tài khoản Windows hiện tại, tạo lối tắt **DSH Pet Việt** và mở pet sau khi cài.
 4. Chuột phải vào pet để mở menu; biểu tượng ở khay hệ thống giúp gọi pet trở lại hoặc thoát ứng dụng.
 
@@ -22,7 +22,7 @@ Bản Việt hóa do [qvinh8726](https://github.com/qvinh8726) duy trì, phát t
 
 ### Bản giải nén, không cần cài
 
-Tải `DSH-Pet-Viet-1.0.0-vi-Windows-x64.zip`, **giải nén toàn bộ thư mục**, rồi chạy `dsh-pet-vi.exe`. Đừng chỉ chép riêng tệp EXE: ứng dụng cần các tệp Electron và thư mục tài nguyên đi kèm. Không chạy trực tiếp bên trong cửa sổ ZIP.
+Tải `DSH-Pet-Viet-1.0.1-vi-Windows-x64.zip`, **giải nén toàn bộ thư mục**, rồi chạy `dsh-pet-vi.exe`. Đừng chỉ chép riêng tệp EXE: ứng dụng cần các tệp Electron và thư mục tài nguyên đi kèm. Không chạy trực tiếp bên trong cửa sổ ZIP.
 
 Bản ZIP không tạo lối tắt hoặc đăng ký gỡ cài đặt. Dữ liệu cài đặt/trí nhớ vẫn được lưu trong hồ sơ người dùng, không nhất thiết nằm cạnh EXE.
 
@@ -31,7 +31,7 @@ Bản ZIP không tạo lối tắt hoặc đăng ký gỡ cài đặt. Dữ li�
 Release có `SHA256SUMS.txt`. Trong PowerShell, chạy:
 
 ```powershell
-Get-FileHash .\DSH-Pet-Viet-1.0.0-vi-Windows-x64-Setup.exe -Algorithm SHA256
+Get-FileHash .\DSH-Pet-Viet-1.0.1-vi-Windows-x64-Setup.exe -Algorithm SHA256
 ```
 
 Đối chiếu chuỗi băm với tệp công bố trên cùng Release. Hai mục **Source code** do GitHub tự tạo chỉ chứa mã nguồn, không phải bộ cài.
@@ -44,7 +44,7 @@ Get-FileHash .\DSH-Pet-Viet-1.0.0-vi-Windows-x64-Setup.exe -Algorithm SHA256
 - **Trò chuyện và lẩm bẩm:** pet xưng “em”, gọi bạn là “chủ nhân”, có trí nhớ hội thoại, ảnh biểu cảm và động tác theo ngữ cảnh.
 - **Giấc ngủ:** ru pet ngủ, đánh thức, nghe nói mớ và những câu từ chối ngái ngủ.
 - **Việc cần làm:** thêm nhắc nhở, theo dõi thời hạn và nhận lời nhắc từ pet.
-- **Giọng nói:** đọc câu trả lời, chọn giọng đọc, điều chỉnh âm lượng; hỗ trợ tiếng Việt qua giọng Hoài My của dịch vụ Edge khi có kết nối.
+- **Giọng nói:** chữ trên bong bóng vẫn tiếng Việt, âm thanh dùng giọng Trung gốc Edge **Hiểu Y (`zh-CN-XiaoyiNeural`)**. Câu có sẵn dùng nguyên văn Trung; câu AI/tùy chỉnh được chuyển sang Trung riêng cho TTS qua mô hình đã cấu hình, không đổi lịch sử hay câu Việt hiển thị. Bước chuyển có thể thêm độ trễ và phí theo mô hình; nếu lỗi, pet không đọc nhầm tiếng Việt.
 - **Thời tiết, số dư và mức dùng:** các tích hợp gốc được giữ lại; khả năng truy vấn phụ thuộc dịch vụ/nhà cung cấp đã cấu hình.
 - **Tùy chỉnh giao diện:** cỡ chữ, phông chữ, hành vi, âm thanh nhấp, menu chuột phải và khay hệ thống.
 - **Tích hợp DeepSeek Harness:** khi chạy dưới dạng plugin, pet có thể phản ứng với trạng thái làm việc, chờ xác nhận và thông báo của phiên DSH.

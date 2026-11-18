@@ -6,13 +6,17 @@
  * @module dsh-pet/src/standalone/llm-facade
  */
 
+import { PET_SPEECH_CALL_IDENTITY } from '../shared/speech-call.ts';
+import type { AiStreamPriority } from './ai-provider/types.ts';
+
 /** ctx.llm 替身的契约，形状必须与 DSH 一致。 */
 export interface StandaloneModelService {
   currentSelection(): { provider: string; model: string };
   listProviders(): unknown[];
   listModels(provider: string): Promise<unknown[]>;
   resolveModelInfo(provider?: string, model?: string, signal?: AbortSignal): Promise<unknown>;
-  stream(options: unknown): AsyncIterable<unknown>;
+  /** 优先级由本地门面按调用身份给出，不从请求载荷读取。 */
+  stream(options: unknown, priority?: AiStreamPriority): AsyncIterable<unknown>;
   isReady(): boolean;
   /**
    * 余额查询要用的服务商与密钥。
@@ -40,13 +44,23 @@ export interface LlmFacade {
   stream(request: unknown): AsyncIterable<unknown>;
 }
 
-/** 有 AI 服务：直接转调，不做任何转换。 */
+/** 只识别专用语音身份，调用方不能通过请求里的 priority 改变调度。 */
+function streamPriority(request: unknown): AiStreamPriority {
+  return typeof request === 'object' &&
+    request !== null &&
+    'sessionId' in request &&
+    request.sessionId === PET_SPEECH_CALL_IDENTITY
+    ? 'background'
+    : 'foreground';
+}
+
+/** 有 AI 服务：保留请求载荷，只为语音翻译指定后台优先级。 */
 export function createLlmFacade(ai: StandaloneModelService): LlmFacade {
   return {
     listProviders: () => ai.listProviders(),
     listModels: (provider) => ai.listModels(provider),
     resolveModelInfo: (provider, model, signal) => ai.resolveModelInfo(provider, model, signal),
-    stream: (request) => ai.stream(request),
+    stream: (request) => ai.stream(request, streamPriority(request)),
   };
 }
 
