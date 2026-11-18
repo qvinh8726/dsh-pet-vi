@@ -3,6 +3,7 @@
  * 不读磁盘、不判断文件是否仍在——那是宿主的池判定；这里只按配置分组，客户端因此不必联网取清单。
  * @module dsh-pet/src/shared/menu/memes
  */
+import { memeLabel } from '../meme-labels.ts';
 import type { MenuBranch, MenuLeaf, MenuNode } from './types.ts';
 
 /** 分组依据：条目级的三项配置，合并器已吹进每只宠物。 */
@@ -55,7 +56,7 @@ export function groupMemes(source: MemeGroupSource): MemeGroups {
 
 /** 单张图 → 菜单叶子：点它就是「用这张图说一句」；给了缩略图地址就带上，菜单据此画小图。 */
 function memeLeaf(name: string, thumbOf?: (name: string) => string): MenuLeaf {
-  const leaf: MenuLeaf = { label: name, action: 'whisper', image: name };
+  const leaf: MenuLeaf = { label: memeLabel(name), action: 'whisper', image: name };
   if (thumbOf) leaf.thumb = thumbOf(name);
   return leaf;
 }

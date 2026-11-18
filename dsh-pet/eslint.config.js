@@ -9,7 +9,7 @@ import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
-  { ignores: ['lib/**', 'scripts/**', 'assets/**', 'runtime/**', 'node_modules/**'] },
+  { ignores: ['lib/**', 'scripts/**', 'assets/**', 'runtime/**', 'node_modules/**', '.tmp*'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

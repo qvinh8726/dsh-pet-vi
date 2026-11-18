@@ -101,7 +101,7 @@ test('上游非 200：抛错并带上状态码', async () => {
 test('响应缺 text：抛错，不把 undefined 当识别结果', async () => {
   const stub = stubFetch(() => new Response(JSON.stringify({ request_id: 'x' }), { status: 200 }));
   try {
-    await assert.rejects(() => providerWithKey('secret').transcribe({ audio: AUDIO }), /invalid body/);
+    await assert.rejects(() => providerWithKey('secret').transcribe({ audio: AUDIO }), /nội dung không hợp lệ/);
   } finally {
     stub.restore();
   }

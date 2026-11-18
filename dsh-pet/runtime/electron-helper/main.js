@@ -13,10 +13,10 @@ try {
   electronApi = require('electron');
 } catch (error) {
   process.stderr.write(
-    '[dsh-pet helper] 启动失败：本进程被以「纯 Node 模式」拉起（ELECTRON_RUN_AS_NODE=' +
+    '[dsh-pet helper] Không khởi động được: tiến trình đang chạy ở chế độ Node thuần (ELECTRON_RUN_AS_NODE=' +
       JSON.stringify(process.env.ELECTRON_RUN_AS_NODE ?? null) +
-      '）。该变量必须在 spawn 前删除（见 src/host/helper-process.ts 的 helperSpawnEnv），' +
-      '运行期再删无效，设成空串会让 Electron 直接 abort。原始错误：' +
+      '). Cần xóa biến này trước khi tạo tiến trình (xem helperSpawnEnv trong src/host/helper-process.ts); ' +
+      'xóa sau khi chạy không có tác dụng, đặt chuỗi rỗng sẽ làm Electron dừng ngay. Lỗi gốc: ' +
       (error instanceof Error ? error.message.split('\n')[0] : String(error)) +
       '\n',
   );
@@ -48,6 +48,7 @@ const { runSmokeCheck } = require('./main/smoke.js');
 const { createDpi } = require('./main/dpi.js');
 const { createBridge } = require('./main/bridge.js');
 const { createTray } = require('./main/tray.js');
+const { localizeApplicationMenu } = require('./main/application-menu.js');
 const { createWindows } = require('./main/windows.js');
 const { registerIpc } = require('./main/ipc.js');
 const { createDisplaySync } = require('./main/displays.js');
@@ -72,10 +73,15 @@ app.setName('dsh-pet-electron-helper');
 // Windows 任务栏分组：不设 AppUserModelID 时窗口归到 electron.exe 名下，任务栏按钮意外出现就显示
 // Electron 默认图标。必须在 ready 之前调用；独立应用与 DSH 内 helper 用不同 ID，避免被合成一组。
 if (process.platform === 'win32') {
-  app.setAppUserModelId(APP_MODE ? 'com.dsh.pet.app' : 'com.dsh.pet.helper');
+  app.setAppUserModelId(APP_MODE ? 'io.github.qvinh8726.dsh-pet-vi' : 'com.dsh.pet.helper');
 }
-// 应用模式只改数据目录、不改应用名：共用同一个 userData 时两个 Chromium 进程会抢同一份 profile 互踢。
-if (APP_MODE) app.setPath('userData', path.join(app.getPath('appData'), 'dsh-pet'));
+// 独立越南语版本与原版分开 Chromium profile；测试可显式注入临时目录，不碰用户缓存。
+if (APP_MODE) {
+  app.setPath(
+    'userData',
+    path.resolve(process.env.DSH_PET_USER_DATA_DIR || path.join(app.getPath('appData'), 'dsh-pet-vi')),
+  );
+}
 
 /** DPI 探测子进程模式：不建窗口，只把主屏 scaleFactor 打到 stdout 就退出（见 probePrimaryScale） */
 const DPI_PROBE = process.env.DSH_PET_DPI_PROBE === '1';
@@ -275,7 +281,7 @@ app.whenReady().then(() => {
     protocol.handle('dsh-pet-bridge', (request) =>
       bridge.handle(request).catch((e) => {
         console.error('[dsh-pet-desktop-helper] bridge handler error:', String(e && e.message ? e.message : e));
-        return new Response('dsh-pet: bridge error', {
+        return new Response('dsh-pet: lỗi kết nối bridge với DSH', {
           status: 502,
           headers: { 'access-control-allow-origin': '*' },
         });
@@ -292,6 +298,8 @@ app.whenReady().then(() => {
 
   linuxPointer?.start();
   petWindows.create();
+  const applicationMenu = Menu.getApplicationMenu();
+  if (applicationMenu) Menu.setApplicationMenu(localizeApplicationMenu(applicationMenu));
 
   // 合盖/唤醒是任务栏按钮重建最集中的时刻：resume / unlock-screen 后把每只宠物重新摘一次。
   // powerMonitor 只能在 ready 之后使用，所以挂在这里而不是模块顶层。

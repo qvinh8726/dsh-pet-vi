@@ -365,7 +365,7 @@ describe('/broadcast —— 第三方投喂（POST 写入端点，issue #76）',
   test('请求体不是合法 JSON → 400（与 /config 的解析失败同一处理）', async () => {
     const r = await call('/dsh-pet-7340/broadcast?pet=main', 'POST', '{ 不是 json');
     assert.equal(r.status, 400);
-    assert.match(r.body, /invalid JSON body/);
+    assert.match(r.body, /Nội dung yêu cầu không phải JSON hợp lệ/);
   });
 
   test('配置不可达时不静默：显式 ok:false/generate-error（不假装投喂成功）', async () => {
@@ -426,7 +426,7 @@ describe('/anim —— 点播动画（POST 写入端点）', () => {
   test('请求体不是合法 JSON → 400', async () => {
     const r = await call('/dsh-pet-7340/anim?pet=main', 'POST', '{ 不是 json');
     assert.equal(r.status, 400);
-    assert.match(r.body, /invalid JSON body/);
+    assert.match(r.body, /Nội dung yêu cầu không phải JSON hợp lệ/);
   });
 
   test('配置不可达时不静默：显式 ok:false/generate-error（不假装已点播）', async () => {
@@ -452,7 +452,7 @@ describe('/position + /throw —— 位置与抛掷指令（POST 写入端点）
     for (const path of ['position', 'throw']) {
       const r = await call(`/dsh-pet-7340/${path}?pet=main`, 'POST', '{ 不是 json');
       assert.equal(r.status, 400, path);
-      assert.match(r.body, /invalid JSON body/);
+      assert.match(r.body, /Nội dung yêu cầu không phải JSON hợp lệ/);
     }
   });
 

@@ -252,7 +252,7 @@ export function readBody(req: IncomingMessage): Promise<string> {
     const onData = (chunk: Buffer): void => {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
-        settle(() => reject(Object.assign(new Error('request body too large'), { code: 'body-too-large' })));
+        settle(() => reject(Object.assign(new Error('Nội dung yêu cầu quá lớn'), { code: 'body-too-large' })));
         req.destroy();
         return;
       }
@@ -261,7 +261,7 @@ export function readBody(req: IncomingMessage): Promise<string> {
     const onEnd = (): void => settle(() => resolve2(Buffer.concat(chunks).toString('utf8')));
     const onError = (error: Error): void => settle(() => reject(error));
     const onAborted = (): void =>
-      settle(() => reject(Object.assign(new Error('client aborted'), { code: 'client-aborted' })));
+      settle(() => reject(Object.assign(new Error('Phía gửi đã hủy yêu cầu'), { code: 'client-aborted' })));
 
     req.on('data', onData);
     req.on('end', onEnd);

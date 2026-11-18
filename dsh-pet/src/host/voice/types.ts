@@ -129,49 +129,51 @@ function isFilledString(value: unknown): value is string {
  * @throws {TypeError} 任一字段缺失、类型不符或音色 id 重复时。
  */
 export function validateVoiceProvider(def: unknown): asserts def is VoiceProvider {
-  if (!def || typeof def !== 'object') throw new TypeError('语音 provider 定义必须是对象');
+  if (!def || typeof def !== 'object') throw new TypeError('Định nghĩa provider giọng nói phải là object');
   const provider = def as Record<string, unknown>;
 
   if (typeof provider.id !== 'string' || !PROVIDER_ID_PATTERN.test(provider.id)) {
-    throw new TypeError(`provider id 必须是小写 kebab-case，收到 ${JSON.stringify(provider.id)}`);
+    throw new TypeError(`id của provider phải là kebab-case chữ thường, nhận được ${JSON.stringify(provider.id)}`);
   }
   if (!isFilledString(provider.name)) {
-    throw new TypeError(`provider ${provider.id} 的 name 必须是非空字符串`);
+    throw new TypeError(`name của provider ${provider.id} phải là chuỗi không rỗng`);
   }
   if (typeof provider.synthesize !== 'function') {
-    throw new TypeError(`provider ${provider.id} 的 synthesize 必须是函数`);
+    throw new TypeError(`synthesize của provider ${provider.id} phải là hàm`);
   }
 
   const format = provider.format;
   if (format !== undefined && format !== 'mp3' && format !== 'wav') {
-    throw new TypeError(`provider ${provider.id} 的 format 必须是 mp3 或 wav，收到 ${JSON.stringify(format)}`);
+    throw new TypeError(`format của provider ${provider.id} phải là mp3 hoặc wav, nhận được ${JSON.stringify(format)}`);
   }
 
   const timeoutMs = provider.timeoutMs;
   if (timeoutMs !== undefined && (typeof timeoutMs !== 'number' || !Number.isFinite(timeoutMs) || timeoutMs <= 0)) {
-    throw new TypeError(`provider ${provider.id} 的 timeoutMs 必须是正有限数，收到 ${JSON.stringify(timeoutMs)}`);
+    throw new TypeError(
+      `timeoutMs của provider ${provider.id} phải là số dương hữu hạn, nhận được ${JSON.stringify(timeoutMs)}`,
+    );
   }
 
   const voices = provider.voices;
   if (!Array.isArray(voices) || voices.length === 0) {
-    throw new TypeError(`provider ${provider.id} 的 voices 必须是非空数组`);
+    throw new TypeError(`voices của provider ${provider.id} phải là mảng không rỗng`);
   }
 
   const seen = new Set<string>();
   for (const rawVoice of voices) {
     if (!rawVoice || typeof rawVoice !== 'object') {
-      throw new TypeError(`provider ${provider.id} 的 voices 项必须是对象`);
+      throw new TypeError(`Mỗi mục voices của provider ${provider.id} phải là object`);
     }
     const voice = rawVoice as Record<string, unknown>;
     if (!isFilledString(voice.id) || voice.id.includes(VOICE_ID_SEPARATOR)) {
       throw new TypeError(
-        `provider ${provider.id} 的音色 id 必须是非空且不含 '/' 的字符串，收到 ${JSON.stringify(voice.id)}`,
+        `id giọng đọc của provider ${provider.id} phải là chuỗi không rỗng và không chứa '/', nhận được ${JSON.stringify(voice.id)}`,
       );
     }
     if (!isFilledString(voice.name)) {
-      throw new TypeError(`provider ${provider.id} 的音色 ${voice.id} 缺少 name`);
+      throw new TypeError(`Giọng đọc ${voice.id} của provider ${provider.id} thiếu name`);
     }
-    if (seen.has(voice.id)) throw new TypeError(`provider ${provider.id} 的音色 id 重复: ${voice.id}`);
+    if (seen.has(voice.id)) throw new TypeError(`id giọng đọc của provider ${provider.id} bị trùng: ${voice.id}`);
     seen.add(voice.id);
   }
 }

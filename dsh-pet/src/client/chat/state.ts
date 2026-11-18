@@ -6,6 +6,7 @@
  * @module dsh-pet/src/client/chat/state
  */
 import { speakText } from '../../shared/voice.ts';
+import { uiErrorText } from '../ui-error.ts';
 import { createCompositionWatch, decideEnter } from '../../shared/chat/enter.ts';
 import type { CompositionWatch } from '../../shared/chat/enter.ts';
 import {
@@ -69,7 +70,7 @@ export function createPetChatState(rt: ChatPanelRuntime): () => ChatPanelState {
     const newestTs = useRef(0);
 
     const patch = (next: Partial<PanelData>): void => setData((prev) => ({ ...prev, ...next }));
-    const fail = (error: unknown): void => patch({ error: error instanceof Error ? error.message : String(error) });
+    const fail = (error: unknown): void => patch({ error: uiErrorText(error) });
 
     /** 重读某只宠物的历史；失败只落在 error 上，不静默清空已有消息。 */
     const reload = async (petId: string): Promise<void> => {

@@ -11,8 +11,11 @@ import assert from 'node:assert/strict';
 import {
   attachmentUrl,
   clearHistory,
+  clearOrphans,
   deleteRounds,
   fetchChatConfig,
+  fetchHistory,
+  fetchOrphans,
   groupRounds,
   memeUrl,
   memoryBoundaryIndex,
@@ -230,6 +233,47 @@ describe('删除对话记忆 —— 请求形状与失败归一', () => {
       deleteRounds('nobody', [1]),
     );
     assert.deepEqual(value, { ok: false, message: '没有这只桌宠' });
+  });
+});
+
+describe('HTTP 失败的越南语文案', () => {
+  test('读取接口非 2xx → 越南语说明保留状态码', async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () => new Response('{}', { status: 503 })) as typeof fetch;
+    try {
+      await assert.rejects(fetchChatConfig(), { message: 'Không tải được cấu hình pet (HTTP 503).' });
+      await assert.rejects(fetchHistory('main'), { message: 'Không tải được lịch sử trò chuyện (HTTP 503).' });
+      await assert.rejects(fetchOrphans(), { message: 'Không tải được lịch sử của pet đã xóa (HTTP 503).' });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  test('删除接口缺少业务文案 → 越南语说明保留状态码', async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () => new Response('{}', { status: 500 })) as typeof fetch;
+    try {
+      assert.deepEqual(await deleteRounds('main', [1]), {
+        ok: false,
+        message: 'Không xóa được lịch sử trò chuyện (HTTP 500).',
+      });
+      assert.deepEqual(await clearOrphans(), {
+        ok: false,
+        message: 'Không dọn được lịch sử của pet đã xóa (HTTP 500).',
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  test('配置失败没有原因 → 越南语兜底，不显示 failed', async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () => new Response('{"ok":false}', { status: 200 })) as typeof fetch;
+    try {
+      await assert.rejects(fetchChatConfig(), { message: 'Không tải được cấu hình pet: không rõ nguyên nhân' });
+    } finally {
+      globalThis.fetch = original;
+    }
   });
 });
 

@@ -84,9 +84,13 @@ export function createPetLookup(deps: PetLookupInput) {
   const surfaceMismatch = (pet: Record<string, unknown>, petId: string, want: Surface): RouteResult | null => {
     const display = String(pet.display ?? '');
     if (displayCovers(want, display)) return null;
-    return failResult('pet-not-displayed', petId + ' đang ở chế độ hiển thị ' + display + ', không khớp surface=' + want, {
-      display,
-    });
+    return failResult(
+      'pet-not-displayed',
+      petId + ' đang ở chế độ hiển thị ' + display + ', không khớp surface=' + want,
+      {
+        display,
+      },
+    );
   };
 
   /**

@@ -23,6 +23,16 @@ const HAN_LANGUAGES = new Set(['zh', 'ja']);
 const pairs = Object.entries(dicts) as Array<[string, Record<keyof typeof zh, string>]>;
 
 describe('设置页字典', () => {
+  test('vi / vi-VN 与 en 回退都显示越南语，旧语言 id 不泄漏外语', () => {
+    assert.ok('vi' in dicts);
+    assert.ok('vi-VN' in dicts);
+    for (const dict of Object.values(dicts)) {
+      assert.equal(dict.nav, 'Cấu hình pet');
+      assert.equal(dict.save, 'Lưu');
+      assert.equal(dict.cancel, 'Hủy');
+      assert.deepEqual(dict, dicts.vi);
+    }
+  });
   test('每种语言的键集都与 zh 一致', () => {
     const zhKeys = Object.keys(zh).sort();
     for (const [language, dict] of pairs) {

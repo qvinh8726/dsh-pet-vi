@@ -26,7 +26,12 @@ import { testAiConnection } from './test-connection.ts';
  * 自定义排第一且没有地址——它的 profile 永远是用户自己填的那份。
  */
 const SERVICE_CATALOG = [
-  { id: CUSTOM_SERVICE, label: 'Tùy chỉnh', keyName: 'CUSTOM_API_KEY' as const, protocol: 'openai-compatible' as const },
+  {
+    id: CUSTOM_SERVICE,
+    label: 'Tùy chỉnh',
+    keyName: 'CUSTOM_API_KEY' as const,
+    protocol: 'openai-compatible' as const,
+  },
   ...BUILTIN_SERVICES,
 ];
 
@@ -44,8 +49,8 @@ function withCatalog<T extends StandaloneAiPublicSettings>(settings: T): T & { s
  * @throws 服务已释放、另一次保存正在进行，或存储层校验/落盘失败时。
  */
 async function saveSettings(runtime: AiRuntime, store: AiStore, input: unknown): Promise<StandaloneAiPublicSettings> {
-  if (runtime.disposed) throw new Error('Standalone AI is disposed.');
-  if (runtime.saving) throw new Error('Standalone AI settings are being saved.');
+  if (runtime.disposed) throw new Error('Dịch vụ AI độc lập đã đóng.');
+  if (runtime.saving) throw new Error('Đang lưu cài đặt AI độc lập.');
   runtime.saving = true;
   // 保存期间先中止在途请求，避免旧设置继续产生输出。
   runtime.active?.abort();
@@ -93,7 +98,7 @@ export function createStandaloneAi(
   } catch {
     logger.error('Cannot securely load standalone AI settings.');
     // 持久化损坏或权限不安全时不能顺势启用环境里的旧凭据，宁可整体失败。
-    throw new Error('Cannot securely load standalone AI settings.');
+    throw new Error('Không thể đọc cài đặt AI độc lập một cách an toàn.');
   }
   const runtime: AiRuntime = {
     store,
@@ -118,7 +123,7 @@ export function createStandaloneAi(
 
   return {
     currentSelection: () => ({ provider: PROVIDER, model: runtime.ready() ? modelOf() : '' }),
-    listProviders: () => (runtime.ready() ? [{ id: PROVIDER, name: 'Standalone AI' }] : []),
+    listProviders: () => (runtime.ready() ? [{ id: PROVIDER, name: 'AI độc lập' }] : []),
     listModels: async (provider) =>
       runtime.ready() && provider === PROVIDER ? [{ id: modelOf(), name: modelOf() }] : [],
     resolveModelInfo: async (provider = PROVIDER, model = modelOf(), signal) =>

@@ -133,7 +133,7 @@ export function startRouter(
       }
       if (!route) {
         res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
-        res.end('not found');
+        res.end('Không tìm thấy');
         return;
       }
       // CORS 只让已鉴权的 file 渲染端可用，它本身不授予任何能力。

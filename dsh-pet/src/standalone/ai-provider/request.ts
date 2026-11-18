@@ -18,7 +18,7 @@ import { MAX_INPUT_CHARS, inputSchema, textBlock } from './limits.ts';
 export function parseRequest(options: unknown, model: string): { request: AiRequest; signal?: AbortSignal } {
   const parsed = inputSchema.safeParse(options);
   if (!parsed.success || parsed.data.model !== model)
-    throw new Error('Invalid standalone AI model selection or input.');
+    throw new Error('Mô hình được chọn hoặc dữ liệu đầu vào của AI độc lập không hợp lệ.');
   const { data } = parsed;
   const messages = data.messages
     .map((message) => ({
@@ -32,7 +32,7 @@ export function parseRequest(options: unknown, model: string): { request: AiRequ
                 if (typeof block !== 'object' || block === null || !('type' in block) || block.type !== 'text')
                   return '';
                 const result = textBlock.safeParse(block);
-                if (!result.success) throw new Error('Invalid standalone AI text input.');
+                if (!result.success) throw new Error('Văn bản đầu vào của AI độc lập không hợp lệ.');
                 return result.data.text;
               })
               .join(''),
@@ -46,16 +46,16 @@ export function parseRequest(options: unknown, model: string): { request: AiRequ
     messages[0].role !== 'user' ||
     messages[messages.length - 1]?.role !== 'user'
   ) {
-    throw new Error('Standalone AI input is empty or exceeds limits.');
+    throw new Error('Dữ liệu đầu vào của AI độc lập đang trống hoặc vượt quá giới hạn.');
   }
   return { request: { system, messages }, signal: data.signal };
 }
 
 /** 让等待中的读取也能响应取消。 */
 export function abortable<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
-  if (signal.aborted) return Promise.reject(new Error('Standalone AI request cancelled.'));
+  if (signal.aborted) return Promise.reject(new Error('Yêu cầu AI độc lập đã bị hủy.'));
   return new Promise<T>((resolve, reject) => {
-    const abort = () => reject(new Error('Standalone AI request cancelled.'));
+    const abort = () => reject(new Error('Yêu cầu AI độc lập đã bị hủy.'));
     signal.addEventListener('abort', abort, { once: true });
     promise.then(resolve, reject).finally(() => signal.removeEventListener('abort', abort));
   });

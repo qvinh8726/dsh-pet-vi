@@ -6,9 +6,13 @@
  * @module dsh-pet/src/standalone/settings-page/script/globals
  */
 
+import { FONT_LABELS } from '../../../shared/fonts.ts';
+
 /** 生成全局卡片片段。 */
 export function globalsScript(): string {
   return `
+const FONT_LABELS = ${JSON.stringify(FONT_LABELS)};
+
 function globalCards() {
   return [globalFlagsCard, voiceCard, fontCard, physicsCard, motionCard, modelCard, memoryCard, environmentCard, advancedCard];
 }
@@ -96,7 +100,7 @@ function voiceCard() {
 function fontCard() {
   const g = state.globals;
   return card('Giao diện và phông chữ', 'Phông chữ dùng chung cho bong bóng, gợi ý nổi và cửa sổ trò chuyện.', [
-    selectField('g-font-family', 'Phông chữ', g.font.family, FONT_IDS.map((id) => ({ value: id, label: id })), (value) => { g.font = Object.assign({}, g.font, { family: value }); }),
+    selectField('g-font-family', 'Phông chữ', g.font.family, FONT_IDS.map((id) => ({ value: id, label: FONT_LABELS[id] || id })), (value) => { g.font = Object.assign({}, g.font, { family: value }); }),
     numberField('g-font-size', 'Cỡ chữ (px)', g.font.size, (value) => { g.font = Object.assign({}, g.font, { size: clampNumber(value, 4, 200, 21) }); }, { min: 4, max: 200, step: 1, hint: 'Chỉ áp dụng cho bong bóng và gợi ý nổi, cỡ chữ cửa sổ trò chuyện không đổi.' }),
     toggleRow('g-font-follow', 'Cỡ chữ theo kích thước pet', 'Tắt đi thì luôn dùng cỡ chữ ở trên, không đổi theo kích thước cửa sổ.', g.font.followPet, (value) => { g.font = Object.assign({}, g.font, { followPet: value }); }),
   ]);

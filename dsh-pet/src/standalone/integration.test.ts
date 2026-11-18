@@ -126,7 +126,7 @@ test('config pet IDs: duplicate IDs return 200 + bad-request without creating a 
     assert.equal(response.status, 200);
     const body = (await response.json()) as { reason: string; message: string };
     assert.equal(body.reason, 'bad-request');
-    assert.match(body.message, /^invalid pet config:/);
+    assert.match(body.message, /^Cấu hình pet không hợp lệ,/);
     assert.equal(existsSync(file), false);
   }
 });

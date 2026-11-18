@@ -99,11 +99,11 @@ export function registerHttpRoute(ctx: HostContext, handlePetRoute: HttpRouteHan
               // 请求体超限与客户端中断是用户侧问题，不能报成 500；断连时连响应都写不出去。
               const code = (e as { code?: string }).code;
               if (code === 'body-too-large')
-                sendJson(res, 413, failureBody('payload-too-large', 'request body too large'));
+                sendJson(res, 413, failureBody('payload-too-large', 'Nội dung yêu cầu quá lớn'));
               else if (code !== 'client-aborted') {
                 // 未预期异常：真实原因只进日志，响应里只回分类文案（可能含绝对路径，不外泄）
                 ctx.logger?.warn?.(`[dsh-pet] route failed: ${e instanceof Error ? e.message : String(e)}`);
-                sendJson(res, 500, failureBody('internal-error', 'dsh-pet: internal error'));
+                sendJson(res, 500, failureBody('internal-error', 'dsh-pet: lỗi nội bộ'));
               }
             }
           }

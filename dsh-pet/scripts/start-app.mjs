@@ -30,7 +30,7 @@ const electron = [process.env.DSH_PET_ELECTRON_PATH, join(dshHome, 'electron', E
   (value) => value && existsSync(value),
 );
 if (!electron) {
-  console.error('[start-app] 找不到 Electron：先跑 `npm run ensure:electron` 或设置 DSH_PET_ELECTRON_PATH。');
+  console.error('[start-app] Không tìm thấy Electron: chạy `npm run ensure:electron` hoặc đặt DSH_PET_ELECTRON_PATH.');
   process.exit(1);
 }
 

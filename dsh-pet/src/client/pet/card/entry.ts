@@ -13,6 +13,7 @@ import {
   type EncodedImage,
 } from '../../../shared/chat/index.ts';
 import { captureDisplayFrame } from '../../../shared/chat/capture.ts';
+import { uiErrorText } from '../../ui-error.ts';
 import { displayOfHotkey } from '../../../shared/display-hotkey.ts';
 import { SLEEP_HOTKEY_HINT, isSleepHotkey } from '../../../shared/sleep-hotkey.ts';
 import { TODO_HOTKEY_HINT, isTodoHotkey } from '../../../shared/todo/hotkey.ts';
@@ -202,7 +203,7 @@ export function createCardEntry(rt: CardEntryRuntime) {
       try {
         encoded = await captureDisplayFrame();
       } catch (error) {
-        const reason = 'Chụp màn hình thất bại: ' + (error instanceof Error ? error.message : String(error));
+        const reason = 'Chụp màn hình thất bại: ' + uiErrorText(error);
         const opened = chatRef.current;
         if (opened !== null) {
           opened.flash(reason);

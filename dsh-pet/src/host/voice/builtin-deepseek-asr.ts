@@ -30,7 +30,7 @@ export function createDeepseekAsrProvider(deps: { resolveKey: ResolveKey }): Spe
     async transcribe({ audio, signal }) {
       const key = await deps.resolveKey();
       // 没配 key 是能力缺失，不是识别失败：让调用方看到「不可用」而不是「识别出错」
-      if (!key) throw new SpeechUnavailableError('DEEPSEEK_API_KEY is not configured');
+      if (!key) throw new SpeechUnavailableError('Chưa cấu hình DEEPSEEK_API_KEY');
       const form = new FormData();
       // 官方按文件内容检测格式，这里的 MIME 只影响服务端选路；端侧产出的就是 WAV
       form.append('file', new Blob([audio], { type: 'audio/wav' }), 'speech.wav');
@@ -40,10 +40,11 @@ export function createDeepseekAsrProvider(deps: { resolveKey: ResolveKey }): Spe
         body: form,
         signal,
       });
-      if (!res.ok) throw new Error(`deepseek asr HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`Nhận dạng giọng nói DeepSeek trả về HTTP ${res.status}`);
       const body = (await res.json()) as { text?: unknown };
       // 宿主返回值不可信：不是字符串就当失败，不把对象塞进文字里
-      if (typeof body?.text !== 'string') throw new Error('deepseek asr returned invalid body');
+      if (typeof body?.text !== 'string')
+        throw new Error('Dịch vụ nhận dạng giọng nói DeepSeek trả về nội dung không hợp lệ');
       return body.text;
     },
   };

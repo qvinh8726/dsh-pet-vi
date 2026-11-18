@@ -15,7 +15,16 @@ describe('对话面板字典 —— 键集与完整性', () => {
   });
 
   test('8 种语言齐全：zh / en / ja / es / fr / de / ru / pt', () => {
-    assert.deepEqual(Object.keys(dicts), ['zh', 'en', 'ja', 'es', 'fr', 'de', 'ru', 'pt']);
+    assert.deepEqual(Object.keys(dicts), ['vi', 'vi-VN', 'zh', 'en', 'ja', 'es', 'fr', 'de', 'ru', 'pt']);
+  });
+
+  test('vi / vi-VN 与 en 回退都显示越南语，旧语言 id 不泄漏外语', () => {
+    for (const dict of Object.values(dicts)) {
+      assert.equal(dict.tabTitle, 'Chat với pet');
+      assert.equal(dict.composerSend, 'Gửi');
+      assert.equal(dict.confirmCancel, 'Hủy');
+      assert.deepEqual(dict, dicts.vi);
+    }
   });
 
   test('每种语言的键集与 zh 完全一致 → 漏翻或多余键都会被发现', () => {

@@ -1,6 +1,6 @@
 {
   "name": "dsh-pet",
-  "version": "0.4.9",
+  "version": "1.0.0-vi",
   "description": "Chú cá voi xanh béo ú chuyên ăn cơm chực, đã dọn vào DeepSeek Harness ở lì không chịu đi. Ngày thường mê chơi rubik, mê đủ món ăn vặt, thỉnh thoảng chợp mắt một chút; rảnh tay là đi dạo vài vòng trên desktop, bị bạn kéo qua ném lại vẫn cứ ở lì; bạn bận thì nó cũng tất bật theo, còn giúp bạn trông chừng ví số dư; lúc rảnh thì hay lẩm bẩm, lại sẵn lòng tán gẫu với bạn vài câu.",
   "icon": "assets/logo.png",
   "keywords": [
@@ -14,13 +14,17 @@
     "cordis",
     "react"
   ],
-  "homepage": "https://github.com/PC2005-cloud/dsh-pet#readme",
+  "author": "PC2005-cloud",
+  "contributors": [
+    "qvinh8726 — bản Việt hóa"
+  ],
+  "homepage": "https://github.com/qvinh8726/dsh-pet-vi#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PC2005-cloud/dsh-pet.git"
+    "url": "git+https://github.com/qvinh8726/dsh-pet-vi.git"
   },
   "bugs": {
-    "url": "https://github.com/PC2005-cloud/dsh-pet/issues"
+    "url": "https://github.com/qvinh8726/dsh-pet-vi/issues"
   },
   "_comment": [
     "=============== dsh-pet 包清单说明 ===============",

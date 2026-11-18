@@ -43,21 +43,22 @@ export function createDshSpeechProvider(deps: { speechToText: () => unknown }): 
     async transcribe({ audio, signal }) {
       const speech = deps.speechToText() as SpeechToTextLike | undefined;
       if (speech === undefined || typeof speech.transcribe !== 'function') {
-        throw new SpeechUnavailableError('host has no speech-to-text service');
+        throw new SpeechUnavailableError('DSH chưa có dịch vụ nhận dạng giọng nói');
       }
       if (speech.listProviders().length === 0) {
-        throw new SpeechUnavailableError('host has no speech provider enabled');
+        throw new SpeechUnavailableError('DSH chưa bật bộ nhận dạng giọng nói nào');
       }
       // 首次使用要下载模型：没有可用状态时回「不可用」，免得用户以为录音有问题。
       // 多识别器时只要有一个可用就算可用——宿主会自己挑，这里不做选择。
       const providers = speech.snapshot?.()?.providers ?? [];
       const isAnyUsable =
         providers.length === 0 || providers.some((item) => USABLE_PHASES.has(String(item.preparation?.phase)));
-      if (!isAnyUsable) throw new SpeechUnavailableError('speech provider is not ready');
+      if (!isAnyUsable) throw new SpeechUnavailableError('Bộ nhận dạng giọng nói chưa sẵn sàng');
 
       const result = await speech.transcribe(speech.resolve({ audio }), signal ?? NEVER_ABORT);
       // 宿主返回值不可信：不是字符串就当失败，不把对象塞进文字里
-      if (typeof result?.text !== 'string') throw new Error('invalid transcript from host speech service');
+      if (typeof result?.text !== 'string')
+        throw new Error('Dịch vụ nhận dạng giọng nói của DSH trả về bản chép lời không hợp lệ');
       return result.text;
     },
   };

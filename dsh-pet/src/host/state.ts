@@ -61,17 +61,17 @@ export type StateWaitParse =
 export function parseStateWaitQuery(sinceRaw: string | null, timeoutRaw: string | null): StateWaitParse {
   if (sinceRaw === null && timeoutRaw === null) return { kind: 'none' };
   if (sinceRaw === null || timeoutRaw === null) {
-    return { kind: 'error', error: 'since and timeout must be used together' };
+    return { kind: 'error', error: 'Phải dùng since và timeout cùng nhau' };
   }
-  if (!/^\d+$/.test(sinceRaw)) return { kind: 'error', error: 'invalid since (expect a non-negative integer)' };
+  if (!/^\d+$/.test(sinceRaw)) return { kind: 'error', error: 'since không hợp lệ (phải là số nguyên không âm)' };
   if (!/^\d+$/.test(timeoutRaw)) {
-    return { kind: 'error', error: `invalid timeout (expect 0..${MAX_STATE_WAIT_MS})` };
+    return { kind: 'error', error: `timeout không hợp lệ (phải trong khoảng 0..${MAX_STATE_WAIT_MS})` };
   }
   const since = Number(sinceRaw);
   const timeoutMs = Number(timeoutRaw);
-  if (!Number.isFinite(since)) return { kind: 'error', error: 'invalid since (expect a non-negative integer)' };
+  if (!Number.isFinite(since)) return { kind: 'error', error: 'since không hợp lệ (phải là số nguyên không âm)' };
   if (!Number.isFinite(timeoutMs) || timeoutMs > MAX_STATE_WAIT_MS) {
-    return { kind: 'error', error: `invalid timeout (expect 0..${MAX_STATE_WAIT_MS})` };
+    return { kind: 'error', error: `timeout không hợp lệ (phải trong khoảng 0..${MAX_STATE_WAIT_MS})` };
   }
   return { kind: 'ok', since, timeoutMs };
 }

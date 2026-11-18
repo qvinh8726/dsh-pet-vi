@@ -15,7 +15,7 @@ test('private JSON writes atomically; rejects non-file destinations and cleans f
     assert.deepEqual(JSON.parse(readFileSync(path, 'utf8')), { value: 2 });
     if (process.platform !== 'win32') assert.equal(statSync(path).mode & 0o777, 0o600);
     mkdirSync(join(home, 'directory.json'));
-    assert.throws(() => writePrivateJson(join(home, 'directory.json'), {}), /Unsafe/);
+    assert.throws(() => writePrivateJson(join(home, 'directory.json'), {}), /không an toàn/);
     assert.throws(() => writePrivateJson(join(home, 'missing', 'private.json'), {}));
     assert.throws(() => writePrivateJson(path, { fail: BigInt(1) }));
     assert.equal(readdirSync(home).filter((name) => name.endsWith('.tmp')).length, 0);
@@ -40,13 +40,16 @@ test('oversize, non-file and invalid persisted settings fail closed with sanitiz
     assert.equal(readAiSettings(home), undefined);
     const path = join(home, 'dsh-pet', 'standalone-ai.json');
     writeFileSync(path, 'secret'.repeat(6000));
-    assert.throws(() => createStandaloneAi(home, logger), /^Error: Cannot securely load standalone AI settings\.$/);
+    assert.throws(
+      () => createStandaloneAi(home, logger),
+      /^Error: Không thể đọc cài đặt AI độc lập một cách an toàn\.$/,
+    );
     rmSync(path);
     mkdirSync(path);
-    assert.throws(() => readAiSettings(home), /Unsafe/);
+    assert.throws(() => readAiSettings(home), /không an toàn/);
     rmSync(path, { recursive: true });
     writePrivateJson(path, { protocol: 'bad-secret' });
-    assert.throws(() => createStandaloneAi(home, logger), /Cannot securely load/);
+    assert.throws(() => createStandaloneAi(home, logger), /Không thể đọc/);
     assert.equal(
       messages.some((message) => message.includes('secret')),
       false,
@@ -73,7 +76,7 @@ test('persistence failure pauses a previously ready backend and never logs key m
       ai.saveSettings({
         profiles: { custom: { protocol: 'openai-compatible', baseUrl: 'https://example.test', model: 'changed' } },
       }),
-      /^Error: Cannot securely save standalone AI settings\.$/,
+      /^Error: Không thể lưu cài đặt AI độc lập một cách an toàn\.$/,
     );
     assert.equal(ai.isReady(), false);
     rmSync(path, { recursive: true });

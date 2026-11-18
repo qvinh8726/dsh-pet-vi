@@ -27,13 +27,25 @@ export interface ToolRule {
 const FILE_COPY: readonly CopyLine[] = ['Lật xem {target} nào', '{target} viết gì thế nhỉ', 'Để em ngó {target} đã'];
 
 /** 写文件。 */
-const WRITE_COPY: readonly CopyLine[] = ['Viết chút gì vào {target}', '{target} viết xong ngay đây', 'Thêm chút đồ vào {target}'];
+const WRITE_COPY: readonly CopyLine[] = [
+  'Viết chút gì vào {target}',
+  '{target} viết xong ngay đây',
+  'Thêm chút đồ vào {target}',
+];
 
 /** 改文件。 */
-const EDIT_COPY: readonly CopyLine[] = ['{target} phải sửa chút rồi', 'Để em chỉnh {target} nha', 'Chỗ {target} này cần sửa'];
+const EDIT_COPY: readonly CopyLine[] = [
+  '{target} phải sửa chút rồi',
+  'Để em chỉnh {target} nha',
+  'Chỗ {target} này cần sửa',
+];
 
 /** 找文件。 */
-const GLOB_COPY: readonly CopyLine[] = ['{target} trốn đâu hết rồi', 'Tìm xem {target} có không', '{target} nấp ở góc nào ta'];
+const GLOB_COPY: readonly CopyLine[] = [
+  '{target} trốn đâu hết rồi',
+  'Tìm xem {target} có không',
+  '{target} nấp ở góc nào ta',
+];
 
 /** 搜内容。 */
 const GREP_COPY: readonly CopyLine[] = ['{target} giấu ở đâu nhỉ', 'Lục xem {target} ở đâu', 'Chỗ nào có {target} ta'];
@@ -42,10 +54,18 @@ const GREP_COPY: readonly CopyLine[] = ['{target} giấu ở đâu nhỉ', 'Lụ
 const PRESENT_COPY: readonly CopyLine[] = ['Cho xem {target} nè', '{target} đây, xem thử nha', 'Nè, {target} ở đây'];
 
 /** 学技能。 */
-const SKILL_COPY: readonly CopyLine[] = ['Học chiêu mới {target}', 'Chiêu {target} phải nhớ kỹ', 'Học luôn {target} thôi'];
+const SKILL_COPY: readonly CopyLine[] = [
+  'Học chiêu mới {target}',
+  'Chiêu {target} phải nhớ kỹ',
+  'Học luôn {target} thôi',
+];
 
 /** 委派子任务。 */
-const SUBAGENT_COPY: readonly CopyLine[] = ['Gọi người phụ: {target}', 'Nhờ trợ thủ xem {target}', 'Giao {target} cho trợ thủ'];
+const SUBAGENT_COPY: readonly CopyLine[] = [
+  'Gọi người phụ: {target}',
+  'Nhờ trợ thủ xem {target}',
+  'Giao {target} cho trợ thủ',
+];
 
 /** 一个工具的文案：3 句带 {target} 的说法 + 目标太长时的一句纯氛围兜底。 */
 export interface ToolCopy {
@@ -88,7 +108,11 @@ export const TOOL_COPY: Readonly<Record<string, ToolCopy>> = {
 export const UNKNOWN_TOOL_LINE: CopyLine = 'Công cụ này để làm gì ta';
 
 /** 兜底：没进表的命令（npm / python / node / tsc / eslint / docker…），短命令名会上屏。 */
-export const COMMAND_FALLBACK: readonly CopyLine[] = ['Chạy {cmd} chút nha', '{cmd} chạy rồi nè', 'Cho {cmd} làm việc nào'];
+export const COMMAND_FALLBACK: readonly CopyLine[] = [
+  'Chạy {cmd} chút nha',
+  '{cmd} chạy rồi nè',
+  'Cho {cmd} làm việc nào',
+];
 
 /** 兜底：命令名本身太长（如 Get-NetTCPConnection）时用，不带名字。 */
 export const COMMAND_NAME_TOO_LONG: CopyLine = 'Chạy một lệnh nè';
@@ -107,7 +131,11 @@ const MV_COPY: readonly CopyLine[] = ['Dời đồ sang chỗ khác', 'Đổi ch
 
 const CP_COPY: readonly CopyLine[] = ['Chép một bản giữ lại', 'Sao một bản dự phòng', 'Thêm một bản nữa'];
 
-const CURL_COPY: readonly CopyLine[] = ['Hỏi thử API có ai không', 'Gõ cửa xem có thông không', 'Gửi request tới địa chỉ đó'];
+const CURL_COPY: readonly CopyLine[] = [
+  'Hỏi thử API có ai không',
+  'Gõ cửa xem có thông không',
+  'Gửi request tới địa chỉ đó',
+];
 
 const CHECKOUT_COPY: readonly CopyLine[] = ['Qua nhánh kia xem thử', 'Đổi nhánh xem sao', 'Rẽ lối khác đi tiếp'];
 

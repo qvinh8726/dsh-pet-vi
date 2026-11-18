@@ -45,7 +45,8 @@ const EXPECTED_BY_HOUR: TimeSlot[] = [
 ];
 
 /** 注入文本的固定尾巴（引导语）——主张克制，避免模型句句都提时间/节日 */
-const TAIL = '. Đây chỉ là thông tin nền, không cần cố ý báo giờ, cũng đừng câu nào cũng nhắc đến ngày lễ. Phần lớn thời gian cứ nói chuyện bình thường, khi nào thật sự hợp thì mới tiện nhắc một câu. Luôn trả lời bằng tiếng Việt.';
+const TAIL =
+  '. Đây chỉ là thông tin nền, không cần cố ý báo giờ, cũng đừng câu nào cũng nhắc đến ngày lễ. Phần lớn thời gian cứ nói chuyện bình thường, khi nào thật sự hợp thì mới tiện nhắc một câu. Luôn trả lời bằng tiếng Việt.';
 
 /** 断言注入文本含指定节日从句（从句在整行里以「，…。」出现） */
 function assertClause(date: Date, clause: string): void {
@@ -370,34 +371,57 @@ describe('timeContextOf —— 环境行（城市与天气）', () => {
     const text = timeContextOf(EVENING);
     assert.ok(!text.includes('Em đang ở'), '不该出现地点');
     assert.ok(!text.includes('bên ngoài'), '不该出现天气');
-    assert.ok(text.endsWith('cũng đừng câu nào cũng nhắc đến ngày lễ. Phần lớn thời gian cứ nói chuyện bình thường, khi nào thật sự hợp thì mới tiện nhắc một câu. Luôn trả lời bằng tiếng Việt.'));
+    assert.ok(
+      text.endsWith(
+        'cũng đừng câu nào cũng nhắc đến ngày lễ. Phần lớn thời gian cứ nói chuyện bình thường, khi nào thật sự hợp thì mới tiện nhắc một câu. Luôn trả lời bằng tiếng Việt.',
+      ),
+    );
   });
 
   test('只给城市：地点在最前，没有天气就写“没查到”的交代', () => {
     const text = timeContextOf(EVENING, { city: '南昌市' });
     assert.ok(text.startsWith('【Hiện tại】Em đang ở 南昌市 (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'));
-    assert.ok(text.includes('ngày thường, lần này chưa tra được thời tiết bên ngoài, chủ nhân có hỏi thì cứ nói là không biết, đừng bịa.'), `实际：${text}`);
+    assert.ok(
+      text.includes(
+        'ngày thường, lần này chưa tra được thời tiết bên ngoài, chủ nhân có hỏi thì cứ nói là không biết, đừng bịa.',
+      ),
+      `实际：${text}`,
+    );
     assert.ok(text.includes('cũng đừng câu nào cũng nhắc đến ngày lễ hay thời tiết'));
   });
 
   test('省 + 市：连写成“江西省南昌市”', () => {
     const text = timeContextOf(EVENING, { region: '江西省', city: '南昌市' });
-    assert.ok(text.startsWith('【Hiện tại】Em đang ở 江西省南昌市 (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'), `实际：${text}`);
+    assert.ok(
+      text.startsWith('【Hiện tại】Em đang ở 江西省南昌市 (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'),
+      `实际：${text}`,
+    );
   });
 
   test('省市互相包含：只留带后缀的那个，不写成“北京市北京”', () => {
     const text = timeContextOf(EVENING, { region: '北京市', city: '北京' });
-    assert.ok(text.startsWith('【Hiện tại】Em đang ở 北京市 (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'), `实际：${text}`);
+    assert.ok(
+      text.startsWith('【Hiện tại】Em đang ở 北京市 (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'),
+      `实际：${text}`,
+    );
   });
 
   test('拉丁文地名之间补一个空格', () => {
     const text = timeContextOf(EVENING, { region: 'Jiangxi', city: 'Nanchang' });
-    assert.ok(text.startsWith('【Hiện tại】Em đang ở Jiangxi Nanchang (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'), `实际：${text}`);
+    assert.ok(
+      text.startsWith('【Hiện tại】Em đang ở Jiangxi Nanchang (ước lượng theo mạng, chưa chắc chính xác). Bây giờ là'),
+      `实际：${text}`,
+    );
   });
 
   test('城市与天气都有：天气接在工作日后面', () => {
     const text = timeContextOf(EVENING, { region: '江西省', city: '南昌市', weather: WEATHER });
-    assert.ok(text.includes('ngày thường, thời tiết bên ngoài: 阴, nhiệt độ 13.1°C, cảm giác như 12.9°C, độ ẩm 84%, gió 2 km/h.'), `实际：${text}`);
+    assert.ok(
+      text.includes(
+        'ngày thường, thời tiết bên ngoài: 阴, nhiệt độ 13.1°C, cảm giác như 12.9°C, độ ẩm 84%, gió 2 km/h.',
+      ),
+      `实际：${text}`,
+    );
   });
 
   test('只有天气没有城市：省掉“你在……”，天气照写', () => {

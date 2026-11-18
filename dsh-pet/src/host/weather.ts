@@ -23,7 +23,7 @@ export interface QueryWeatherDeps {
 
 /** 当前天气快照，字段全部来自 Open-Meteo 的 `current` 段。 */
 export interface WeatherSnapshot {
-  /** 城市名，取地名搜索返回的中文名（与用户输入可能不同）。 */
+  /** 城市名，优先取地名搜索返回的越南语名称（与用户输入可能不同）。 */
   readonly city: string;
   /** 气温（°C）。 */
   readonly temperatureC: number;
@@ -35,7 +35,7 @@ export interface WeatherSnapshot {
   readonly windKph: number;
   /** WMO 天气码，原样保留。 */
   readonly code: number;
-  /** 天气码的中文短语。 */
+  /** 天气码的越南语短语。 */
   readonly summary: string;
   /** 观测时刻，站点当地时间（ISO 字符串，不带时区后缀）。 */
   readonly observedAt: string;
@@ -48,8 +48,8 @@ const WEATHER_TTL_MS = 60 * 60 * 1000;
 /** 坐标缓存条目上限：对话里出现的城市数有限，32 条足够。 */
 const GEO_CACHE_MAX = 32;
 
-/** 地名搜索：只取第一条，中文名优先。 */
-const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search?count=1&language=zh&format=json&name=';
+/** 地名搜索：只取第一条，越南语名称优先。 */
+const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search?count=1&language=vi&format=json&name=';
 
 /** 当前天气端点。 */
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -132,7 +132,7 @@ function alternateCityName(city: string): string | null {
   return city + '市';
 }
 
-/** 一次地名搜索：取第一条结果的坐标与中文名。 */
+/** 一次地名搜索：取第一条结果的坐标与展示名。 */
 async function searchPlace(name: string, deps: QueryWeatherDeps): Promise<Place | null> {
   let body: Record<string, unknown> | undefined;
   try {

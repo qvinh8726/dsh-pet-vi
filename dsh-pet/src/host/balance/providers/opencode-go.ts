@@ -26,7 +26,7 @@ export const opencodeGo: BalanceProvider = {
   credential: { mode: 'ref', ref: 'OPENCODE_GO_API_KEY' },
   async fetch({ key, provider }) {
     const res = await fetchWithRetry('https://opencode.ai/zen/go/v1/usage', key);
-    if (!res.ok) throw new Error('opencode usage HTTP ' + res.status);
+    if (!res.ok) throw new Error('Tra mức dùng OpenCode trả về HTTP ' + res.status);
     const body: unknown = await res.json();
     const usage = (body as { usage?: unknown })?.usage;
     if (!usage || typeof usage !== 'object') throw new Error('dsh-pet: phản hồi usage của opencode thiếu usage');

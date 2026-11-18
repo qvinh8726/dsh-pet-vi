@@ -67,20 +67,20 @@ type PreparedCall =
 function parseSpeakInput(raw: unknown): ParseResult {
   const body = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
   const text = typeof body.text === 'string' ? body.text.trim() : '';
-  if (!text) return { ok: false, message: 'text is required' };
-  if (text.length > MAX_TEXT_CHARS) return { ok: false, message: `text too long (max ${MAX_TEXT_CHARS} chars)` };
+  if (!text) return { ok: false, message: 'Phải có text' };
+  if (text.length > MAX_TEXT_CHARS) return { ok: false, message: `text quá dài (tối đa ${MAX_TEXT_CHARS} ký tự)` };
   // 音色的存在性不在这一层判：它只在注册表里有答案，这里只管类型。
   const voice = body.voice;
   if (voice !== undefined && typeof voice !== 'string') {
-    return { ok: false, message: 'voice must be a string' };
+    return { ok: false, message: 'voice phải là chuỗi' };
   }
   const rate = body.rate === undefined ? '+0%' : body.rate;
   if (typeof rate !== 'string' || !RATE_PATTERN.test(rate)) {
-    return { ok: false, message: 'rate must look like +0% or -10%' };
+    return { ok: false, message: 'rate phải có dạng +0% hoặc -10%' };
   }
   const percent = Number(rate.slice(0, -1));
   if (!Number.isFinite(percent) || percent < RATE_MIN_PERCENT || percent > RATE_MAX_PERCENT) {
-    return { ok: false, message: `rate out of range (${RATE_MIN_PERCENT}%..+${RATE_MAX_PERCENT}%)` };
+    return { ok: false, message: `rate nằm ngoài khoảng cho phép (${RATE_MIN_PERCENT}%..+${RATE_MAX_PERCENT}%)` };
   }
   // `-0%` 与 `+0%` 是同一个语义：归一成正零，免得 -0 一路传到实现与日志里
   const ratePercent = percent === 0 ? 0 : percent;
@@ -89,7 +89,7 @@ function parseSpeakInput(raw: unknown): ParseResult {
 
 /** 断言用：丢弃分支只经这里构造，避免各处手写同一句文案。 */
 function dropped(): SpeakResult {
-  return { ok: false, reason: 'voice-busy', message: 'queued too long, dropped' };
+  return { ok: false, reason: 'voice-busy', message: 'Đã bỏ qua vì chờ đọc quá lâu' };
 }
 
 /**
@@ -111,7 +111,7 @@ export function isQueueStale(queuedMs: number, nowMs: number, waitMs: number = S
 /** 给一个 Promise 套超时；超时 reject，原 Promise 不被取消（实现自己该处理放弃）。 */
 function withTimeout<T>(task: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('voice provider timed out')), timeoutMs);
+    const timer = setTimeout(() => reject(new Error('Nhà cung cấp giọng nói phản hồi quá thời gian')), timeoutMs);
     timer.unref?.();
     task.then(
       (value) => {
@@ -192,10 +192,14 @@ export function createVoiceService(options: {
     const { text, rate } = parsed.value;
     // 唯一的「默认」来源：调用方显式给的，或者用户配置里那个值。查不到就是查不到，不替他挑。
     const limitedId = parsed.value.voice ?? configuredVoice?.();
-    if (!limitedId) return { ok: false, result: { ok: false, reason: 'bad-request', message: 'voice is required' } };
+    if (!limitedId)
+      return { ok: false, result: { ok: false, reason: 'bad-request', message: 'Phải chọn giọng đọc (voice)' } };
     const resolved = resolveVoice(limitedId);
     if (!resolved) {
-      return { ok: false, result: { ok: false, reason: 'bad-request', message: `voice not found: ${limitedId}` } };
+      return {
+        ok: false,
+        result: { ok: false, reason: 'bad-request', message: `Không tìm thấy giọng đọc: ${limitedId}` },
+      };
     }
     const format = resolved.provider.format ?? 'mp3';
     return {
@@ -230,7 +234,7 @@ export function createVoiceService(options: {
           timeoutMs,
         );
         // 空字节按失败处理：0 字节文件会被缓存命中逻辑反复重合成，白烧上游
-        if (bytes.length === 0) throw new Error('voice provider returned empty audio');
+        if (bytes.length === 0) throw new Error('Nhà cung cấp giọng nói trả về âm thanh rỗng');
         await writeAtomically(target, bytes);
         // 淘汰放在成功之后：失败时不该为腾地方而删掉还能用的缓存
         await pruneCache(dir);
@@ -241,7 +245,7 @@ export function createVoiceService(options: {
         `[dsh-pet] voice speak: failed chars=${text.length} voice=${resolved.limitedId} ` +
           `ms=${Date.now() - startedMs} reason=${error instanceof Error ? error.message : String(error)}`,
       );
-      return { ok: false, reason: 'generate-error', message: 'voice synthesis failed' };
+      return { ok: false, reason: 'generate-error', message: 'Không tạo được giọng nói' };
     }
     if (queue.dropped) {
       log?.warn?.(
@@ -271,7 +275,7 @@ export function createVoiceService(options: {
         `[dsh-pet] voice speak: queue full (max ${MAX_QUEUE}) chars=${call.text.length} ` +
           `voice=${call.resolved.limitedId}`,
       );
-      return { ok: false, reason: 'voice-busy', message: 'voice queue is full, retry later' };
+      return { ok: false, reason: 'voice-busy', message: 'Hàng đợi giọng nói đã đầy, vui lòng thử lại sau' };
     }
     return runSynthesis(call);
   }

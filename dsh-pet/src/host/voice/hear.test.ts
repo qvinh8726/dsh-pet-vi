@@ -81,14 +81,14 @@ test('audio 超过上限：bad-request，不做截断', () =>
   withProvider(async (hear) => {
     const result = await hear.hear({ audio: encode(new Uint8Array(MAX_AUDIO_BYTES + 1)) });
     assert.equal(result.ok, false);
-    assert.match(result.ok === false ? result.message : '', /too large/);
+    assert.match(result.ok === false ? result.message : '', /quá lớn/);
   }));
 
 test('provider 不是字符串：bad-request', () =>
   withProvider(async (hear) => {
     const result = await hear.hear({ audio: encode(AUDIO), provider: 1 });
     assert.equal(result.ok, false);
-    assert.match(result.ok === false ? result.message : '', /provider must be/);
+    assert.match(result.ok === false ? result.message : '', /provider phải là/);
   }));
 
 test('请求和配置都没有 provider：bad-request', () =>
@@ -96,7 +96,7 @@ test('请求和配置都没有 provider：bad-request', () =>
     async (hear) => {
       const result = await hear.hear({ audio: encode(AUDIO) });
       assert.equal(result.ok, false);
-      assert.match(result.ok === false ? result.message : '', /provider is required/);
+      assert.match(result.ok === false ? result.message : '', /Phải chọn bộ nhận dạng giọng nói \(provider\)/);
     },
     { configuredProvider: () => undefined },
   ));
@@ -106,7 +106,7 @@ test('provider 解析不到：bad-request，消息里带原值，不做隐式兜
     const result = await hear.hear({ audio: encode(AUDIO), provider: 'missing' });
     assert.equal(result.ok, false);
     assert.equal(result.ok === false ? result.reason : '', 'bad-request');
-    assert.match(result.ok === false ? result.message : '', /provider not found: missing/);
+    assert.match(result.ok === false ? result.message : '', /Không tìm thấy bộ nhận dạng giọng nói: missing/);
   }));
 
 test('不传 provider 时用配置值；传了就以请求为准', async () => {
@@ -193,7 +193,7 @@ test('实现返回非字符串：generate-error，不把对象当文字发出去
       const result = await hear.hear({ audio: encode(AUDIO) });
       assert.equal(result.ok, false);
       assert.equal(result.ok === false ? result.reason : '', 'generate-error');
-      assert.match(result.ok === false ? result.message : '', /invalid transcript/);
+      assert.match(result.ok === false ? result.message : '', /bản chép lời không hợp lệ/);
     },
     { transcribe: async () => ({ text: '好' }) },
   ));

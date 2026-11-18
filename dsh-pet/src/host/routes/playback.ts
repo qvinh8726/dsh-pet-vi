@@ -35,15 +35,15 @@ export async function handlePlaybackRoutes(deps: PetRouteDeps, input: RouteInput
       const o = reported && typeof reported === 'object' ? (reported as Record<string, unknown>) : {};
       const outcome = playback.report(playbackId, o.status, o.reason);
       // 未知回执与非法 status 都是业务结论（调用方自己给错了），仍回 200 + reason
-      if (outcome === 'unknown') return failResult('unknown-playback', 'unknown playback');
-      if (outcome === 'invalid') return failResult('bad-request', 'invalid status');
+      if (outcome === 'unknown') return failResult('unknown-playback', 'Không tìm thấy lượt phát');
+      if (outcome === 'invalid') return failResult('bad-request', 'status không hợp lệ');
       // ok / ignored 都回 200：上报是幂等的，「已经这样了」对上报方就是成功
       // （迟到的 ended 不许覆盖 cancelled——终态保护在 ./playback 里）
       return okResult({ ok: true });
     }
     if (method !== 'GET') return methodNotAllowed();
     const record = playback.get(playbackId);
-    if (!record) return failResult('unknown-playback', 'unknown playback');
+    if (!record) return failResult('unknown-playback', 'Không tìm thấy lượt phát');
     const parsed = parseWaitQuery(url.searchParams.get('wait'), url.searchParams.get('timeout'));
     if (parsed.kind === 'error') return failResult('bad-request', parsed.error);
     // 两者都没传 = 立刻返回（兜底 / 调试 / 只想知道当下状态的调用方）
@@ -74,7 +74,7 @@ export async function handlePlaybackRoutes(deps: PetRouteDeps, input: RouteInput
       });
       // get 之后记录被清理（极端竞态）→ 立刻回未知回执，不挂
       if (cancel === undefined) {
-        settle(failResult('unknown-playback', 'unknown playback'));
+        settle(failResult('unknown-playback', 'Không tìm thấy lượt phát'));
         return;
       }
       // 调用方断开：取消等待者（清掉它的超时定时器），以「无需应答」收尾。

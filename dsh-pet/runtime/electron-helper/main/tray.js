@@ -141,7 +141,7 @@ function createTray({
       const menu = await buildMenu();
       if (menu === null) return;
       tray = new Tray(trayIcon());
-      tray.setToolTip('dsh-pet - Pet desktop');
+      tray.setToolTip('dsh-pet - Pet trên màn hình');
       tray.setContextMenu(menu);
       // Windows 上 setContextMenu 只接管右键，左键默认什么都不做（macOS 相反：左键即弹菜单）
       if (platform.leftClickPopsMenu) tray.on('click', () => tray.popUpContextMenu());

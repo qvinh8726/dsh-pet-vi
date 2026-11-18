@@ -9,11 +9,11 @@
 /** 设置页样式表；按类名族分段拼成单段文本，行内注释标出反直觉的那几条规则。 */
 const SETTINGS_CSS = [
   '.dsh-pet-mp{position:relative;min-width:0;display:flex;flex-direction:column;gap:4px}',
-  '.dsh-pet-mp__trigger{display:flex;align-items:center;gap:6px;width:100%;max-width:340px;height:28px;padding:0 8px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font-size:13px;line-height:20px;text-align:left;cursor:pointer;outline:none}',
+  '.dsh-pet-mp__trigger{display:flex;align-items:center;gap:6px;width:100%;max-width:340px;min-height:28px;padding:4px 8px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font-size:13px;line-height:20px;text-align:left;cursor:pointer;outline:none}',
   '.dsh-pet-mp__trigger:hover:not(:disabled){border-color:var(--dsw-alias-state-business-primary)}',
   '.dsh-pet-mp__trigger:focus-visible{border-color:var(--dsw-alias-state-business-primary);box-shadow:0 0 0 2px var(--dsw-focus-ring-color,var(--dsw-alias-state-business-primary))}',
   '.dsh-pet-mp__trigger:disabled{color:var(--dsw-alias-label-dimmed);cursor:default}',
-  '.dsh-pet-mp__label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
+  '.dsh-pet-mp__label{white-space:normal;overflow-wrap:anywhere;min-width:0}',
   '.dsh-pet-mp__sub{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex-shrink:1000;color:var(--dsw-alias-label-caption,var(--dsw-alias-label-tertiary))}',
   '.dsh-pet-mp__chevron{flex:none;margin-left:auto;color:var(--dsw-alias-label-caption,var(--dsw-alias-label-tertiary));transition:transform .12s}',
   '.dsh-pet-mp__chevron.is-open{transform:rotate(180deg)}',
@@ -29,7 +29,7 @@ const SETTINGS_CSS = [
   '.dsh-pet-mp__item:hover:not(:disabled),.dsh-pet-mp__item.is-active{background:var(--dsw-alias-interactive-bg-hover)}',
   '.dsh-pet-mp__item[aria-checked="true"]{color:var(--dsw-alias-state-business-primary)}',
   '.dsh-pet-mp__item:disabled{color:var(--dsw-alias-label-dimmed);cursor:default}',
-  '.dsh-pet-mp__name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
+  '.dsh-pet-mp__name{white-space:normal;overflow-wrap:anywhere;min-width:0}',
   '.dsh-pet-mp__check{flex:none;margin-left:auto}',
   '.dsh-pet-mp__status{padding:8px;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary)}',
 
@@ -37,7 +37,7 @@ const SETTINGS_CSS = [
   '.dsh-pet-sel{position:relative;min-width:0}',
   '.dsh-pet-sel__trigger{display:flex;align-items:center;gap:6px;text-align:left;cursor:pointer}',
   '.dsh-pet-sel__trigger:disabled{cursor:default}',
-  '.dsh-pet-sel__label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
+  '.dsh-pet-sel__label{white-space:normal;overflow-wrap:anywhere;min-width:0}',
   // 箭头用小三角而不是字符：不依赖字体，旋转时的基线与折叠卡一致。
   '.dsh-pet-sel__chevron{flex:none;margin-left:auto;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;color:var(--dsw-alias-label-tertiary);transition:transform .12s}',
   '.dsh-pet-sel__chevron.is-open{transform:rotate(180deg)}',
@@ -48,7 +48,7 @@ const SETTINGS_CSS = [
   '.dsh-pet-sel__item:hover:not(:disabled),.dsh-pet-sel__item.is-active{background:var(--dsw-alias-interactive-bg-hover)}',
   '.dsh-pet-sel__item[aria-selected="true"]{color:var(--dsw-alias-state-business-primary)}',
   '.dsh-pet-sel__item:disabled{color:var(--dsw-alias-label-dimmed);cursor:default}',
-  '.dsh-pet-sel__name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
+  '.dsh-pet-sel__name{white-space:normal;overflow-wrap:anywhere;min-width:0}',
   '.dsh-pet-sel__check{flex:none;margin-left:auto}',
 
   '.dsh-pet-cfg{container-type:inline-size;display:flex;flex-direction:column;gap:12px;color:var(--dsw-alias-label-primary);font-size:13px;line-height:20px}',
@@ -79,7 +79,7 @@ const SETTINGS_CSS = [
   '@container (max-width:400px){.dsh-pet-cfg__grid2,.dsh-pet-cfg__grid3,.dsh-pet-cfg__grid4{grid-template-columns:minmax(0,1fr)}}',
 
   '.dsh-pet-cfg__field{display:flex;flex-direction:column;gap:4px;min-width:0}',
-  '.dsh-pet-cfg__flabel{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--dsw-alias-label-secondary)}',
+  '.dsh-pet-cfg__flabel{display:inline-flex;align-items:center;gap:5px;min-width:0;overflow-wrap:anywhere;font-size:12px;color:var(--dsw-alias-label-secondary)}',
 
   // 顶部一行：头像作左列，右侧是 2×2 的输入网格；窄容器降成单列，头像回到输入之上。
   '.dsh-pet-cfg__topRow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px 18px;align-items:stretch;margin-bottom:10px}',
@@ -93,7 +93,7 @@ const SETTINGS_CSS = [
   '.dsh-pet-cfg__avatarPick:focus-within{outline:2px solid var(--dsw-alias-state-business-primary);outline-offset:2px}',
   // 遮罩用 token，缺 token 时回退到半透明黑：与本文件其它「token + fallback」写法一致，
   // 不在规则里直接写字面色值。文字色同理用静态白 token。
-  '.dsh-pet-cfg__avatarMask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--dsw-alias-bg-mask,rgba(0,0,0,.55));color:var(--dsw-static-neutral-00,#fff);font-size:12px;line-height:1;opacity:0;transition:opacity .12s;pointer-events:none}',
+  '.dsh-pet-cfg__avatarMask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--dsw-alias-bg-mask,rgba(0,0,0,.55));color:var(--dsw-static-neutral-00,#fff);font-size:12px;line-height:1.5;text-align:center;padding:4px;opacity:0;transition:opacity .12s;pointer-events:none}',
   '.dsh-pet-cfg__avatarPick:hover .dsh-pet-cfg__avatarMask,.dsh-pet-cfg__avatarPick:focus-within .dsh-pet-cfg__avatarMask,.dsh-pet-cfg__avatarMask.is-busy{opacity:1}',
   '.dsh-pet-cfg__file{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}',
 
@@ -120,7 +120,7 @@ const SETTINGS_CSS = [
 
   // 悬浮说明气泡：由 ./tip-layer 按光标挂到 body 上，不画在触发元素里——右列与贴顶的说明
   // 会被窗口边缘或滚动容器裁掉。这里只管外观，坐标由 tooltipPlacement 写进 style。
-  '.pet-cfg-tip{position:fixed;left:0;top:0;z-index:2147483000;max-width:320px;padding:6px 10px;border-radius:8px;background:var(--dsw-alias-tooltip-bg);color:var(--dsw-static-neutral-00);font-size:12px;font-style:normal;font-weight:400;line-height:18px;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;pointer-events:none;opacity:0;transition:opacity .12s ease;box-shadow:var(--dsw-elevation-prominent,0 6px 20px rgba(0,0,0,.22))}',
+  '.pet-cfg-tip{position:fixed;left:0;top:0;z-index:2147483000;max-width:min(320px,calc(100vw - 20px));padding:6px 10px;border-radius:8px;background:var(--dsw-alias-tooltip-bg);color:var(--dsw-static-neutral-00);font-size:12px;font-style:normal;font-weight:400;line-height:18px;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;pointer-events:none;opacity:0;transition:opacity .12s ease;box-shadow:var(--dsw-elevation-prominent,0 6px 20px rgba(0,0,0,.22))}',
   '.pet-cfg-tip.is-on{opacity:1}',
 
   // 问号：气泡的一个圆形宿主外观。
@@ -128,7 +128,7 @@ const SETTINGS_CSS = [
   // 折叠卡把问号放进了标题按钮里：包一层 span 以便单独拦截点击（点问号只出气泡、不开合）。
   '.dsh-pet-cfg__qWrap{display:inline-flex;flex:none;align-items:center}',
 
-  '.dsh-pet-cfg__btn{border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary);border-radius:8px;padding:4px 14px;font:inherit;font-size:12px;line-height:20px;cursor:pointer;white-space:nowrap}',
+  '.dsh-pet-cfg__btn{border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary);border-radius:8px;padding:4px 14px;font:inherit;font-size:12px;line-height:20px;cursor:pointer;white-space:normal;overflow-wrap:anywhere;max-width:100%}',
   // 实心主按钮必须排除在通用 hover 外：半透明 hover 会顶掉 button-info-fill，让蓝色按钮一悬停就发白；
   // 主按钮的 hover 走主题自己的 button-info-hover。
   '.dsh-pet-cfg__btn:hover:not(:disabled):not(.is-primary){background:var(--dsw-alias-interactive-bg-hover)}',
@@ -143,7 +143,7 @@ const SETTINGS_CSS = [
   '.dsh-pet-cfg__tabsLabel{font-size:12px;color:var(--dsw-alias-label-secondary)}',
   // 种类条单独一行：与下面的宠物条隔开，避免两组按钮读成一行。
   '.dsh-pet-cfg__kinds{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}',
-  '.dsh-pet-cfg__tab{border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary);border-radius:8px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}',
+  '.dsh-pet-cfg__tab{max-width:100%;overflow-wrap:anywhere;border:1px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-primary);border-radius:8px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}',
   '.dsh-pet-cfg__tab:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}',
   '.dsh-pet-cfg__tab:disabled{opacity:.5;cursor:default}',
   '.dsh-pet-cfg__tab.is-active{border-color:var(--dsw-alias-state-business-primary);background:var(--dsw-alias-interactive-bg-active)}',

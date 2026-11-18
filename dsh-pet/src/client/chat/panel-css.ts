@@ -14,6 +14,7 @@ export const PANEL_CSS = `
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  min-width: 0;
   gap: ${px(SIZE.gapWide)};
   padding: ${px(SIZE.pad)} ${px(SIZE.pad)} ${px(SIZE.padBottom)};
   color: var(--dsw-alias-label-primary);
@@ -52,6 +53,7 @@ export const PANEL_CSS = `
 
 .pet-chat-tools {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: ${px(SIZE.gapTight)};
   flex: 0 0 auto;
@@ -93,6 +95,8 @@ export const PANEL_CSS = `
 
 .pet-chat-orphans {
   display: flex;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
   align-items: center;
   gap: ${px(SIZE.gap)};
   flex: 0 0 auto;
@@ -105,6 +109,8 @@ export const PANEL_CSS = `
 
 .pet-chat-confirm {
   display: flex;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
   align-items: center;
   gap: ${px(SIZE.gap)};
   flex: 0 0 auto;
@@ -133,6 +139,7 @@ export const PANEL_CSS = `
 
 .pet-chat-confirm-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: ${px(SIZE.gap)};
 }
@@ -226,7 +233,10 @@ export const PANEL_CSS = `
 }
 
 .pet-chat-memory-note {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .pet-chat-round {
@@ -272,6 +282,7 @@ export const PANEL_CSS = `
 
 .pet-chat-msg {
   display: flex;
+  min-width: 0;
   flex-direction: row;
   align-items: flex-start;
   gap: ${px(SIZE.gap)};
@@ -300,6 +311,8 @@ export const PANEL_CSS = `
 }
 
 .pet-chat-bubble {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: ${px(SIZE.bubblePadY)} ${px(SIZE.bubblePadX)};
   border-radius: var(--dsw-radius-md);
   word-break: break-word;
@@ -331,7 +344,7 @@ export const PANEL_CSS = `
 
 .pet-chat-img {
   display: block;
-  max-width: ${px(SIZE.imgMaxW)};
+  max-width: min(100%, ${px(SIZE.imgMaxW)});
   max-height: ${px(SIZE.imgMaxH)};
   border-radius: var(--dsw-radius-sm);
   object-fit: contain;
@@ -575,15 +588,15 @@ export const PANEL_CSS = `
 .pet-chat-tip {
   position: fixed;
   z-index: 2147483000;
-  max-width: ${px(SIZE.tipMaxW)};
+  max-width: min(${px(SIZE.tipMaxW)}, calc(100vw - ${px(SIZE.pad * 2)}));
   padding: ${px(SIZE.tipPadY)} ${px(SIZE.tipPadX)};
   border-radius: var(--dsw-radius-sm);
   background: var(--dsw-alias-tooltip-bg);
   color: var(--dsw-static-neutral-00);
   font: var(--dsw-font-xxs-12);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--ds-transition-duration-fast) var(--ds-ease-in-out);

@@ -23,8 +23,7 @@ import { POWERCONTEXT_MEMORY_ID } from '../../shared/memory.ts';
 /** scope 标题：一只宠物实例一个 scope，记忆不跨宠物串。 */
 const scopeTitleOf = (petId: string): string => 'dsh-pet:' + petId;
 /** scope 摘要：服务端建 scope 时必填（1–2000 字）。 */
-const scopeSummaryOf = (petId: string): string =>
-  'Trí nhớ trò chuyện của pet ' + petId + ', do plugin tự động tạo.';
+const scopeSummaryOf = (petId: string): string => 'Trí nhớ trò chuyện của pet ' + petId + ', do plugin tự động tạo.';
 /** scope 的幂等键：一只宠物一份，重复创建只会得到同一个；换掉它会多出一个删不掉的 scope。 */
 const scopeKeyOf = (petId: string): string => 'dsh-pet:' + petId + ':v1';
 

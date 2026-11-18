@@ -133,7 +133,8 @@ export function decideAnim(args: {
 
   const name = typeof args.name === 'string' ? args.name.trim() : '';
   const rawUrl = typeof args.url === 'string' ? args.url.trim() : '';
-  if (name && rawUrl) return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong hai: name hoặc url' };
+  if (name && rawUrl)
+    return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong hai: name hoặc url' };
   if (!name && !rawUrl) return { ok: false, reason: 'bad-request', message: 'Phải truyền name hoặc url' };
 
   // facing 可选：没给（undefined / null 都算，复用 body 模板时两种都常见）→ 不动朝向，保持宠物

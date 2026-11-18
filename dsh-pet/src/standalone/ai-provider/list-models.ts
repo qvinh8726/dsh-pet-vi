@@ -128,7 +128,8 @@ async function requestList(
   } catch {
     return failure('contract');
   }
-  if (text.length > MAX_DISCOVERY_BYTES) return failure('contract', 'Danh sách mô hình endpoint trả về quá lớn, hãy dùng địa chỉ có hỗ trợ phân trang');
+  if (text.length > MAX_DISCOVERY_BYTES)
+    return failure('contract', 'Danh sách mô hình endpoint trả về quá lớn, hãy dùng địa chỉ có hỗ trợ phân trang');
   let payload: unknown;
   try {
     payload = JSON.parse(text);
@@ -158,7 +159,11 @@ export async function discoverModels(
   if (rawBase === '') return failure('input', 'Hãy nhập địa chỉ API (Base URL) trước');
   if (apiKey === '') return failure('input', 'Hãy nhập khóa API trước');
   const base = parseEndpoint(rawBase);
-  if (base === undefined) return failure('input', 'Địa chỉ API phải là địa chỉ HTTP(S), không được chứa tài khoản, tham số truy vấn hay phân đoạn (#)');
+  if (base === undefined)
+    return failure(
+      'input',
+      'Địa chỉ API phải là địa chỉ HTTP(S), không được chứa tài khoản, tham số truy vấn hay phân đoạn (#)',
+    );
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), DISCOVERY_TIMEOUT_MS);

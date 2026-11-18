@@ -8,6 +8,7 @@
  * @module dsh-pet/src/client/baifan/show
  */
 import { CFG, LINES } from './constants.ts';
+import { uiErrorText } from '../ui-error.ts';
 import type { ActivityAssets } from './assets.ts';
 import { bottomNormY, geometry, spriteBox, type Geometry, type Pose, type SpriteBox } from './geometry.ts';
 import { createLock, Halted, type Lock } from './lock.ts';
@@ -133,7 +134,7 @@ export function createShow(deps: ShowDeps): Show {
     const r = await transport.call('POST', '/anim?pet=' + enc(petId) + '&surface=web&lock=' + enc(lease), body);
     if (r.ok !== true) {
       lock?.noteFailure(r.reason);
-      throw new Error('Phát hoạt ảnh thất bại: ' + String(r.reason ?? 'unknown'));
+      throw new Error('Phát hoạt ảnh thất bại: ' + String(r.reason ?? 'không rõ nguyên nhân'));
     }
     return typeof r.playbackId === 'string' ? r.playbackId : null;
   }
@@ -451,7 +452,7 @@ export function createShow(deps: ShowDeps): Show {
       } else if (lock?.isLost() === true) {
         scene.toast('Mất khóa, kết thúc màn diễn');
       } else {
-        scene.toast(error instanceof Error ? error.message : String(error));
+        scene.toast(uiErrorText(error));
         console.warn('[dsh-pet] 吃白饭异常', error);
       }
     } finally {

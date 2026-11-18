@@ -80,7 +80,7 @@ export function isolatedFetch(settings: Readonly<StandaloneAiSettings>, fetcher:
       (urlStr === expected + (beta ? '?beta=true' : '') ||
         urlStr === base + '/messages' ||
         urlStr === base + '/v1/messages' + (beta ? '?beta=true' : ''));
-    if (!validOpenAi && !validAnthropic) throw new Error('Unexpected standalone AI endpoint.');
+    if (!validOpenAi && !validAnthropic) throw new Error('Địa chỉ API của AI độc lập không đúng với cấu hình.');
     // 所有头都由本层重建：SDK 可能从环境继承自定义鉴权头，即使已经给出显式密钥。
     // 服务商要求的会话头也在这里补上，缺它会被直接判 400。
     const headers = new Headers({

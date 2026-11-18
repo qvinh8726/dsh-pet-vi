@@ -47,18 +47,18 @@ type ParseResult = { ok: true; value: HearInput } | { ok: false; message: string
 function parseHearInput(raw: unknown): ParseResult {
   const body = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
   const encoded = typeof body.audio === 'string' ? body.audio.trim() : '';
-  if (encoded === '') return { ok: false, message: 'audio is required' };
+  if (encoded === '') return { ok: false, message: 'Phải có audio' };
   if (!BASE64_PATTERN.test(encoded) || encoded.replace(/=+$/, '').length % 4 === 1) {
-    return { ok: false, message: 'audio must be base64' };
+    return { ok: false, message: 'audio phải ở dạng base64' };
   }
   const audio = new Uint8Array(Buffer.from(encoded, 'base64'));
-  if (audio.byteLength === 0) return { ok: false, message: 'audio is empty' };
+  if (audio.byteLength === 0) return { ok: false, message: 'audio đang trống' };
   if (audio.byteLength > MAX_AUDIO_BYTES) {
-    return { ok: false, message: `audio too large (max ${MAX_AUDIO_BYTES} bytes)` };
+    return { ok: false, message: `audio quá lớn (tối đa ${MAX_AUDIO_BYTES} byte)` };
   }
   const provider = body.provider;
   if (provider !== undefined && (typeof provider !== 'string' || provider.trim() === '')) {
-    return { ok: false, message: 'provider must be a non-empty string' };
+    return { ok: false, message: 'provider phải là chuỗi không rỗng' };
   }
   return {
     ok: true,
@@ -90,7 +90,7 @@ async function withDeadline<T>(
   let onDeadline: (() => void) | undefined;
   // 与实现赛跑：它不理 signal 时超时也必须生效，否则这里会一直等下去
   const deadline = new Promise<never>((_, reject) => {
-    onDeadline = () => reject(new Error('speech transcription aborted'));
+    onDeadline = () => reject(new Error('Nhận dạng giọng nói đã bị hủy hoặc quá thời gian'));
     controller.signal.addEventListener('abort', onDeadline, { once: true });
   });
   try {
@@ -128,10 +128,11 @@ export function createHearService(options: {
 
       // 唯一的「默认」来源：请求显式给的，或者用户配置里那个值。查不到就是查不到，不替他挑。
       const providerId = parsed.value.provider ?? options.configuredProvider?.();
-      if (!providerId) return { ok: false, reason: 'bad-request', message: 'provider is required' };
+      if (!providerId)
+        return { ok: false, reason: 'bad-request', message: 'Phải chọn bộ nhận dạng giọng nói (provider)' };
       const provider = resolveSpeechProvider(providerId);
       if (!provider) {
-        return { ok: false, reason: 'bad-request', message: `provider not found: ${providerId}` };
+        return { ok: false, reason: 'bad-request', message: `Không tìm thấy bộ nhận dạng giọng nói: ${providerId}` };
       }
 
       // 实现最清楚自己需要多久：它声明了就用它的，服务级只是缺省与测试注入
@@ -144,7 +145,11 @@ export function createHearService(options: {
       }
       // 实现返回值不可信：不是字符串就当失败，避免把对象塞进 text 字段发出去
       if (typeof run.value !== 'string') {
-        return { ok: false, reason: 'generate-error', message: 'invalid transcript from provider' };
+        return {
+          ok: false,
+          reason: 'generate-error',
+          message: 'Bộ nhận dạng giọng nói trả về bản chép lời không hợp lệ',
+        };
       }
       return { ok: true, text: run.value };
     },

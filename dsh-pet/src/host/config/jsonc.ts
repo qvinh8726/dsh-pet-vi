@@ -29,7 +29,7 @@ function stripJsonc(src: string): string {
       while (i + 1 < src.length && src[i + 1] !== '\r' && src[i + 1] !== '\n') i++;
     } else if (ch === '/' && src[i + 1] === '*') {
       const end = src.indexOf('*/', i + 2);
-      if (end === -1) throw new SyntaxError('Unterminated JSONC block comment');
+      if (end === -1) throw new SyntaxError('Khối chú thích JSONC chưa được đóng');
       out += src.slice(i, end + 2).replace(/[^\r\n]/g, ' ');
       i = end + 1;
     } else {

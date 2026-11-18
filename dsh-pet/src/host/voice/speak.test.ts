@@ -81,7 +81,7 @@ test('text 超过上限：判 bad-request，不做截断', () =>
   withService(async (voice) => {
     const result = await voice.speak({ text: '中'.repeat(MAX_TEXT_CHARS + 1) });
     assert.equal(result.ok, false);
-    assert.match(result.ok === false ? result.message : '', /too long/);
+    assert.match(result.ok === false ? result.message : '', /quá dài/);
   }));
 
 test('voice 解析不到：判 bad-request，消息里带原值', () =>
@@ -89,21 +89,21 @@ test('voice 解析不到：判 bad-request，消息里带原值', () =>
     const result = await voice.speak({ text: '你好', voice: 'demo/nope' });
     assert.equal(result.ok, false);
     assert.equal(result.ok === false ? result.reason : '', 'bad-request');
-    assert.match(result.ok === false ? result.message : '', /voice not found: demo\/nope/);
+    assert.match(result.ok === false ? result.message : '', /Không tìm thấy giọng đọc: demo\/nope/);
   }));
 
 test('voice 是裸 id（没有 provider 前缀）：判 bad-request，不做隐式归属', () =>
   withService(async (voice) => {
     const result = await voice.speak({ text: '你好', voice: 'v1' });
     assert.equal(result.ok, false);
-    assert.match(result.ok === false ? result.message : '', /voice not found: v1/);
+    assert.match(result.ok === false ? result.message : '', /Không tìm thấy giọng đọc: v1/);
   }));
 
 test('voice 不是字符串：判 bad-request', () =>
   withService(async (voice) => {
     const result = await voice.speak({ text: '你好', voice: 1 });
     assert.equal(result.ok, false);
-    assert.match(result.ok === false ? result.message : '', /voice must be a string/);
+    assert.match(result.ok === false ? result.message : '', /voice phải là chuỗi/);
   }));
 
 test('请求和配置都没有音色：判 bad-request', () =>
@@ -111,7 +111,7 @@ test('请求和配置都没有音色：判 bad-request', () =>
     async (voice) => {
       const result = await voice.speak({ text: '你好' });
       assert.equal(result.ok, false);
-      assert.match(result.ok === false ? result.message : '', /voice is required/);
+      assert.match(result.ok === false ? result.message : '', /Phải chọn giọng đọc \(voice\)/);
     },
     { configuredVoice: () => undefined },
   ));
@@ -129,7 +129,7 @@ for (const rate of ['-51%', '-60%', '-100%', '-101%', '-999%', '+101%', '+999%']
       async (voice) => {
         const result = await voice.speak({ text: '你好', rate });
         assert.equal(result.ok, false);
-        assert.match(result.ok === false ? result.message : '', /rate out of range/);
+        assert.match(result.ok === false ? result.message : '', /rate nằm ngoài khoảng cho phép/);
       },
       {
         synthesize: async () => {
@@ -328,24 +328,40 @@ test('isQueueStale —— 排队久了就丢弃', () => {
   assert.equal(isQueueStale(1_000, 1_000 + 28_001), true, '超过上限就该丢');
 });
 
-test('排队等到客户端早已放弃：直接丢弃，不再白合成一次', async () => {
+test('排队等到客户端早已放弃：直接丢弃，不再白合成一次', async (context) => {
   let release: () => void = () => undefined;
   const gate = new Promise<void>((resolve) => {
     release = resolve;
+  });
+  let started: () => void = () => undefined;
+  const firstStarted = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let enqueued: () => void = () => undefined;
+  const secondEnqueued = new Promise<void>((resolve) => {
+    enqueued = resolve;
+  });
+  let clockMs = 1_000;
+  let clockReads = 0;
+  context.mock.method(Date, 'now', () => {
+    clockReads += 1;
+    if (clockReads === 3) enqueued();
+    return clockMs;
   });
   let calls = 0;
   await withService(
     async (voice) => {
       try {
         const first = voice.speak({ text: '第一句' });
-        await waitFor(() => calls === 1);
+        await firstStarted;
         const second = voice.speak({ text: '第二句' });
-        await new Promise((resolve) => setTimeout(resolve, 10));
+        await secondEnqueued;
+        clockMs += 1;
         release();
         const [kept, dropped] = await Promise.all([first, second]);
         assert.equal(kept.ok, true, '排在第一的照常合成');
         assert.equal(dropped.ok === false ? dropped.reason : '', 'voice-busy');
-        assert.match(dropped.ok === false ? dropped.message : '', /queued too long/);
+        assert.match(dropped.ok === false ? dropped.message : '', /chờ đọc quá lâu/);
         assert.equal(calls, 1, '被丢弃的那句不能再合成');
       } finally {
         release();
@@ -355,7 +371,10 @@ test('排队等到客户端早已放弃：直接丢弃，不再白合成一次',
       staleWaitMs: 0,
       synthesize: async () => {
         calls += 1;
-        if (calls === 1) await gate;
+        if (calls === 1) {
+          started();
+          await gate;
+        }
         return new Uint8Array([1]);
       },
     },

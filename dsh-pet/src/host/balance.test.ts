@@ -212,7 +212,10 @@ describe('parseCommandCode —— 必填缺失/非法一律抛错（绝不伪造
   });
 
   test('credits 里三个额度字段全缺 → 抛错（否则分母当 0 会算出「已用 100%」）', () => {
-    assert.throws(() => parseCommandCode({ credits: {} }, undefined, { totalCost: 0 }, 'commandcode'), /trường hạn mức/);
+    assert.throws(
+      () => parseCommandCode({ credits: {} }, undefined, { totalCost: 0 }, 'commandcode'),
+      /trường hạn mức/,
+    );
   });
 
   test('缺少 / 非法 totalCost → 抛错', () => {
@@ -584,13 +587,13 @@ describe('注册表 —— 第三方 provider（register / list / match）', () 
   });
 
   test('不能覆盖内置 id', () => {
-    assert.throws(() => registerBalanceProvider(plugin('deepseek-official')), /不能覆盖内置服务商/);
+    assert.throws(() => registerBalanceProvider(plugin('deepseek-official')), /Không thể ghi đè nhà cung cấp tích hợp/);
   });
 
   test('重复注册同一个 id → 抛错（不静默覆盖）', () => {
     const dispose = registerBalanceProvider(plugin('plugin-b'));
     try {
-      assert.throws(() => registerBalanceProvider(plugin('plugin-b')), /已被注册/);
+      assert.throws(() => registerBalanceProvider(plugin('plugin-b')), /đã được đăng ký/);
     } finally {
       dispose();
     }

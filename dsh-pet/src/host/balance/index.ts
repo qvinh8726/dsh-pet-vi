@@ -57,7 +57,10 @@ export async function queryBalance(
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
       const timeout = new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error('Tra số dư quá thời gian (20 giây), vui lòng thử lại sau')), PLUGIN_FETCH_TIMEOUT_MS);
+        timer = setTimeout(
+          () => reject(new Error('Tra số dư quá thời gian (20 giây), vui lòng thử lại sau')),
+          PLUGIN_FETCH_TIMEOUT_MS,
+        );
         timer.unref();
       });
       // 超时只结束宿主等待，不宣称取消第三方请求；迟到结果由 race 丢弃。

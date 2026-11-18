@@ -88,7 +88,7 @@ export function createLock(transport: Transport, petId: string, alive: () => boo
     if (reason === 'pet-not-displayed') {
       throw new Error('Pet này không hiển thị trên web (display=' + String(created.display) + ')');
     }
-    if (reason !== 'locked') throw new Error('Lấy khóa thất bại: ' + String(reason ?? 'unknown'));
+    if (reason !== 'locked') throw new Error('Lấy khóa thất bại: ' + String(reason ?? 'không rõ nguyên nhân'));
 
     // 3) 被占着：可能是上一场还没过期。等一等，别直接判死。
     const expiresAt = typeof created.expiresAt === 'number' ? created.expiresAt : 0;
@@ -107,7 +107,8 @@ export function createLock(transport: Transport, petId: string, alive: () => boo
         writeStored(petId, lockId);
         return;
       }
-      if (retry.reason !== 'locked') throw new Error('Lấy khóa thất bại: ' + String(retry.reason ?? 'unknown'));
+      if (retry.reason !== 'locked')
+        throw new Error('Lấy khóa thất bại: ' + String(retry.reason ?? 'không rõ nguyên nhân'));
     }
     throw new Error('Pet đang bị nơi khác chiếm, lát nữa thử lại nhé');
   }

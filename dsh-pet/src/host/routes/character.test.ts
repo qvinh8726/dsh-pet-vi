@@ -77,7 +77,7 @@ describe('handleCharacterRoutes —— 参数校验', () => {
   test('root 含路径分隔符 → 400，不做任何路径拼接', async () => {
     const { status, body } = asText(await read('?root=' + encodeURIComponent('../evil')));
     assert.equal(status, 400);
-    assert.equal(body, 'dsh-pet: invalid asset root');
+    assert.equal(body, 'dsh-pet: thư mục gốc tài nguyên không hợp lệ');
   });
 
   test('目录里有个名字相近的文件 → 仍然 404，不按前缀匹配', async () => {
@@ -121,6 +121,6 @@ describe('handleCharacterRoutes —— 取图', () => {
   test('没有这份图 → 404', async () => {
     const { status, body } = asText(await read('?root=cat'));
     assert.equal(status, 404);
-    assert.equal(body, 'dsh-pet: character not found');
+    assert.equal(body, 'dsh-pet: không tìm thấy ảnh tham chiếu nhân vật');
   });
 });

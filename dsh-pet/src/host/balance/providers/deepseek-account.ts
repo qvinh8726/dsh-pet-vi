@@ -44,7 +44,7 @@ export function parseAccountBalance(
   for (const raw of Array.isArray(snapshot.bonusWallets) ? snapshot.bonusWallets : []) {
     const w = obj(raw as unknown);
     if (!w || typeof w.currency !== 'string' || w.currency.length === 0) continue;
-    const amount = money(w.balance, 'bonus balance');
+    const amount = money(w.balance, 'số dư được tặng');
     const prev = grantedBy.get(w.currency);
     grantedBy.set(w.currency, prev === undefined ? amount : sumMoney(prev, amount));
   }

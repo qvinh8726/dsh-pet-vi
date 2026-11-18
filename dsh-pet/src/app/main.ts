@@ -37,6 +37,8 @@ interface WebContentsLike {
 interface ElectronApp {
   whenReady(): Promise<void>;
   requestSingleInstanceLock(): boolean;
+  getPath(name: 'appData'): string;
+  setPath(name: 'userData', path: string): void;
   exit(code?: number): void;
   on(event: 'web-contents-created', listener: (event: unknown, contents: WebContentsLike) => void): void;
   on(event: 'second-instance', listener: () => void): void;
@@ -53,6 +55,10 @@ const packageRoot = resolve(here, '..');
 const helperMain = join(packageRoot, 'runtime', 'electron-helper', 'main.js');
 
 const log = (message: string): void => console.log(`[dsh-pet-app] ${message}`);
+
+/** 独立版本必须在取单实例锁之前选定自己的 Chromium profile。 */
+const userDataDir = resolve(process.env.DSH_PET_USER_DATA_DIR || join(app.getPath('appData'), 'dsh-pet-vi'));
+app.setPath('userData', userDataDir);
 
 /** 单实例：第二次双击直接退出（共用 userData 的 Chromium profile 会互踢） */
 const locked = app.requestSingleInstanceLock();

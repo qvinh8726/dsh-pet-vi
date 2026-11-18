@@ -92,7 +92,11 @@ export function decidePosition(args: {
   if (mode === 'line') {
     const d = finite(args.duration);
     if (d === null || d < 0) {
-      return { ok: false, reason: 'bad-request', message: 'duration ở chế độ line phải là số hữu hạn không âm (mili giây)' };
+      return {
+        ok: false,
+        reason: 'bad-request',
+        message: 'duration ở chế độ line phải là số hữu hạn không âm (mili giây)',
+      };
     }
     duration = d;
   }

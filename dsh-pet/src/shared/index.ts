@@ -16,6 +16,8 @@ export * from './balance/index.ts';
 export * from './whisper.ts';
 export * from './config.ts';
 export * from './fonts.ts';
+export { animationLabel, categoryLabel } from './animation-labels.ts';
+export { memeLabel } from './meme-labels.ts';
 export * from './notify.ts';
 export * from './menu.ts';
 export * from './chat/index.ts';

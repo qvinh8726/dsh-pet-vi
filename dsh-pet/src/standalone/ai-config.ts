@@ -289,8 +289,8 @@ export function validateSettings(input: unknown, previous: Readonly<StandaloneAi
     const keyPatch = patch.keys;
     const written = KEY_NAMES.filter((name) => (keyPatch?.[name] ?? '') !== '');
     // 清空与写入同时出现时意图不明，直接拒绝。
-    if (patch.clearKey && written.length > 0) throw new Error('Conflicting key changes');
-    if (patch.clearDeepseekKey && patch.deepseekApiKey) throw new Error('Conflicting key changes');
+    if (patch.clearKey && written.length > 0) throw new Error('Không thể vừa xóa vừa ghi khóa API');
+    if (patch.clearDeepseekKey && patch.deepseekApiKey) throw new Error('Không thể vừa xóa vừa ghi khóa API');
 
     const { clearKey, clearDeepseekKey, keys: _keys, profiles: _profiles, ...values } = patch;
     void _keys;
@@ -321,7 +321,7 @@ export function validateSettings(input: unknown, previous: Readonly<StandaloneAi
     });
     return derive(stored);
   } catch {
-    throw new Error('Invalid standalone AI settings.');
+    throw new Error('Cài đặt AI độc lập không hợp lệ.');
   }
 }
 
@@ -389,7 +389,7 @@ export function createAiConfig(home: string): AiConfigStore {
     }
   } catch {
     // 读取失败说明无法确认文件权限，宁可整体失败。
-    throw new Error('Cannot securely load standalone AI settings.');
+    throw new Error('Không thể đọc cài đặt AI độc lập một cách an toàn.');
   }
   return {
     current: () => settings,
@@ -399,7 +399,7 @@ export function createAiConfig(home: string): AiConfigStore {
       try {
         writeAiSettings(home, persistedSettings(next));
       } catch {
-        throw new Error('Cannot securely save standalone AI settings.');
+        throw new Error('Không thể lưu cài đặt AI độc lập một cách an toàn.');
       }
       // 写盘成功后才替换内存中的设置。
       settings = Object.freeze(next);

@@ -110,7 +110,8 @@ export function decideBroadcast(args: {
 
   const rawImage = typeof args.image === 'string' ? args.image.trim() : '';
   const rawUrl = typeof args.url === 'string' ? args.url.trim() : '';
-  if (rawImage && rawUrl) return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong hai: image hoặc url' };
+  if (rawImage && rawUrl)
+    return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong hai: image hoặc url' };
   if (!rawImage && !rawUrl) return { ok: true, petId, text, duration: args.duration, anim: args.anim };
 
   // url 形态：地址合法即放行，不查表情包池——图在第三方手里，池里当然没有；取不到图由消费端

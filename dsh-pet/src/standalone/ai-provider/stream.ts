@@ -13,9 +13,9 @@ import type { AiRuntime } from './types.ts';
 
 /** 本层自己写的固定文案：只有这些能原样透出给调用方。 */
 const OWN_MESSAGES: readonly string[] = [
-  'Standalone AI could not answer this request.',
-  'Standalone AI returned no text.',
-  'Standalone AI response exceeds limits.',
+  'AI độc lập không thể trả lời yêu cầu này.',
+  'AI độc lập không trả về nội dung văn bản.',
+  'Phản hồi của AI độc lập vượt quá giới hạn.',
 ];
 
 /** 把传输层异常归一成可示人的错误；鉴权失败顺带置位暂停，等用户重新保存设置。 */
@@ -23,19 +23,19 @@ function normalizeFailure(runtime: AiRuntime, controller: AbortController, error
   if (isAuthenticationFailure(error)) {
     runtime.paused = true;
     runtime.logger.warn('Standalone AI authentication failed; save settings again to resume.');
-    return new Error('Standalone AI authentication failed. Check credentials and save settings again.', {
+    return new Error('Xác thực AI độc lập thất bại. Hãy kiểm tra khóa API và lưu lại cài đặt.', {
       cause: error,
     });
   }
   if (controller.signal.aborted) {
-    return new Error('Standalone AI request cancelled or timed out.', { cause: error });
+    return new Error('Yêu cầu AI độc lập đã bị hủy hoặc quá thời gian.', { cause: error });
   }
   if (isRateLimitFailure(error)) {
-    return new Error('Standalone AI provider rate limit reached. Please wait.', { cause: error });
+    return new Error('Nhà cung cấp AI độc lập đã giới hạn tần suất yêu cầu. Vui lòng đợi một chút.', { cause: error });
   }
   if (error instanceof Error && OWN_MESSAGES.includes(error.message)) return error;
   runtime.logger.warn('Standalone AI request failed.');
-  return new Error('Standalone AI request failed. Check the endpoint and model settings.', { cause: error });
+  return new Error('Yêu cầu AI độc lập thất bại. Hãy kiểm tra địa chỉ API và cài đặt mô hình.', { cause: error });
 }
 
 /**
@@ -47,11 +47,11 @@ export function createTextStream(
   runtime: AiRuntime,
 ): (options: unknown) => AsyncIterable<{ type: 'text'; text: string }> {
   return async function* stream(options) {
-    if (!runtime.ready()) throw new Error('Standalone AI is not ready. Configure and enable the model first.');
+    if (!runtime.ready()) throw new Error('AI độc lập chưa sẵn sàng. Hãy cấu hình và bật mô hình trước.');
     const settings = runtime.store.current();
     const { request, signal: callerSignal } = parseRequest(options, settings.model);
-    if (callerSignal?.aborted) throw new Error('Standalone AI request cancelled.');
-    if (runtime.active) throw new Error('Standalone AI is busy. Please wait.');
+    if (callerSignal?.aborted) throw new Error('Yêu cầu AI độc lập đã bị hủy.');
+    if (runtime.active) throw new Error('AI độc lập đang bận. Vui lòng đợi một chút.');
     const controller = new AbortController();
     runtime.active = controller;
     const abort = () => controller.abort();
@@ -64,18 +64,18 @@ export function createTextStream(
       while (true) {
         const part: IteratorResult<AiTransportEvent> = await abortable(iterator.next(), controller.signal);
         // 流式过程中设置可能被保存、服务也可能被释放，每次都重新确认。
-        if (controller.signal.aborted || !runtime.ready()) throw new Error('Standalone AI request cancelled.');
+        if (controller.signal.aborted || !runtime.ready()) throw new Error('Yêu cầu AI độc lập đã bị hủy.');
         if (part.done) break;
         // 事件数也要有上限，防止对端用大量空块拖住进程。
-        if (++events > MAX_EVENTS) throw new Error('Standalone AI response exceeds limits.');
-        if (part.value.refusal) throw new Error('Standalone AI could not answer this request.');
+        if (++events > MAX_EVENTS) throw new Error('Phản hồi của AI độc lập vượt quá giới hạn.');
+        if (part.value.refusal) throw new Error('AI độc lập không thể trả lời yêu cầu này.');
         const text = part.value.text;
         if (!text) continue;
         emitted += text.length;
-        if (emitted > MAX_OUTPUT_CHARS) throw new Error('Standalone AI response exceeds limits.');
+        if (emitted > MAX_OUTPUT_CHARS) throw new Error('Phản hồi của AI độc lập vượt quá giới hạn.');
         yield { type: 'text', text };
       }
-      if (emitted === 0) throw new Error('Standalone AI returned no text.');
+      if (emitted === 0) throw new Error('AI độc lập không trả về nội dung văn bản.');
     } catch (error) {
       throw normalizeFailure(runtime, controller, error);
     } finally {

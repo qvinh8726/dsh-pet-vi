@@ -14,6 +14,7 @@ import type { FontConfig, ModelSelection, PhysicsParams, Weights } from '../shar
 import type { FunctionComponent } from 'react';
 import { requestNotificationPermission } from './notify.ts';
 import { injectSettingsCss } from './settings/css.ts';
+import { uiErrorText } from './ui-error.ts';
 import { type Feedback, makeActions } from './settings/actions.ts';
 import { petBridge } from './settings/bridge.ts';
 import { type MergedConfig, readConfigEntries, readMainConfig } from './settings/config/index.ts';
@@ -245,7 +246,7 @@ export function makePetConfigSection(
         // 条目列表与全局字段各取一份：前者给标签条与保存时的写回计划，后者给全局卡片。
         const entries = readConfigEntries(merged);
         const patch = readMainConfig(merged);
-        if (entries === null || patch === null) throw new Error('Invalid config response');
+        if (entries === null || patch === null) throw new Error('Phản hồi cấu hình không hợp lệ');
         replace(entries);
         if (patch.notificationsEnabled !== undefined) setNotifyEnabled(patch.notificationsEnabled);
         if (patch.notifyWhenFocused !== undefined) setNotifyWhenFocused(patch.notifyWhenFocused);
@@ -311,7 +312,7 @@ export function makePetConfigSection(
           setAvatarVersion(Date.now());
           setMsg({ kind: 'ok', text: t('avatarUploaded') });
         } catch (error) {
-          setMsg({ kind: 'err', text: error instanceof Error ? error.message : String(error) });
+          setMsg({ kind: 'err', text: uiErrorText(error) });
         } finally {
           setAvatarBusy(false);
         }

@@ -19,7 +19,7 @@ const providers = new Map<string, SpeechProvider>();
  */
 export function registerSpeechProvider(def: SpeechProvider): () => void {
   validateSpeechProvider(def);
-  if (providers.has(def.id)) throw new TypeError(`识别 provider id 已被注册: ${def.id}`);
+  if (providers.has(def.id)) throw new TypeError(`id provider nhận dạng giọng nói đã được đăng ký: ${def.id}`);
   providers.set(def.id, def);
   return () => {
     if (providers.get(def.id) === def) providers.delete(def.id);

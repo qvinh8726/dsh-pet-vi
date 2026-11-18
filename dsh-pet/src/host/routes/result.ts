@@ -80,23 +80,23 @@ export function failResult(reason: ResultReason, message: string, extra?: Record
 }
 
 /** 请求体不是合法 JSON：400。 */
-export function invalidJson(message = 'invalid JSON body'): RouteResult {
+export function invalidJson(message = 'Nội dung yêu cầu không phải JSON hợp lệ'): RouteResult {
   return rejected(400, 'invalid-json', message);
 }
 
 /** 该路径不接受这个方法：405。 */
-export function methodNotAllowed(message = 'method not allowed'): RouteResult {
+export function methodNotAllowed(message = 'Phương thức không được hỗ trợ'): RouteResult {
   return rejected(405, 'method-not-allowed', message);
 }
 
 /** 请求体超过上限：413。 */
-export function payloadTooLarge(message = 'request body too large'): RouteResult {
+export function payloadTooLarge(message = 'Nội dung yêu cầu quá lớn'): RouteResult {
   return rejected(413, 'payload-too-large', message);
 }
 
 /** 未预期异常：500。文案固定，真实原因只进日志，不外泄路径与内部细节。 */
 export function internalError(): RouteResult {
-  return rejected(500, 'internal-error', 'dsh-pet: internal error');
+  return rejected(500, 'internal-error', 'dsh-pet: lỗi nội bộ');
 }
 
 /** 协议失败：真实状态码 + 与业务失败同一形状的体。 */

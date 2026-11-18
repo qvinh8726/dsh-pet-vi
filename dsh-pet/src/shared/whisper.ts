@@ -1,4 +1,5 @@
 import { ROUTE_PATH } from './constants.ts';
+import { memeLabel } from './meme-labels.ts';
 /**
  * 碎碎念的展示视图：文本 → 气泡行数据，以及配图节点与样式。
  * 不负责取数、生成与失败判定——宿主半侧生成后写进 /state 的 pets.<id>.say，两端只从轮询状态读。
@@ -88,7 +89,7 @@ export function createMemeImage(name?: string, base = ROUTE_PATH, assetRoot = ''
   const img = document.createElement('img');
   img.className = MEME_IMG_CLASS;
   img.src = memeImageUrl(key, base, assetRoot);
-  img.alt = key;
+  img.alt = memeLabel(key);
   return img;
 }
 

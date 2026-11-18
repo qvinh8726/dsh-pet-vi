@@ -111,7 +111,11 @@ export function modelsHandler(
       return;
     }
     if (!ai?.discoverModels) {
-      sendJson(res, 200, { ok: false, code: 'input', message: 'Môi trường hiện tại chưa hỗ trợ lấy danh sách mô hình' });
+      sendJson(res, 200, {
+        ok: false,
+        code: 'input',
+        message: 'Môi trường hiện tại chưa hỗ trợ lấy danh sách mô hình',
+      });
       return;
     }
     try {

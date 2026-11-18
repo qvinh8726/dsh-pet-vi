@@ -11,6 +11,7 @@
 
 import { frameToToast, truncate, NOTIFY_ICONS as ICON_NAMES, type NotifyFrame } from '../shared/notify.ts';
 import { ROUTE_PATH } from '../shared/constants.ts';
+import { uiErrorText } from './ui-error.ts';
 
 let pageVisible = typeof document !== 'undefined' && !document.hidden;
 let pageFocused = typeof document !== 'undefined' && document.hasFocus();
@@ -194,7 +195,7 @@ export async function requestNotificationPermission(): Promise<PermissionResult>
     // 弹窗被直接关掉 / 未选择：浏览器仍是 default。
     return { ok: false, reason: 'error', message: 'Chưa được cấp quyền (' + p + ')' };
   } catch (e) {
-    return { ok: false, reason: 'error', message: e instanceof Error ? e.message : String(e) };
+    return { ok: false, reason: 'error', message: uiErrorText(e) };
   }
 }
 

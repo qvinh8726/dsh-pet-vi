@@ -130,7 +130,8 @@ function validateMemoryProvider(def: unknown): asserts def is ChatMemoryProvider
   if (typeof provider.id !== 'string' || !PROVIDER_ID_PATTERN.test(provider.id)) {
     throw new TypeError(`id của provider phải là kebab-case chữ thường, nhận được ${JSON.stringify(provider.id)}`);
   }
-  if (provider.id === NATIVE_MEMORY_ID) throw new TypeError(`Không được dùng id dành cho bản tích hợp: ${NATIVE_MEMORY_ID}`);
+  if (provider.id === NATIVE_MEMORY_ID)
+    throw new TypeError(`Không được dùng id dành cho bản tích hợp: ${NATIVE_MEMORY_ID}`);
   if (typeof provider.name !== 'string' || provider.name.trim() === '') {
     throw new TypeError(`name của provider ${provider.id} phải là chuỗi không rỗng`);
   }
@@ -139,7 +140,9 @@ function validateMemoryProvider(def: unknown): asserts def is ChatMemoryProvider
   }
   const timeoutMs = provider.timeoutMs;
   if (timeoutMs !== undefined && (typeof timeoutMs !== 'number' || !Number.isFinite(timeoutMs) || timeoutMs <= 0)) {
-    throw new TypeError(`timeoutMs của provider ${provider.id} phải là số dương hữu hạn, nhận được ${JSON.stringify(timeoutMs)}`);
+    throw new TypeError(
+      `timeoutMs của provider ${provider.id} phải là số dương hữu hạn, nhận được ${JSON.stringify(timeoutMs)}`,
+    );
   }
 }
 

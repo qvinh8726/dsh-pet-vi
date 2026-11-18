@@ -36,10 +36,11 @@ let bootFailures = 0;
 async function loadConfig() {
   // 唯一配置入口：宿主 /config 的成品聚合（已合并并保证绝对正确），一步拉取 → 拍平，零校验零兜底
   const res = await fetch(BASE + '/config', { cache: 'no-store' });
-  if (!res.ok) throw new Error(`config http ${res.status}`);
+  if (!res.ok) throw new Error(`Không tải được cấu hình (HTTP ${res.status})`);
   const merged = await res.json();
   // 接口统一 200 + 实体：失败时状态码仍是 200，得看体里的 ok。
-  if (merged && merged.ok === false) throw new Error('config ' + String(merged.reason ?? 'failed'));
+  if (merged && merged.ok === false)
+    throw new Error('Không tải được cấu hình: ' + String(merged.reason ?? 'không rõ nguyên nhân'));
   return {
     pets: S.flattenConfigPets(merged),
     // 拖拽抛掷物理参数（顶层全局，所有宠物共用；合并器已填内置默认）
@@ -85,7 +86,13 @@ async function boot() {
     // 本窗口只承载一只宠物：petIndex 由主进程按 DSH_PET_PETS 顺序注入
     const pet = pets[CONFIG.petIndex];
     if (!pet) {
-      showError('petIndex=' + CONFIG.petIndex + ' vượt quá danh sách pet desktop (có ' + pets.length + ' con), cửa sổ này không tạo pet');
+      showError(
+        'petIndex=' +
+          CONFIG.petIndex +
+          ' vượt quá danh sách pet desktop (có ' +
+          pets.length +
+          ' con), cửa sổ này không tạo pet',
+      );
       scheduleReboot();
       return;
     }
@@ -96,7 +103,12 @@ async function boot() {
     for (const s of sprites) s.playIdle();
     startLoops();
   } catch (e) {
-    const msg = 'Tải cấu hình thất bại: ' + (e && e.message ? String(e.message) : String(e));
+    const detail = e && e.message ? String(e.message) : String(e);
+    const msg =
+      'Tải cấu hình thất bại: ' +
+      (/^(Failed to fetch|fetch failed|Load failed|NetworkError when attempting to fetch resource\.?)$/i.test(detail)
+        ? 'Không kết nối được với dịch vụ. Hãy kiểm tra kết nối rồi thử lại.'
+        : detail);
     // 首次失败先静默（多半是启动竞态，见 bootFailures 的说明），下一次 5s 重试仍失败才报。
     bootFailures += 1;
     if (bootFailures > 1) showError(msg);

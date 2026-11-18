@@ -67,10 +67,15 @@ export async function savePetLayer(deps: PetRouteDeps, input: RouteInput): Promi
     return invalidJson();
   }
   const entry = typeof payload.entry === 'string' ? payload.entry.trim() : '';
-  if (!entry) return failResult('bad-request', 'Thiếu entry: cần cho biết ghi vào loại pet nào (tiền tố tên file pet/<tên>-config.json)');
+  if (!entry)
+    return failResult(
+      'bad-request',
+      'Thiếu entry: cần cho biết ghi vào loại pet nào (tiền tố tên file pet/<tên>-config.json)',
+    );
   // 先挡非法字符再查文件：entry 会被拼成路径片段，不能让配置值逃出 pet/ 目录。
   if (!isValidPetId(entry)) return failResult('bad-request', `entry không dùng làm đoạn đường dẫn được: ${entry}`);
-  if (entry === MAIN_ENTRY) return failResult('bad-request', 'Mục main hãy dùng PUT /config: nó còn kèm các trường toàn cục');
+  if (entry === MAIN_ENTRY)
+    return failResult('bad-request', 'Mục main hãy dùng PUT /config: nó còn kèm các trường toàn cục');
   const pets = payload.pets;
   if (!Array.isArray(pets) || pets.length === 0) return failResult('bad-request', INVALID_PETS);
   const resolved = resolveConfigLayer(deps, entry);

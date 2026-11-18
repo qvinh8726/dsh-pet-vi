@@ -26,11 +26,12 @@ const external = new Map<string, PluginProvider>();
  * @throws 定义非法、id 与内置冲突或已被第三方注册时
  */
 export function registerBalanceProvider(def: PluginProvider): () => void {
-  if (!def || typeof def !== 'object') throw new TypeError('provider 定义必须是对象');
-  if (typeof def.id !== 'string' || def.id.length === 0) throw new TypeError('id 必须是非空字符串');
-  if (typeof def.fetch !== 'function') throw new TypeError('fetch 必须是函数');
-  if (BUILTIN_PROVIDERS.some((p) => p.id === def.id)) throw new Error('不能覆盖内置服务商: ' + def.id);
-  if (external.has(def.id)) throw new Error('该服务商 id 已被注册: ' + def.id);
+  if (!def || typeof def !== 'object') throw new TypeError('Định nghĩa provider phải là object');
+  if (typeof def.id !== 'string' || def.id.length === 0) throw new TypeError('id phải là chuỗi không rỗng');
+  if (typeof def.fetch !== 'function') throw new TypeError('fetch phải là hàm');
+  if (BUILTIN_PROVIDERS.some((p) => p.id === def.id))
+    throw new Error('Không thể ghi đè nhà cung cấp tích hợp: ' + def.id);
+  if (external.has(def.id)) throw new Error('id nhà cung cấp này đã được đăng ký: ' + def.id);
 
   external.set(def.id, def);
   return () => {

@@ -63,7 +63,8 @@ export async function postAvatar(
   });
   const raw = (await res.json().catch(() => null)) as { ok?: unknown; message?: unknown } | null;
   if (!res.ok || raw === null) return { ok: false, message: 'Tải lên thất bại (HTTP ' + res.status + ')' };
-  if (raw.ok !== true) return { ok: false, message: typeof raw.message === 'string' ? raw.message : 'Tải lên thất bại' };
+  if (raw.ok !== true)
+    return { ok: false, message: typeof raw.message === 'string' ? raw.message : 'Tải lên thất bại' };
   return { ok: true };
 }
 

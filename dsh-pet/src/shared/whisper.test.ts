@@ -138,7 +138,7 @@ describe('createMemeImage —— 两端共用的配图节点', () => {
       const img = doc.created.find((c) => c.tag === 'img');
       assert.equal(img?.props.className, MEME_IMG_CLASS);
       assert.equal(img?.props.src, memeImageUrl('死掉了'));
-      assert.equal(img?.props.alt, '死掉了');
+      assert.equal(img?.props.alt, 'Sập nguồn rồi');
     } finally {
       doc.restore();
     }

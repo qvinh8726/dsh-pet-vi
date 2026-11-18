@@ -24,11 +24,14 @@ function missingField(baseUrl: string, model: string, apiKey: string): string | 
 
 /** 把探测失败翻成可操作的一句话；原始 message 只在兜底分支透出。 */
 function describeFailure(error: unknown, controller: AbortController): string {
-  if (controller.signal.aborted) return 'Hết thời gian kết nối (15 giây không phản hồi): hãy kiểm tra mạng hoặc trạng thái máy chủ';
+  if (controller.signal.aborted)
+    return 'Hết thời gian kết nối (15 giây không phản hồi): hãy kiểm tra mạng hoặc trạng thái máy chủ';
   if (isAuthenticationFailure(error)) return 'Xác thực thất bại (HTTP 401/403): hãy kiểm tra khóa API có đúng không';
-  if (isRateLimitFailure(error)) return 'Bị giới hạn yêu cầu hoặc vượt hạn mức (HTTP 429): hãy kiểm tra số dư tài khoản API hoặc tần suất gọi';
+  if (isRateLimitFailure(error))
+    return 'Bị giới hạn yêu cầu hoặc vượt hạn mức (HTTP 429): hãy kiểm tra số dư tài khoản API hoặc tần suất gọi';
   const raw = error instanceof Error ? error.message : String(error);
-  if (raw.includes('404')) return 'Đường dẫn API hoặc mô hình không tồn tại (HTTP 404): hãy kiểm tra địa chỉ API (thường kết thúc bằng /v1) và tên mô hình';
+  if (raw.includes('404'))
+    return 'Đường dẫn API hoặc mô hình không tồn tại (HTTP 404): hãy kiểm tra địa chỉ API (thường kết thúc bằng /v1) và tên mô hình';
   if (raw.includes('ECONNREFUSED') || raw.includes('fetch failed')) {
     return 'Không kết nối được tới máy chủ: hãy kiểm tra địa chỉ và cổng có đúng không, máy chủ có đang chạy không';
   }

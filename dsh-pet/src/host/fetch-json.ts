@@ -85,7 +85,11 @@ async function fetchOnce(fetchImpl: typeof fetch, url: string, timeoutMs: number
   } catch (e) {
     // AbortSignal.timeout 抛出的异常 name 是 TimeoutError；其余（断网、DNS）都算网络错误
     const timedOut = signal.aborted || (e instanceof Error && e.name === 'TimeoutError');
-    throw new FetchJsonError(timedOut ? 'timeout' : 'network', label + (timedOut ? ': yêu cầu quá thời gian' : ': yêu cầu thất bại'), e);
+    throw new FetchJsonError(
+      timedOut ? 'timeout' : 'network',
+      label + (timedOut ? ': yêu cầu quá thời gian' : ': yêu cầu thất bại'),
+      e,
+    );
   }
   if (!response.ok) throw new FetchJsonError('http-status', label + ': trả về HTTP ' + response.status);
   try {

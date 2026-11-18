@@ -36,7 +36,7 @@ async function main() {
     return;
   }
 
-  console.log(`[ensure-electron] Electron not found, downloading v${VERSION} (${PLAT}-${process.arch}) ...`);
+  console.log(`[ensure-electron] Chưa có Electron, đang tải v${VERSION} (${PLAT}-${process.arch})...`);
   mkdirSync(TARGET_DIR, { recursive: true });
 
   const zipPath = await downloadArtifact({
@@ -48,7 +48,7 @@ async function main() {
   });
   await extract(zipPath, { dir: TARGET_DIR });
   if (!existsSync(EXE)) {
-    throw new Error(`Electron zip extracted, but ${ELECTRON_REL} not found`);
+    throw new Error(`Đã giải nén Electron nhưng không tìm thấy ${ELECTRON_REL}`);
   }
   console.log(EXE);
 }

@@ -35,7 +35,7 @@ function createBridge({ isBridge, prefix, origin, token }) {
         const p = bridgePending.get(id);
         if (!p) return;
         bridgePending.delete(id);
-        p.reject(new Error('bridge request timeout'));
+        p.reject(new Error('Đã hết thời gian chờ phản hồi từ DSH'));
       }, 45000).unref?.();
     });
   }
@@ -54,7 +54,7 @@ function createBridge({ isBridge, prefix, origin, token }) {
     const server = http.createServer((req, res) => {
       if (req.method !== 'POST' || req.url !== '/respond') {
         res.writeHead(404, { 'content-type': 'text/plain' });
-        res.end('dsh-pet: not found');
+        res.end('dsh-pet: không tìm thấy tài nguyên');
         return;
       }
       let raw = '';
@@ -66,12 +66,12 @@ function createBridge({ isBridge, prefix, origin, token }) {
           res.end('ok');
         } catch {
           res.writeHead(400, { 'content-type': 'text/plain' });
-          res.end('dsh-pet: bad payload');
+          res.end('dsh-pet: dữ liệu yêu cầu không hợp lệ');
         }
       });
       req.on('error', () => {
         res.writeHead(400, { 'content-type': 'text/plain' });
-        res.end('dsh-pet: bad payload');
+        res.end('dsh-pet: dữ liệu yêu cầu không hợp lệ');
       });
     });
     server.on('error', (e) => {
@@ -127,7 +127,7 @@ function createBridge({ isBridge, prefix, origin, token }) {
         });
       } catch (e) {
         console.error('[dsh-pet-desktop-helper] bridge file read failed:', resp.file, e);
-        return new Response('dsh-pet: asset read failed', { status: 500, headers });
+        return new Response('dsh-pet: không đọc được tài nguyên', { status: 500, headers });
       }
     }
     return new Response(resp.body ?? '', { status: resp.status || 200, headers });

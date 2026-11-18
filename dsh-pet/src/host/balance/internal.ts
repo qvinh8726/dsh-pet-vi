@@ -44,7 +44,8 @@ export function num(value: unknown, what: string): number {
 
 /** 必填字符串：非空才通过，否则抛错。 */
 export function str(value: unknown, what: string): string {
-  if (typeof value !== 'string' || value.length === 0) throw new Error('dsh-pet: dữ liệu số dư có trường không hợp lệ ' + what);
+  if (typeof value !== 'string' || value.length === 0)
+    throw new Error('dsh-pet: dữ liệu số dư có trường không hợp lệ ' + what);
   return value;
 }
 

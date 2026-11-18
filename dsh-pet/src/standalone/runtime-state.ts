@@ -41,7 +41,9 @@ export function writeStandaloneRuntime(home: string, details: RuntimeDetails): (
       ...details,
     });
   } catch (error) {
-    throw new Error('Không ghi an toàn được trạng thái chạy của pet, hãy kiểm tra quyền truy cập thư mục dữ liệu.', { cause: error });
+    throw new Error('Không ghi an toàn được trạng thái chạy của pet, hãy kiểm tra quyền truy cập thư mục dữ liệu.', {
+      cause: error,
+    });
   }
   let released = false;
   // 只删 pid 与令牌都匹配的文件，避免误删另一个实例的状态。
@@ -53,7 +55,10 @@ export function writeStandaloneRuntime(home: string, details: RuntimeDetails): (
       if (current.pid === process.pid && current.token === details.token) unlinkSync(file);
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') return;
-      throw new Error('Dọn trạng thái chạy của pet thất bại; hãy kiểm tra thư mục dữ liệu, trạng thái của tiến trình khác không bị xóa.', { cause: error });
+      throw new Error(
+        'Dọn trạng thái chạy của pet thất bại; hãy kiểm tra thư mục dữ liệu, trạng thái của tiến trình khác không bị xóa.',
+        { cause: error },
+      );
     }
   };
 }

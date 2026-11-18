@@ -38,7 +38,7 @@ export type WaitParse =
 export function parseWaitQuery(waitRaw: string | null, timeoutRaw: string | null): WaitParse {
   if (waitRaw === null && timeoutRaw === null) return { kind: 'none' };
   if (waitRaw === null || timeoutRaw === null) {
-    return { kind: 'error', error: 'wait and timeout must be used together' };
+    return { kind: 'error', error: 'Phải dùng wait và timeout cùng nhau' };
   }
   const wait = waitRaw
     .split(',')
@@ -46,14 +46,14 @@ export function parseWaitQuery(waitRaw: string | null, timeoutRaw: string | null
     .filter((s) => s !== '');
   const bad = wait.find((s) => !isPlaybackStatus(s));
   if (wait.length === 0 || bad !== undefined) {
-    return { kind: 'error', error: `invalid wait status: ${bad ?? waitRaw}` };
+    return { kind: 'error', error: `Trạng thái wait không hợp lệ: ${bad ?? waitRaw}` };
   }
   if (!/^\d+$/.test(timeoutRaw)) {
-    return { kind: 'error', error: `invalid timeout (expect 0..${MAX_PLAYBACK_WAIT_MS})` };
+    return { kind: 'error', error: `timeout không hợp lệ (phải trong khoảng 0..${MAX_PLAYBACK_WAIT_MS})` };
   }
   const timeoutMs = Number(timeoutRaw);
   if (!Number.isFinite(timeoutMs) || timeoutMs > MAX_PLAYBACK_WAIT_MS) {
-    return { kind: 'error', error: `invalid timeout (expect 0..${MAX_PLAYBACK_WAIT_MS})` };
+    return { kind: 'error', error: `timeout không hợp lệ (phải trong khoảng 0..${MAX_PLAYBACK_WAIT_MS})` };
   }
   // 逐项过 isPlaybackStatus 之后才收窄：wait 是外部输入，不能靠调用方守规矩
   return { kind: 'ok', wait: wait as PlaybackStatus[], timeoutMs };

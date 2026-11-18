@@ -70,7 +70,8 @@ export async function handleTodoRoutes(deps: PetRouteDeps, input: RouteInput): P
       const raw = parseObjectBody(body);
       if (raw === null) return invalidJson();
       const text = normalizeTodoText(raw.text);
-      if (text === null) return failResult('bad-request', `text phải là chuỗi không rỗng, tối đa ${TODO_TEXT_MAX} ký tự`);
+      if (text === null)
+        return failResult('bad-request', `text phải là chuỗi không rỗng, tối đa ${TODO_TEXT_MAX} ký tự`);
       const due = normalizeTodoDueAt(raw.dueAt);
       if (!due.ok) return failResult('bad-request', 'dueAt phải là mốc thời gian mili giây hoặc null');
       return okResult({ ok: true, todo: await todos.create({ text, dueAt: due.value }) });

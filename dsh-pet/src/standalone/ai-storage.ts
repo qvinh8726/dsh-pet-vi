@@ -40,7 +40,7 @@ function restrictFile(path: string): void {
     { encoding: 'utf8', windowsHide: true },
   );
   const sid = identity.match(/\bS-1-\d+(?:-\d+)+\b/)?.[0];
-  if (!sid) throw new Error('Cannot identify file owner');
+  if (!sid) throw new Error('Không xác định được chủ sở hữu tệp');
   execFileSync(
     join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'icacls.exe'),
     [path, '/inheritance:r', '/grant:r', `*${sid}:F`],
@@ -53,7 +53,7 @@ function configPath(home: string): string {
   const directory = join(home, 'dsh-pet');
   if (!existsSync(directory)) mkdirSync(directory, { recursive: true, mode: 0o700 });
   const info = lstatSync(directory);
-  if (!info.isDirectory() || info.isSymbolicLink()) throw new Error('Unsafe settings directory');
+  if (!info.isDirectory() || info.isSymbolicLink()) throw new Error('Thư mục cài đặt không an toàn');
   return join(directory, 'standalone-ai.json');
 }
 
@@ -67,7 +67,8 @@ export function readAiSettings(home: string): unknown | undefined {
   const path = configPath(home);
   if (!existsSync(path)) return undefined;
   const stat = lstatSync(path);
-  if (!stat.isFile() || stat.isSymbolicLink() || stat.size > MAX_CONFIG_BYTES) throw new Error('Unsafe settings file');
+  if (!stat.isFile() || stat.isSymbolicLink() || stat.size > MAX_CONFIG_BYTES)
+    throw new Error('Tệp cài đặt không an toàn');
   // 显式宽权限比读不到更危险：先拒绝，再由 restrictFile 收紧到当前 SID。
   // 这里创建的文件除当前 SID 外不应有任何显式授权。
   if (process.platform === 'win32') {
@@ -76,12 +77,12 @@ export function readAiSettings(home: string): unknown | undefined {
       windowsHide: true,
     });
     if (/\b(?:Everyone|BUILTIN\\Users|Authenticated Users)\s*:/i.test(acl))
-      throw new Error('Unsafe settings permissions');
+      throw new Error('Quyền truy cập cài đặt không an toàn');
   }
   restrictFile(path);
   const fd = openSync(path, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
   try {
-    if (fstatSync(fd).size > MAX_CONFIG_BYTES) throw new Error('Settings file too large');
+    if (fstatSync(fd).size > MAX_CONFIG_BYTES) throw new Error('Tệp cài đặt quá lớn');
     return JSON.parse(readFileSync(fd, 'utf8')) as unknown;
   } finally {
     closeSync(fd);
@@ -107,9 +108,10 @@ export function writeAiSettings(home: string, settings: unknown): void {
 export function writePrivateJson(path: string, settings: unknown): void {
   // 先确认目录是普通目录，避免被符号链接带到别处。
   const directory = lstatSync(dirname(path));
-  if (!directory.isDirectory() || directory.isSymbolicLink()) throw new Error('Unsafe private file directory');
+  if (!directory.isDirectory() || directory.isSymbolicLink())
+    throw new Error('Thư mục chứa tệp riêng tư không an toàn');
   if (existsSync(path) && (!lstatSync(path).isFile() || lstatSync(path).isSymbolicLink()))
-    throw new Error('Unsafe settings file');
+    throw new Error('Tệp cài đặt không an toàn');
   const temporary = `${path}.${randomUUID()}.tmp`;
   // 先建空临时文件并收紧权限，再写入任何密钥，避免密钥短暂落进宽权限文件。
   const fd = openSync(temporary, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY, 0o600);

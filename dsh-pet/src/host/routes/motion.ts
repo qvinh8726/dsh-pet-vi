@@ -148,13 +148,19 @@ export async function handleMotionRoutes(deps: PetRouteDeps, input: RouteInput):
       if (!displayCovers('desktop', display)) {
         return failResult(
           'pet-not-displayed',
-          who.petId + ' đang ở chế độ hiển thị ' + display + '; trạng thái thực tế trên desktop chỉ có với pet có display chứa desktop',
+          who.petId +
+            ' đang ở chế độ hiển thị ' +
+            display +
+            '; trạng thái thực tế trên desktop chỉ có với pet có display chứa desktop',
           { display },
         );
       }
       const snap = pose.get(who.petId);
       if (snap === undefined) {
-        return failResult('pose-unavailable', 'Chưa nhận được trạng thái thực tế trên desktop của pet này (bản desktop chưa chạy, hoặc vừa khởi động lại nên chưa kịp báo)');
+        return failResult(
+          'pose-unavailable',
+          'Chưa nhận được trạng thái thực tế trên desktop của pet này (bản desktop chưa chạy, hoặc vừa khởi động lại nên chưa kịp báo)',
+        );
       }
       return okResult({ ok: true, petId: who.petId, ...snap });
     } catch (e) {

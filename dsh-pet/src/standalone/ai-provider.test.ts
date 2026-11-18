@@ -50,15 +50,15 @@ test('disabled model selection cannot be overridden; metadata and saves make no 
     assert.deepEqual(ai.listProviders(), []);
     assert.deepEqual(await ai.listModels('standalone'), []);
     assert.equal(await ai.resolveModelInfo(), undefined);
-    await assert.rejects(collect(ai.stream(options)), /not ready/);
+    await assert.rejects(collect(ai.stream(options)), /chưa sẵn sàng/);
     await ai.saveSettings(config);
     assert.equal(ai.isReady(), true);
     assert.deepEqual(ai.currentSelection(), { provider: 'standalone', model: 'test-model' });
     assert.equal((await ai.listModels('standalone'))[0].id, 'test-model');
     assert.equal((await ai.resolveModelInfo('standalone', 'test-model'))?.id, 'test-model');
     assert.equal(await ai.resolveModelInfo('other', 'test-model'), undefined);
-    await assert.rejects(collect(ai.stream({ ...options, provider: 'other' })), /selection/);
-    await assert.rejects(collect(ai.stream({ ...options, model: 'other' })), /selection/);
+    await assert.rejects(collect(ai.stream({ ...options, provider: 'other' })), /Mô hình được chọn/);
+    await assert.rejects(collect(ai.stream({ ...options, model: 'other' })), /Mô hình được chọn/);
     assert.equal(calls, 0);
     ai.dispose();
     assert.equal(ai.isReady(), false);
@@ -198,11 +198,11 @@ test('auth failures are fixed/redacted and pause until explicit save, without SD
     async (ai) => {
       await assert.rejects(
         collect(ai.stream(options)),
-        /^Error: Standalone AI authentication failed\. Check credentials and save settings again\.$/,
+        /^Error: Xác thực AI độc lập thất bại\. Hãy kiểm tra khóa API và lưu lại cài đặt\.$/,
       );
       assert.equal(ai.isReady(), false);
       assert.equal(ai.currentSelection().model, '');
-      await assert.rejects(collect(ai.stream(options)), /not ready/);
+      await assert.rejects(collect(ai.stream(options)), /chưa sẵn sàng/);
       assert.equal(calls, 1);
       await ai.saveSettings({});
       assert.equal(ai.isReady(), true);
@@ -221,8 +221,8 @@ test('remote rate limits and API failures never reflect raw response text', asyn
         await assert.rejects(
           collect(ai.stream(options)),
           status === 429
-            ? /provider rate limit/
-            : /^Error: Standalone AI request failed\. Check the endpoint and model settings\.$/,
+            ? /đã giới hạn tần suất yêu cầu/
+            : /^Error: Yêu cầu AI độc lập thất bại\. Hãy kiểm tra địa chỉ API và cài đặt mô hình\.$/,
         );
         assert.equal(ai.isReady(), true);
       },
@@ -240,15 +240,15 @@ test('input, empty/nontext output, and response output caps are enforced before/
         { system: 'x'.repeat(32768) },
         { messages: [{ role: 'assistant', content: 'invalid' }] },
       ]) {
-        await assert.rejects(collect(ai.stream({ ...options, ...patch })), /input|limits/);
+        await assert.rejects(collect(ai.stream({ ...options, ...patch })), /đầu vào|giới hạn/);
       }
-      await assert.rejects(collect(ai.stream(options)), /returned no text/);
+      await assert.rejects(collect(ai.stream(options)), /không trả về nội dung văn bản/);
     },
     async () => openAiResponse(''),
   );
   await fixture(
     async (ai) => {
-      await assert.rejects(collect(ai.stream(options)), /response exceeds limits/);
+      await assert.rejects(collect(ai.stream(options)), /Phản hồi của AI độc lập vượt quá giới hạn/);
     },
     async () => openAiResponse('x'.repeat(16385)),
   );
@@ -290,15 +290,15 @@ test('abort, save changes, and dispose cancel in-flight requests; concurrency st
       async (ai) => {
         const controller = new AbortController();
         const outcome = collect(ai.stream({ ...options, signal: controller.signal }));
-        const rejected = assert.rejects(outcome, /cancelled|timed out/);
+        const rejected = assert.rejects(outcome, /bị hủy|quá thời gian/);
         await start;
-        await assert.rejects(collect(ai.stream(options)), /busy/);
+        await assert.rejects(collect(ai.stream(options)), /đang bận/);
         if (mode === 'abort') controller.abort();
         if (mode === 'save') await ai.saveSettings({ clearKey: true });
         if (mode === 'dispose') ai.dispose();
         await rejected;
         if (mode !== 'abort') assert.equal(ai.isReady(), false);
-        if (mode === 'dispose') await assert.rejects(ai.saveSettings({}), /disposed/);
+        if (mode === 'dispose') await assert.rejects(ai.saveSettings({}), /đã đóng/);
       },
       async (_url, init) => {
         started();
@@ -314,7 +314,7 @@ test('wall-clock timeout also bounds a transport ignoring cancellation', async (
   await fixture(
     async (ai) => {
       await ai.saveSettings({ timeoutMs: 1000 });
-      await assert.rejects(collect(ai.stream(options)), /timed out/);
+      await assert.rejects(collect(ai.stream(options)), /quá thời gian/);
     },
     async () => await new Promise<Response>(() => {}),
   );
@@ -328,7 +328,7 @@ test('Anthropic protocol uses explicit key, adaptive Opus without sampling, igno
           profilePatch({ protocol: 'anthropic', baseUrl: 'https://api.anthropic.com', model: 'claude-opus-5-5' }),
         );
         const stream = ai.stream({ ...options, model: 'claude-opus-5-5' });
-        if (refused) await assert.rejects(collect(stream), /could not answer/);
+        if (refused) await assert.rejects(collect(stream), /không thể trả lời/);
         else assert.equal(await collect(stream), 'hello');
       },
       async (url, init) => {
@@ -367,12 +367,12 @@ test('redirects are disabled and unexpected SDK endpoints are rejected; custom A
     calls++;
     return new Response('');
   });
-  await assert.rejects(transport('https://evil.test', {}), /Unexpected/);
+  await assert.rejects(transport('https://evil.test', {}), /không đúng với cấu hình/);
   assert.equal(calls, 0);
   await fixture(
     async (ai) => {
       await ai.saveSettings(profilePatch({ protocol: 'anthropic', model: 'custom-claude' }));
-      await assert.rejects(collect(ai.stream({ ...options, model: 'custom-claude' })), /returned no text/);
+      await assert.rejects(collect(ai.stream({ ...options, model: 'custom-claude' })), /không trả về nội dung văn bản/);
     },
     async (_url, init) => {
       assert.equal(new Headers(init?.headers).has('anthropic-beta'), false);

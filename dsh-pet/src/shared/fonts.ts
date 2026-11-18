@@ -14,6 +14,17 @@ export interface FontPreset {
   stack: string;
 }
 
+/** 字体显示名独立于持久化的 family 标识与 CSS 字体栈。 */
+export const FONT_LABELS: Readonly<Record<FontFamilyId, string>> = {
+  candy: 'Phông Kẹo Dẻo',
+  yahei: 'Microsoft YaHei / PingFang',
+  youyuan: 'YouYuan',
+  kaiti: 'KaiTi',
+  simsun: 'SimSun',
+  comic: 'Comic',
+  system: 'Mặc định hệ thống',
+};
+
 /** 字体预设清单：顺序即设置页下拉框的显示顺序（第一项为默认）。
  *  candy 是唯一随包发布的字体，CSS 名 "ShangshouSoftCandy" 由我们自己起，改名须同步两端的 @font-face。
  *  其余都是系统字体，机器上没装时由字体栈后面的兜底自然回退，不报错也不空白。 */
@@ -21,7 +32,7 @@ export const FONT_PRESETS: FontPreset[] = [
   {
     id: 'candy',
     stack:
-      '"ShangshouSoftCandy","Yuanti SC","YouYuan","幼圆","Comic Sans MS","PingFang SC","Microsoft YaHei",sans-serif',
+      '"Segoe UI",Arial,system-ui,"ShangshouSoftCandy","Yuanti SC","YouYuan","幼圆","Comic Sans MS","PingFang SC","Microsoft YaHei",sans-serif',
   },
   { id: 'yahei', stack: '"Microsoft YaHei","PingFang SC",sans-serif' },
   { id: 'youyuan', stack: '"YouYuan","Yuanti SC",sans-serif' },

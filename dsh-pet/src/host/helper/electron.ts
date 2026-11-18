@@ -223,7 +223,7 @@ export async function ensureElectronDownload(options: EnsureElectronOptions = {}
     // （同一版本只下载一次，之后命中缓存秒回）。超时用 AbortController 传给 fetch。
     const controller = new AbortController();
     const timer = setTimeout(
-      () => controller.abort(new Error(`Electron download timed out after ${timeoutMs}ms`)),
+      () => controller.abort(new Error(`Tải Electron quá thời gian sau ${timeoutMs}ms`)),
       timeoutMs,
     );
     timer.unref?.();
@@ -261,7 +261,7 @@ export async function ensureElectronDownload(options: EnsureElectronOptions = {}
       const { default: extract } = await import('@electron-internal/extract-zip');
       await extract(zipPath, { dir: targetDir });
       if (!isNonEmptyFile(exe)) {
-        throw new Error(`Electron zip extracted, but ${ELECTRON_REL} is missing, empty or not a regular file`);
+        throw new Error(`Đã giải nén Electron, nhưng ${ELECTRON_REL} bị thiếu, rỗng hoặc không phải tệp thông thường`);
       }
       const readySeconds = ((Date.now() - startedAt) / 1000).toFixed(1);
       info(`ready in ${readySeconds}s: ${exe}`, `Electron đã sẵn sàng (${readySeconds}s), đang khởi động pet`, true);
@@ -284,7 +284,7 @@ export async function ensureElectronDownload(options: EnsureElectronOptions = {}
 export function defaultLaunch(options: HelperOptions = {}): { command: string; args: string[] } {
   const electronPath = resolveElectronPath([options.electronPath]);
   if (!electronPath) {
-    throw new Error('dsh-pet: cannot resolve Electron executable. Set DSH_PET_ELECTRON_PATH or install electron.');
+    throw new Error('dsh-pet: không tìm thấy tệp chạy Electron. Hãy đặt DSH_PET_ELECTRON_PATH hoặc cài Electron.');
   }
   const helperPath = options.helperPath || defaultHelperMain;
   return { command: electronPath, args: helperLaunchArgs(helperPath, { forceX11: shouldForceXWayland() }) };

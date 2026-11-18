@@ -4,6 +4,7 @@
  * 纯映射，不做取数与状态；时间的位置是唯一的约定：贴着这一轮最后一条消息。
  * @module dsh-pet/src/client/chat/view-message
  */
+import { animationLabel } from '../../shared/animation-labels.ts';
 import { attachmentUrl, avatarUrl, memeUrl, type ChatMessageView } from './api.ts';
 import type { ChatPanelRuntime } from './runtime.ts';
 import { formatStamp } from './stamp.ts';
@@ -57,8 +58,8 @@ function actionNode(
   return h('button', {
     type: 'button',
     className: 'pet-chat-action',
-    'aria-label': t('speakAction', { name: action }),
-    ...tipAttrs(action),
+    'aria-label': t('speakAction', { name: animationLabel(action) }),
+    ...tipAttrs(animationLabel(action)),
     onClick: (event: { stopPropagation: () => void }) => {
       // 多选模式下整轮可点：这里必须拦一下，否则点动作键会顺手切换选中
       event.stopPropagation();

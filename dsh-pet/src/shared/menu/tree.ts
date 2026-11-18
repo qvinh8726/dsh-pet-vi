@@ -5,6 +5,7 @@
  * 必须始终成立：同一份输入必得同一棵树，层级顺序稳定。
  * @module dsh-pet/src/shared/menu/tree
  */
+import { animationLabel, categoryLabel } from '../animation-labels.ts';
 import { DISPLAY_HOTKEY_HINTS, DISPLAY_ORDER } from '../display-hotkey.ts';
 import { type Animations, type Category, type PetDisplay } from '../types.ts';
 import type { MenuBranch, MenuLeaf, MenuMoreItem, MenuNode } from './types.ts';
@@ -104,7 +105,7 @@ const EVENT_LABELS: Record<string, string> = {
 };
 
 /** 把动画名包成叶子。 */
-export const leaf = (anim: string): MenuLeaf => ({ label: anim, anim });
+export const leaf = (anim: string): MenuLeaf => ({ label: animationLabel(anim), anim });
 
 /** 由成品 animations 配置推导菜单树：一级「动作」→ 二级分类 → 三级动画名；空池与空分类自动省略。 */
 export function buildMenuTree(animations: Animations): MenuNode[] {
@@ -122,7 +123,7 @@ export function buildMenuTree(animations: Animations): MenuNode[] {
   // 随机动作分类：noMirror 分类照样可点播，播放端朝右时强制朝左（见 isNoMirrorAnimation）
   const cats = (animations.categories ?? []).filter((c) => c.actions.length > 0);
   for (const c of cats) {
-    groups.push({ label: c.id, children: c.actions.map(leaf) });
+    groups.push({ label: categoryLabel(c.id), children: c.actions.map(leaf) });
   }
   // 事件动画：每个事件一个分类，不来自随机链；数组槽位展平为逐个叶子，候选都可点播预览。
   const events = animations.events ?? {};

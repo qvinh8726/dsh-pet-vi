@@ -64,7 +64,7 @@ test('config save errors: invalid fields are 200 + bad-request and leave storage
   const result = await put(JSON.stringify({ pets: [{ ...pet, size: -1 }] }));
   assert.equal(result.status, 200);
   assert.equal(result.body.reason, 'bad-request');
-  assert.match(String(result.body.message), /^invalid pet config:/);
+  assert.match(String(result.body.message), /^Cấu hình pet không hợp lệ,/);
   assert.equal(existsSync(file), false);
 });
 
@@ -84,7 +84,7 @@ test('config save errors: an I/O failure is 200 + generate-error with details on
   const result = await put(JSON.stringify({ pets: [pet] }), '?force=1');
   assert.equal(result.status, 200);
   assert.equal(result.body.reason, 'generate-error');
-  assert.equal(result.body.message, 'failed to save config');
+  assert.equal(result.body.message, 'Không lưu được cấu hình');
   assert.ok(warnings.some((m) => m.includes('config save failed:') && m.includes('main-config.jsonc')));
   assert.equal(JSON.stringify(result.body).includes(home), false);
 });

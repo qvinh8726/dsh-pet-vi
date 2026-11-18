@@ -25,10 +25,12 @@ export type WhisperGenerateResult =
 const TIMEOUT_MS = 30_000;
 
 /** 碎碎念指令：纯文本（没有配图时的原样请求）。 */
-const USER_TEXT = 'Nói bâng quơ một câu lẩm bẩm thường ngày bằng tiếng Việt, một câu thôi, ngắn gọn khoảng 15 từ trở xuống.';
+const USER_TEXT =
+  'Nói bâng quơ một câu lẩm bẩm thường ngày bằng tiếng Việt, một câu thôi, ngắn gọn khoảng 15 từ trở xuống.';
 
 /** 梦话指令：睡觉期间嘟囔一句。与碎碎念指令同属「功能指令」，不进配置（配置里只有人设）。 */
-const SLEEP_TALK_TEXT = 'Em đang ngủ, hãy lầm bầm một câu nói mớ bằng tiếng Việt, một câu thôi, khoảng 15 từ trở xuống; ú ớ, nửa tỉnh nửa mê, đừng tỉnh táo đáp lời bất kỳ ai.';
+const SLEEP_TALK_TEXT =
+  'Em đang ngủ, hãy lầm bầm một câu nói mớ bằng tiếng Việt, một câu thôi, khoảng 15 từ trở xuống; ú ớ, nửa tỉnh nửa mê, đừng tỉnh táo đáp lời bất kỳ ai.';
 
 /** 梦话指令的对外出口：调用方传进 generateWhisper 的 instruction，避免再抄一份文案。 */
 export const SLEEP_TALK_INSTRUCTION = SLEEP_TALK_TEXT;

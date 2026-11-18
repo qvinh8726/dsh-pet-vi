@@ -81,7 +81,9 @@ export function runCheck(logger: StandaloneLogger): number {
     // 只有 display 为 desktop 或 both 的宠物会真的出现在桌面上。
     lines.push(
       `Cửa sổ desktop      ${desktopVisible.length} pet${
-        desktopVisible.length === 0 ? ' (display cần là desktop hoặc both, nếu không chế độ độc lập sẽ không có pet nào để hiện)' : ''
+        desktopVisible.length === 0
+          ? ' (display cần là desktop hoặc both, nếu không chế độ độc lập sẽ không có pet nào để hiện)'
+          : ''
       }`,
     );
     for (const line of lines) logger.info(line);

@@ -42,7 +42,8 @@ async function acceptUpload(deps: PetRouteDeps, input: RouteInput): Promise<Rout
   // 素材根是标识符不是路径片段：含分隔符/保留字符即拒，早于任何路径拼接。
   if (!isValidPetId(assetRoot)) return failResult('bad-request', 'Thư mục gốc tài nguyên không hợp lệ');
   // pet/ 只归 pet pack：内置条目用插件默认 logo，不接受写入（也不该在 pet/ 里留下 main 的文件）。
-  if (assetRoot === 'main') return failResult('bad-request', 'Mục tích hợp sẵn không đổi được ảnh đại diện: main không ghi vào thư mục pet/');
+  if (assetRoot === 'main')
+    return failResult('bad-request', 'Mục tích hợp sẵn không đổi được ảnh đại diện: main không ghi vào thư mục pet/');
 
   let raw: unknown;
   try {
@@ -55,7 +56,8 @@ async function acceptUpload(deps: PetRouteDeps, input: RouteInput): Promise<Rout
 
   // Buffer 解码会静默丢弃非法字符，所以用「重新编码必须与原文一致」确认它是规范 base64。
   const bytes = Buffer.from(base64, 'base64');
-  if (bytes.length === 0 || bytes.toString('base64') !== base64) return failResult('bad-request', 'base64 không hợp lệ');
+  if (bytes.length === 0 || bytes.toString('base64') !== base64)
+    return failResult('bad-request', 'base64 không hợp lệ');
   if (bytes.length > MAX_AVATAR_BYTES) return payloadTooLarge('Ảnh đại diện vượt quá 768 KiB');
 
   const saved = savePetAvatar(deps.petConfigDir, assetRoot, bytes);

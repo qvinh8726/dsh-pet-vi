@@ -82,7 +82,7 @@ describe('playback —— 路径与查询参数解析（纯函数，路由只做
     assert.deepEqual(parseWaitQuery(null, null), { kind: 'none' });
     const onlyWait = parseWaitQuery('ended', null);
     assert.equal(onlyWait.kind, 'error', '只填 wait 会无限挂住，必须拒');
-    assert.match(onlyWait.kind === 'error' ? onlyWait.error : '', /together/);
+    assert.match(onlyWait.kind === 'error' ? onlyWait.error : '', /cùng nhau/);
     assert.equal(parseWaitQuery(null, '1000').kind, 'error', '只填 timeout 等于没说要等什么');
   });
 

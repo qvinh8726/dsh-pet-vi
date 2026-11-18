@@ -180,10 +180,11 @@ export function personaText(own: unknown, entry: unknown): string {
  */
 export async function fetchChatConfig(): Promise<ChatConfig> {
   const res = await fetch(ROUTE_PATH + '/config', { cache: 'no-store' });
-  if (!res.ok) throw new Error('config HTTP ' + res.status);
+  if (!res.ok) throw new Error('Không tải được cấu hình pet (HTTP ' + res.status + ').');
   const body = (await res.json()) as Record<string, unknown>;
   // 业务失败也是 200：ok:false 的体不是成品配置，拿它拍平会静默退化成默认宠物
-  if (body.ok === false) throw new Error('config: ' + String(body.reason ?? 'failed'));
+  if (body.ok === false)
+    throw new Error('Không tải được cấu hình pet: ' + String(body.reason ?? 'không rõ nguyên nhân'));
   const merged = body as Record<string, Record<string, unknown>>;
   const roundsByEntry: Record<string, number> = {};
   for (const [entry, conf] of Object.entries(merged)) {
@@ -242,7 +243,7 @@ export const HISTORY_ROUNDS = 200;
 export async function fetchHistory(petId: string): Promise<ChatMessageView[]> {
   const url = ROUTE_PATH + '/chat?pet=' + encodeURIComponent(petId) + '&rounds=' + HISTORY_ROUNDS;
   const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error('chat HTTP ' + res.status);
+  if (!res.ok) throw new Error('Không tải được lịch sử trò chuyện (HTTP ' + res.status + ').');
   return toChatMessages(await res.json());
 }
 
@@ -272,7 +273,8 @@ async function deleteChat(petId: string, ts: readonly number[]): Promise<DeleteR
   const res = await fetch(ROUTE_PATH + '/chat?pet=' + encodeURIComponent(petId) + query, { method: 'DELETE' });
   const body = (await res.json().catch(() => null)) as Record<string, unknown> | null;
   if (body?.ok === true) return { ok: true, removed: Number(body.removed ?? 0) };
-  const reason = typeof body?.message === 'string' ? body.message : 'HTTP ' + res.status;
+  const reason =
+    typeof body?.message === 'string' ? body.message : 'Không xóa được lịch sử trò chuyện (HTTP ' + res.status + ').';
   return { ok: false, message: reason };
 }
 
@@ -318,7 +320,7 @@ export interface OrphanHistory {
  */
 export async function fetchOrphans(): Promise<OrphanHistory[]> {
   const res = await fetch(ROUTE_PATH + '/chat/memory', { cache: 'no-store' });
-  if (!res.ok) throw new Error('chat/memory HTTP ' + res.status);
+  if (!res.ok) throw new Error('Không tải được lịch sử của pet đã xóa (HTTP ' + res.status + ').');
   const body = (await res.json()) as { orphans?: unknown };
   const raw = Array.isArray(body.orphans) ? body.orphans : [];
   const out: OrphanHistory[] = [];
@@ -348,5 +350,11 @@ export async function clearOrphans(): Promise<
   const res = await fetch(ROUTE_PATH + '/chat/memory', { method: 'DELETE' });
   const body = (await res.json().catch(() => null)) as Record<string, unknown> | null;
   if (body?.ok === true) return { ok: true, pets: Number(body.pets ?? 0), messages: Number(body.messages ?? 0) };
-  return { ok: false, message: typeof body?.message === 'string' ? body.message : 'HTTP ' + res.status };
+  return {
+    ok: false,
+    message:
+      typeof body?.message === 'string'
+        ? body.message
+        : 'Không dọn được lịch sử của pet đã xóa (HTTP ' + res.status + ').',
+  };
 }

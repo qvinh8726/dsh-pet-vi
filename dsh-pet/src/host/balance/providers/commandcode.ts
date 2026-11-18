@@ -72,7 +72,8 @@ export function parseCommandCode(
 
   const summary = obj(summaryBody);
   const spentRaw = summary?.totalCost;
-  if (spentRaw === undefined || spentRaw === null) throw new Error('dsh-pet: phản hồi usage của commandcode thiếu totalCost');
+  if (spentRaw === undefined || spentRaw === null)
+    throw new Error('dsh-pet: phản hồi usage của commandcode thiếu totalCost');
   const spent = Math.max(0, num(spentRaw, 'totalCost'));
 
   const pool = spent + remaining;

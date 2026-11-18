@@ -113,7 +113,7 @@ export async function handleStateRoutes(deps: PetRouteDeps, input: RouteInput): 
       return { kind: 'text', status: 204, body: '' };
     }
     if (method !== 'POST') return methodNotAllowed();
-    if (Buffer.byteLength(body ?? '', 'utf8') > 8 * 1024) return payloadTooLarge('body too large');
+    if (Buffer.byteLength(body ?? '', 'utf8') > 8 * 1024) return payloadTooLarge('Nội dung yêu cầu quá lớn');
     let parsed: unknown;
     try {
       parsed = JSON.parse(body ?? '');
@@ -134,12 +134,12 @@ export async function handleStateRoutes(deps: PetRouteDeps, input: RouteInput): 
         if (trimmed === '') {
           task = null;
         } else if (Array.from(trimmed).length > TASK_TEXT_MAX) {
-          return failResult('bad-request', `task too long (max ${TASK_TEXT_MAX} code points)`);
+          return failResult('bad-request', `task quá dài (tối đa ${TASK_TEXT_MAX} mã điểm Unicode)`);
         } else {
           task = trimmed;
         }
       } else {
-        return failResult('bad-request', 'invalid task');
+        return failResult('bad-request', 'task không hợp lệ');
       }
     }
     workStatus.setState(EXTERNAL_WORK_SESSION, state as HostWorkStatusState, nextExternalWorkSeq());

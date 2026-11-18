@@ -89,7 +89,11 @@ describe('工具文案 —— 每工具 3 句候选，且带具体对象', () =>
   });
 
   test('workflow：整句不带对象也能出（不需要目标）', () => {
-    oneOf(toolDetailFromEvent(call('workflow')), ['Xếp việc theo thứ tự, bắt đầu nè', 'Lên lịch mấy việc cùng lúc', 'Làm lần lượt từng việc']);
+    oneOf(toolDetailFromEvent(call('workflow')), [
+      'Xếp việc theo thứ tự, bắt đầu nè',
+      'Lên lịch mấy việc cùng lúc',
+      'Làm lần lượt từng việc',
+    ]);
   });
 
   test('拿不到目标 → null（不覆盖已有文案，也不吐半句话）', () => {
@@ -237,7 +241,10 @@ describe('目标过长 —— 换一句不带名字的氛围兜底', () => {
   });
 
   test('文件名太长（超过 20 码点）→ 该工具的兜底句', () => {
-    assert.equal(toolDetailFromEvent(call('read', { file_path: 'work-status-lifecycle.test.ts' })), 'Lật code ra xem nào');
+    assert.equal(
+      toolDetailFromEvent(call('read', { file_path: 'work-status-lifecycle.test.ts' })),
+      'Lật code ra xem nào',
+    );
     assert.equal(
       toolDetailFromEvent(call('read_image', { file_path: 'some-very-long-image-name.png' })),
       'Xem ảnh này là gì nào',

@@ -36,7 +36,7 @@ export function createDeepseekTtsProvider(deps: { resolveKey: ResolveKey }): Voi
     timeoutMs: 60_000,
     async synthesize({ text, voice, signal }: SynthInput): Promise<Uint8Array> {
       const key = await deps.resolveKey();
-      if (!key) throw new Error('DEEPSEEK_API_KEY is not configured');
+      if (!key) throw new Error('Chưa cấu hình DEEPSEEK_API_KEY');
       const res = await fetch(TTS_ENDPOINT, {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
@@ -44,7 +44,7 @@ export function createDeepseekTtsProvider(deps: { resolveKey: ResolveKey }): Voi
         body: JSON.stringify({ text, voice_id: voice, format: 'wav' }),
         signal,
       });
-      if (!res.ok) throw new Error(`deepseek tts HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`Dịch vụ giọng nói DeepSeek trả về HTTP ${res.status}`);
       return new Uint8Array(await res.arrayBuffer());
     },
   };

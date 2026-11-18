@@ -43,9 +43,11 @@ export const zh = {
   shortcutRowDisplay: 'Vị trí hiển thị',
   shortcutRowSidebar: 'Mở chat ở thanh bên',
   shortcutGroupPet: 'Phím tắt của pet',
-  shortcutGroupPetHint: 'Trên web chỉ cần rê chuột lên pet; cửa sổ pet trên desktop phải bấm vào pet một lần để nhận bàn phím rồi mới dùng được.',
+  shortcutGroupPetHint:
+    'Trên web chỉ cần rê chuột lên pet; cửa sổ pet trên desktop phải bấm vào pet một lần để nhận bàn phím rồi mới dùng được.',
   shortcutGroupGlobal: 'Phím tắt toàn cục',
-  shortcutGroupGlobalHint: 'Trên web và trong cửa sổ bản desktop, DSH sẽ phân phối phím; có thể gán lại ở "Cài đặt → Chung → Phím tắt".',
+  shortcutGroupGlobalHint:
+    'Trên web và trong cửa sổ bản desktop, DSH sẽ phân phối phím; có thể gán lại ở "Cài đặt → Chung → Phím tắt".',
   petsLabel: 'Danh sách pet',
   add: 'Thêm pet',
   remove: 'Xóa',
@@ -61,7 +63,8 @@ export const zh = {
   sizePercentHint:
     'Pet chiếm tối đa bao nhiêu phần chiều rộng màn hình: 100 = không rộng quá một màn hình, khi cửa sổ rộng hơn pet thì hiển thị y như khi đặt theo px; nhập 30–40 để pet nhỏ hẳn trên điện thoại dựng đứng mà trên desktop vẫn như cũ. Chỉ tính một lần khi tải trang, đổi kích thước cửa sổ thì tải lại trang mới có tác dụng.',
   nameLabel: 'Tên',
-  nameHint: 'Tên hiển thị: hiện ra khi rê chuột lên pet, và được đưa vào tính cách AI (tên của bạn là X). Có thể trùng nhau, để trống thì dùng id của pet.',
+  nameHint:
+    'Tên hiển thị: hiện ra khi rê chuột lên pet, và được đưa vào tính cách AI (tên của bạn là X). Có thể trùng nhau, để trống thì dùng id của pet.',
   personaLabel: 'Tính cách (tùy chọn)',
   personaHint:
     'Chỉ ảnh hưởng pet này. Để trống = dùng tính cách của mục chứa nó, chính là phần chữ xám trong ô nhập. System thực sự gửi cho mô hình = đoạn này + câu tự thêm "Tên của bạn là “<tên>”" + bối cảnh thời gian hiện tại, nên đừng viết lại tên và ngày ở đây.',
@@ -69,7 +72,8 @@ export const zh = {
   balanceEnabled: 'Số dư',
   balanceEnabledHint: 'Bật lên thì pet này phát hoạt ảnh số dư và hiện bong bóng số dư.',
   whisperEnabled: 'Lẩm bẩm',
-  whisperEnabledHint: 'Bật lên thì pet này định kỳ dùng AI tạo một câu và phát hoạt ảnh lẩm bẩm (tính cách lấy từ ô "Tính cách" bên dưới, để trống thì theo mục).',
+  whisperEnabledHint:
+    'Bật lên thì pet này định kỳ dùng AI tạo một câu và phát hoạt ảnh lẩm bẩm (tính cách lấy từ ô "Tính cách" bên dưới, để trống thì theo mục).',
   workStatusEnabled: 'Theo trạng thái làm việc',
   workStatusEnabledHint:
     'Bật lên thì pet này theo dõi trạng thái làm việc của DSH: khi suy nghĩ / đang làm / chờ xác nhận / xong / lỗi sẽ tự chuyển hoạt ảnh tương ứng và hiện bong bóng (kho hoạt ảnh nằm ở cấp cao nhất của cấu hình, chỉ lắng nghe, không gọi mô hình).',
@@ -92,7 +96,8 @@ export const zh = {
   save: 'Lưu',
   saveHotkey: 'Ctrl+S / Cmd+S',
   sync: 'Đồng bộ',
-  confirmSync: 'Đồng bộ ngay? Cấu hình mặc định có sẵn trong dự án (đủ trường + chú thích) sẽ ghi đè cấu hình người dùng, mọi tùy chỉnh hiện tại sẽ mất.',
+  confirmSync:
+    'Đồng bộ ngay? Cấu hình mặc định có sẵn trong dự án (đủ trường + chú thích) sẽ ghi đè cấu hình người dùng, mọi tùy chỉnh hiện tại sẽ mất.',
   corruptTitle: 'Cấu hình người dùng bị hỏng, chưa lưu',
   corruptConfirm: 'Vẫn lưu',
   corruptBody:
@@ -123,8 +128,10 @@ export const zh = {
     'Còn {n} loại khác đến từ file trong thư mục pet/ (<tên>-config.json + <tên>-animation/), chuyển ở thanh "Loại" phía trên để sửa; khi lưu sẽ ghi lại vào cấu hình của từng gói nhân vật, không trộn vào main-config.jsonc.',
   kindLabel: 'Loại',
   kindMain: 'Có sẵn',
-  lastOfKind: '"{entry}" chỉ còn đúng một pet, xóa đi là mất luôn loại này. Muốn gỡ hẳn thì hãy xóa trực tiếp file gói nhân vật đó.',
-  savePartial: 'Đã lưu pet chính, nhưng không ghi lại được {names}: hãy kiểm tra cấu hình gói nhân vật có hợp lệ và thư mục có ghi được không.',
+  lastOfKind:
+    '"{entry}" chỉ còn đúng một pet, xóa đi là mất luôn loại này. Muốn gỡ hẳn thì hãy xóa trực tiếp file gói nhân vật đó.',
+  savePartial:
+    'Đã lưu pet chính, nhưng không ghi lại được {names}: hãy kiểm tra cấu hình gói nhân vật có hợp lệ và thư mục có ghi được không.',
   notifyToggle: 'Thông báo hệ thống',
   notifyToggleHint:
     'Hiện thông báo hệ thống (góc dưới bên phải màn hình) khi trò chuyện xong / tạo câu trả lời lỗi / xin quyền / chờ người dùng chọn. Mặc định chỉ hiện khi cửa sổ không được focus, đang xem trang này thì không làm phiền.',
@@ -156,23 +163,28 @@ export const zh = {
   voiceEnabledHint:
     'Đọc thành tiếng câu lẩm bẩm gọi từ menu chuột phải hoặc lệnh gạch chéo, và câu trả lời khi chat. Nút loa trong khung chat là phát từng câu, bấm lúc nào cũng được. Chỉ quyết định "có nói hay không": bong bóng, trí nhớ hội thoại và thông báo hệ thống không bị ảnh hưởng; tổng hợp giọng lỗi thì chỉ ghi nhật ký, không làm gián đoạn cuộc trò chuyện.',
   voiceWhisperEnabled: 'Đọc câu lẩm bẩm',
-  voiceWhisperEnabledHint: 'Đọc thành tiếng câu lẩm bẩm được tạo định kỳ. Mặc định tắt, vì lẩm bẩm chỉ là lời thoại nền, không nên phát tiếng mặc định.',
+  voiceWhisperEnabledHint:
+    'Đọc thành tiếng câu lẩm bẩm được tạo định kỳ. Mặc định tắt, vì lẩm bẩm chỉ là lời thoại nền, không nên phát tiếng mặc định.',
   voiceTodoEnabled: 'Đọc việc cần làm',
-  voiceTodoEnabledHint: 'Đọc thành tiếng lời nhắc việc cần làm khi đến giờ (câu đó vẫn hiện bong bóng như thường, mục này chỉ quyết định có đọc hay không). Mặc định tắt.',
+  voiceTodoEnabledHint:
+    'Đọc thành tiếng lời nhắc việc cần làm khi đến giờ (câu đó vẫn hiện bong bóng như thường, mục này chỉ quyết định có đọc hay không). Mặc định tắt.',
   voiceNotifyEnabled: 'Đọc thông báo',
   voiceNotifyEnabledHint:
     'Khi việc xong, gặp lỗi hoặc chờ bạn xác nhận sẽ đọc một câu trạng thái làm việc đã cấu hình cho mức đó. Cùng nguyên tắc với thông báo hệ thống: chỉ đọc khi người dùng không ở trang này (chuyển đi, mất focus, thu nhỏ), đang nhìn màn hình thì không làm phiền. Chỉ đọc câu thoại trong cấu hình, không đọc chi tiết công việc. Mặc định tắt.',
   voiceNameLabel: 'Giọng đọc',
-  voiceNameHint: 'Dùng giọng nào khi đọc. Giọng đọc do bộ tổng hợp giọng nói cung cấp, cài thêm bộ khác thì mới có thêm lựa chọn.',
+  voiceNameHint:
+    'Dùng giọng nào khi đọc. Giọng đọc do bộ tổng hợp giọng nói cung cấp, cài thêm bộ khác thì mới có thêm lựa chọn.',
   memoryTitle: 'Trí nhớ dài hạn',
-  memoryHint: 'Dùng bộ trí nhớ nào khi chat; địa chỉ và token của PowerContext chỉ dành cho nó, chọn bộ khác thì không hiện.',
+  memoryHint:
+    'Dùng bộ trí nhớ nào khi chat; địa chỉ và token của PowerContext chỉ dành cho nó, chọn bộ khác thì không hiện.',
   memoryProviderLabel: 'Trí nhớ dài hạn',
   memoryProviderHint:
     'Dùng bộ trí nhớ nào khi chat. "Trí nhớ có sẵn" chỉ mang theo vài lượt gần nhất; cài plugin trí nhớ bên thứ ba thì mới có thêm lựa chọn. Id được chọn sẽ ghi vào cấu hình người dùng, không tìm thấy bộ tương ứng thì quay về bộ có sẵn và ghi một dòng nhật ký.',
   powercontextEndpointLabel: 'Địa chỉ PowerContext',
   powercontextEndpointHint: 'Địa chỉ gốc của dịch vụ PowerContext trên máy, ví dụ http://127.0.0.1:8000.',
   powercontextTokenLabel: 'Token truy cập',
-  powercontextTokenHint: 'Để trống nếu máy chủ không bật xác thực. Token chỉ lưu trong cấu hình trên máy, không ghi vào nhật ký.',
+  powercontextTokenHint:
+    'Để trống nếu máy chủ không bật xác thực. Token chỉ lưu trong cấu hình trên máy, không ghi vào nhật ký.',
   optimizeQuery: 'Tối ưu truy vấn',
   optimizeQueryHint:
     'Bật lên thì dùng mô hình viết lại câu này thành truy vấn tìm kiếm, kèm hai lượt gần nhất để hiểu đúng các từ thay thế. Mặc định tắt: từ thay thế thường chỉ tới câu vừa nói, mà các lượt đó vốn đã có trong lịch sử chat, không cần tốn thêm một lần gọi mô hình mỗi lượt.',
@@ -199,11 +211,14 @@ export const zh = {
   'physics.gravity': 'Trọng lực',
   'physics.gravityHint': 'px/s², càng lớn rơi càng nhanh; 0 = không trọng lực (ném ra sẽ bay thẳng đều)',
   'physics.restitution': 'Độ nảy',
-  'physics.restitutionHint': '0~1, tỉ lệ vận tốc giữ lại khi đập tường / chạm đất bật lên (1 = nảy hoàn toàn, 0 = chạm là dừng)',
+  'physics.restitutionHint':
+    '0~1, tỉ lệ vận tốc giữ lại khi đập tường / chạm đất bật lên (1 = nảy hoàn toàn, 0 = chạm là dừng)',
   'physics.groundFriction': 'Ma sát tiếp xúc',
-  'physics.groundFrictionHint': '/s, tốc độ giảm vận tốc theo mặt tiếp xúc khi đập tường / chạm đất / chạm trần; 0 = bốn phía trơn như mặt băng',
+  'physics.groundFrictionHint':
+    '/s, tốc độ giảm vận tốc theo mặt tiếp xúc khi đập tường / chạm đất / chạm trần; 0 = bốn phía trơn như mặt băng',
   'physics.throwPower': 'Lực tổng',
-  'physics.throwPowerHint': '> 0, hệ số chung cho lò xo bám tay và vận tốc ban đầu khi ném (1 = mặc định; càng lớn càng bám tay, ném càng mạnh)',
+  'physics.throwPowerHint':
+    '> 0, hệ số chung cho lò xo bám tay và vận tốc ban đầu khi ném (1 = mặc định; càng lớn càng bám tay, ném càng mạnh)',
   physicsCeilingBounce: 'Nảy ở mép trên',
   physicsCeilingBounceHint: 'Tắt đi thì ném có thể bay quá mép trên màn hình (trọng lực vẫn kéo nó về)',
   physicsPetCollision: 'Pet va nhau',
@@ -215,7 +230,8 @@ export const zh = {
   physicsHapticHint:
     'Rung một cái mỗi khi đập tường, chạm đất, chạm trần hoặc va nhau. Dùng được trên Chrome / Edge; iOS và các vỏ WebView như Via không có tác dụng; chế độ không làm phiền sẽ chặn rung.',
   physicsTilt: 'Nghiêng để đổi trọng lực',
-  physicsTiltHint: 'Nghiêng điện thoại = trọng lực hướng về phía đó, độ lớn là giá trị trọng lực ở trên; trọng lực bằng 0 thì nghiêng không có tác dụng. Cần HTTPS hoặc localhost.',
+  physicsTiltHint:
+    'Nghiêng điện thoại = trọng lực hướng về phía đó, độ lớn là giá trị trọng lực ở trên; trọng lực bằng 0 thì nghiêng không có tác dụng. Cần HTTPS hoặc localhost.',
   physicsShake: 'Lắc để ném',
   physicsShakeHint:
     'Lắc điện thoại sẽ ném pet theo hướng lắc, lực = lực cơ sở × lực tổng; không phụ thuộc trọng lực, đặt trọng lực bằng 0 vẫn ném được. Cần HTTPS hoặc localhost.',
@@ -227,7 +243,8 @@ export const zh = {
   fontFamilyHint:
     '"Kẹo Dẻo (có sẵn)" đi kèm plugin; các phông còn lại là phông hệ thống, máy chưa cài thì tự chuyển sang phông kế tiếp trong danh sách (không bị trống hay báo lỗi).',
   fontSizeLabel: 'Cỡ chữ (px)',
-  fontSizeHint: 'Cỡ chữ nội dung bong bóng; chú thích khi rê chuột và chữ nhỏ trong bong bóng tính theo tỉ lệ sẵn có. Khoảng 4~200.',
+  fontSizeHint:
+    'Cỡ chữ nội dung bong bóng; chú thích khi rê chuột và chữ nhỏ trong bong bóng tính theo tỉ lệ sẵn có. Khoảng 4~200.',
   fontFollowToggle: 'Cỡ chữ theo kích thước pet',
   fontFollowToggleHint:
     'Bật (mặc định): pet to lên thì chữ cũng to lên theo tỉ lệ, ở chiều rộng 462 thì đúng bằng cỡ chữ đặt ở trên; tắt: cỡ chữ cố định, không đổi theo kích thước pet.',
@@ -252,9 +269,12 @@ export const zh = {
   modelNone: 'Nhà cung cấp này không có mô hình nào dùng được',
   whisperModelLabel: 'Mô hình lẩm bẩm',
   chatModelLabel: 'Mô hình chat',
-  modelFieldHint: 'Chọn "Theo cuộc trò chuyện hiện tại" = dùng mô hình của cuộc trò chuyện hiện tại; nếu đã chỉ định mà gọi lỗi thì tự quay về mô hình của cuộc trò chuyện hiện tại thử lại một lần.',
-  invalidModel: 'Hãy kiểm tra cài đặt mô hình: nhà cung cấp và mô hình phải chọn cả hai, hoặc để trống cả hai (theo cuộc trò chuyện hiện tại).',
-  modelCatalogFailed: 'Không tải được danh sách mô hình (tải lại trang để thử lại); giá trị đang cấu hình vẫn được giữ nguyên.',
+  modelFieldHint:
+    'Chọn "Theo cuộc trò chuyện hiện tại" = dùng mô hình của cuộc trò chuyện hiện tại; nếu đã chỉ định mà gọi lỗi thì tự quay về mô hình của cuộc trò chuyện hiện tại thử lại một lần.',
+  invalidModel:
+    'Hãy kiểm tra cài đặt mô hình: nhà cung cấp và mô hình phải chọn cả hai, hoặc để trống cả hai (theo cuộc trò chuyện hiện tại).',
+  modelCatalogFailed:
+    'Không tải được danh sách mô hình (tải lại trang để thử lại); giá trị đang cấu hình vẫn được giữ nguyên.',
   chatMemory: 'Số lượt lịch sử chat',
   chatMemoryHint:
     'Số lượt lịch sử gần nhất gửi kèm mỗi lần chat (1 lượt = 1 hỏi 1 đáp; 0 = không kèm lịch sử, mỗi câu là một cuộc trò chuyện mới). Trí nhớ hội thoại vẫn lưu đủ, không xóa; giá trị này chỉ quyết định cắt bao nhiêu đưa vào ngữ cảnh: càng lớn càng nhớ lâu, nhưng cũng càng tốn token. Mặc định chung, mọi pet dùng chung (pet pack có thể ghi đè riêng trong file của loại đó).',
@@ -269,13 +289,17 @@ export const zh = {
   notifyDenyBlocked: 'Quyền thông báo đã bị trình duyệt đặt là "Chặn".',
   notifyDenyRejected: 'Bạn đã chọn "Chặn" trong hộp thoại xin quyền.',
   notifyDenyError: 'Lỗi khi xin quyền',
-  notifyGuide: 'Hướng dẫn: bấm 🔒/ⓘ bên trái thanh địa chỉ → "Cài đặt trang web" → "Thông báo" → đổi thành "Cho phép", tải lại trang rồi thử lại.',
+  notifyGuide:
+    'Hướng dẫn: bấm 🔒/ⓘ bên trái thanh địa chỉ → "Cài đặt trang web" → "Thông báo" → đổi thành "Cho phép", tải lại trang rồi thử lại.',
   storageTitle: 'Gỡ cài đặt và lưu trữ',
-  storageHint: 'Mọi vị trí plugin lưu trên máy. Xóa bộ nhớ đệm không ảnh hưởng gì (sẽ tự tải lại / dựng lại); xóa "Dữ liệu người dùng của plugin" sẽ mất cấu hình và trí nhớ hội thoại.',
+  storageHint:
+    'Mọi vị trí plugin lưu trên máy. Xóa bộ nhớ đệm không ảnh hưởng gì (sẽ tự tải lại / dựng lại); xóa "Dữ liệu người dùng của plugin" sẽ mất cấu hình và trí nhớ hội thoại.',
   'storage.userData':
     'Dữ liệu người dùng của plugin: cấu hình tùy chỉnh main-config.jsonc, trí nhớ hội thoại memory.json, hoạt ảnh tùy chỉnh main-animation/, pet dạng file pet/',
-  'storage.electron': 'Môi trường chạy Electron cho pet desktop (khá nặng; xóa đi thì lần sau bật chế độ desktop sẽ tự tải lại)',
-  'storage.desktopCache': 'Bộ nhớ đệm của cửa sổ pet desktop và bộ nhớ đệm tỉ lệ màn hình chính (xóa được, sẽ tự dựng lại)',
+  'storage.electron':
+    'Môi trường chạy Electron cho pet desktop (khá nặng; xóa đi thì lần sau bật chế độ desktop sẽ tự tải lại)',
+  'storage.desktopCache':
+    'Bộ nhớ đệm của cửa sổ pet desktop và bộ nhớ đệm tỉ lệ màn hình chính (xóa được, sẽ tự dựng lại)',
   'storage.electronCache': 'Bộ nhớ đệm gói cài Electron (xóa được, khi cần sẽ tải lại)',
   'storage.package': 'Bản thân plugin (do DSH quản lý, gỡ bằng lệnh gỡ cài đặt bên dưới, đừng xóa tay)',
   storageMissing: '(chưa được tạo)',

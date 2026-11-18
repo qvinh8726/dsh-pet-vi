@@ -34,7 +34,7 @@ export async function runNotificationTest(deps: NotificationTestDeps): Promise<v
           ? t('notifyDenyBlocked')
           : result.reason === 'rejected'
             ? t('notifyDenyRejected')
-            : t('notifyDenyError') + (result.message ? '：' + result.message : '');
+            : t('notifyDenyError') + (result.message ? ': ' + result.message : '');
     report({ kind: 'err', text: reason + (result.reason === 'unsupported' ? '' : ' ' + t('notifyGuide')) });
     return;
   }

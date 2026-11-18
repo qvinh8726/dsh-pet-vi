@@ -1,7 +1,13 @@
-# dsh-pet 🐾
+# DSH Pet Việt 🐳
 
-一只住在 DeepSeek Harness 里的桌面宠物，一百余个透明动画，可多开、能上桌面。
+Thú cưng màn hình với giao diện, thông báo và lời thoại tiếng Việt. Bản Windows độc lập đã kèm Electron và tài nguyên, không yêu cầu Node.js hay DeepSeek Harness trên máy người dùng.
 
-安装与完整文档：**<https://github.com/PC2005-cloud/dsh-pet>**
+- [Tải bộ cài và bản giải nén](https://github.com/qvinh8726/dsh-pet-vi/releases/tag/v1.0.0-vi).
+- [Hướng dẫn đầy đủ bằng tiếng Việt](https://github.com/qvinh8726/dsh-pet-vi#readme).
+- [Báo lỗi bản Việt](https://github.com/qvinh8726/dsh-pet-vi/issues).
 
-许可：代码 MIT；素材禁止商用；二创在公开渠道须署名（同上链接）。
+## Ghi công
+
+Dự án gốc: **[PC2005-cloud/dsh-pet](https://github.com/PC2005-cloud/dsh-pet)**. Việt hóa và đóng gói: **[qvinh8726](https://github.com/qvinh8726/dsh-pet-vi)**. Đây là bản cộng đồng, không phải ứng dụng chính thức của DeepSeek.
+
+Mã nguồn theo [MIT](LICENSE); hình tượng và tài nguyên phải tuân theo điều kiện **phi thương mại, ghi công, chia sẻ tương tự** của dự án gốc. Nguyên mẫu “溟月”: [@上善无形](https://space.bilibili.com/4456176); thiết kế hầu gái cá voi: [@ZipZipPipe](https://space.bilibili.com/4168597). Xem [ghi công và bản quyền](https://github.com/qvinh8726/dsh-pet-vi/blob/main/NOTICE.md).

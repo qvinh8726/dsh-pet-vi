@@ -77,7 +77,10 @@ const settingsSchema = z
 /** 校验设置补丁。 */
 export function validateSettings(input: unknown): z.infer<typeof settingsSchema> {
   const result = settingsSchema.safeParse(input);
-  if (!result.success) throw new Error('Cài đặt không hợp lệ: hãy kiểm tra giao thức, địa chỉ API, khoảng cách (ít nhất 60 giây) và giới hạn đầu ra (128–4096)');
+  if (!result.success)
+    throw new Error(
+      'Cài đặt không hợp lệ: hãy kiểm tra giao thức, địa chỉ API, khoảng cách (ít nhất 60 giây) và giới hạn đầu ra (128–4096)',
+    );
   return result.data;
 }
 

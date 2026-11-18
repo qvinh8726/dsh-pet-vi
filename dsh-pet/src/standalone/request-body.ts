@@ -41,7 +41,11 @@ export async function boundedRequest(
         // 先暂停原请求再回错误，避免继续读取对端仍在发送的正文。
         req.pause();
         if (!res.writableEnded && !res.destroyed)
-          rejectRequest(res, status, status === 408 ? 'Hết thời gian đọc yêu cầu' : 'Nội dung yêu cầu không hợp lệ hoặc quá lớn');
+          rejectRequest(
+            res,
+            status,
+            status === 408 ? 'Hết thời gian đọc yêu cầu' : 'Nội dung yêu cầu không hợp lệ hoặc quá lớn',
+          );
         resolve(undefined);
       } else resolve(Buffer.concat(chunks));
     };

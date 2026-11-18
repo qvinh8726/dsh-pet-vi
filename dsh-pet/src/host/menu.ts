@@ -89,7 +89,11 @@ export class MenuRegistry {
     const body = raw as Record<string, unknown>;
     const owner = displayText(body.owner, OWNER_MAX);
     if (owner === null) {
-      return { ok: false, reason: 'invalid-owner', message: `owner phải là chuỗi dài 1–${OWNER_MAX} ký tự (không chứa ký tự điều khiển)` };
+      return {
+        ok: false,
+        reason: 'invalid-owner',
+        message: `owner phải là chuỗi dài 1–${OWNER_MAX} ký tự (không chứa ký tự điều khiển)`,
+      };
     }
 
     const rawLabels = body.labels;
@@ -143,7 +147,11 @@ export class MenuRegistry {
   clear(rawOwner: unknown): { ok: true; removed: number } | { ok: false; reason: MenuFailure; message: string } {
     const owner = displayText(rawOwner, OWNER_MAX);
     if (owner === null) {
-      return { ok: false, reason: 'invalid-owner', message: `owner phải là chuỗi dài 1–${OWNER_MAX} ký tự (không chứa ký tự điều khiển)` };
+      return {
+        ok: false,
+        reason: 'invalid-owner',
+        message: `owner phải là chuỗi dài 1–${OWNER_MAX} ký tự (không chứa ký tự điều khiển)`,
+      };
     }
     const entry = this.owners.get(owner);
     if (!entry) return { ok: true, removed: 0 };

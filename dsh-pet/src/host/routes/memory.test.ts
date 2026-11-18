@@ -31,7 +31,7 @@ describe('handleMemoryRoutes', () => {
     assert.equal(res?.kind, 'json');
     const body = (res as { obj: { ok: boolean; providers: Array<{ id: string; name: string }> } }).obj;
     assert.equal(body.ok, true);
-    assert.deepEqual(body.providers, [{ id: NATIVE_MEMORY_ID, name: '内置记忆' }]);
+    assert.deepEqual(body.providers, [{ id: NATIVE_MEMORY_ID, name: 'Trí nhớ tích hợp' }]);
   });
 
   test('注册第三方后出现在目录里，注销后消失', async () => {

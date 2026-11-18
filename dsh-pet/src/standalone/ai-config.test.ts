@@ -25,7 +25,7 @@ test('validates safe endpoints and explicit configuration with fixed redacted er
   ]) {
     assert.throws(
       () => validateSettings({ profiles: { custom: { ...configured.profiles.custom, baseUrl } } }, DEFAULT_AI_SETTINGS),
-      /^Error: Invalid standalone AI settings\.$/,
+      /^Error: Cài đặt AI độc lập không hợp lệ\.$/,
     );
   }
   for (const baseUrl of [
@@ -56,7 +56,7 @@ test('validates safe endpoints and explicit configuration with fixed redacted er
   ]) {
     assert.throws(
       () => validateSettings({ ...configured, ...patch }, DEFAULT_AI_SETTINGS),
-      /Invalid standalone AI settings/,
+      /Cài đặt AI độc lập không hợp lệ/,
     );
   }
 });
@@ -75,7 +75,7 @@ test('服务商：默认自定义，内置三家的协议与地址由名录回�
     assert.equal(next.protocol, 'openai-compatible');
   }
   for (const service of ['deepseek-account', 'openai', 'DEEPSEEK-OFFICIAL', '']) {
-    assert.throws(() => validateSettings({ service }, DEFAULT_AI_SETTINGS), /Invalid standalone AI settings/);
+    assert.throws(() => validateSettings({ service }, DEFAULT_AI_SETTINGS), /Cài đặt AI độc lập không hợp lệ/);
   }
 });
 
@@ -184,11 +184,11 @@ test('语音密钥独立于对话密钥：单独保存、单独清空、互不�
 test('清空与写入同时出现时拒绝，意图不明', () => {
   assert.throws(
     () => validateSettings({ clearKey: true, keys: { CUSTOM_API_KEY: 'x' } }, DEFAULT_AI_SETTINGS),
-    /Invalid standalone AI settings/,
+    /Cài đặt AI độc lập không hợp lệ/,
   );
   assert.throws(
     () => validateSettings({ clearDeepseekKey: true, deepseekApiKey: 'x' }, DEFAULT_AI_SETTINGS),
-    /Invalid standalone AI settings/,
+    /Cài đặt AI độc lập không hợp lệ/,
   );
 });
 
@@ -216,7 +216,7 @@ test('persists only in isolated home, redacts keys, supports keep and clear, rel
     assert.equal((await store.save({ clearKey: true })).hasKey, false);
     assert.equal(createAiConfig(home).publicSettings().hasKey, false);
     writeFileSync(join(home, 'dsh-pet', 'standalone-ai.json'), '{broken');
-    assert.throws(() => createAiConfig(home), /^Error: Cannot securely load standalone AI settings\.$/);
+    assert.throws(() => createAiConfig(home), /^Error: Không thể đọc cài đặt AI độc lập một cách an toàn\.$/);
   } finally {
     rmSync(home, { recursive: true, force: true });
   }

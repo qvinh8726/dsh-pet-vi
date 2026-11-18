@@ -66,7 +66,11 @@ export function registerPetCommand(deps: CommandPetInput): void {
                 '), vui lòng chọn bằng id',
             };
           }
-          return { kind: 'error', text: 'Không tìm thấy pet "' + arg + '" (nhập id hoặc tên đều được; gõ /pet rồi Enter để mở danh sách chọn)' };
+          return {
+            kind: 'error',
+            text:
+              'Không tìm thấy pet "' + arg + '" (nhập id hoặc tên đều được; gõ /pet rồi Enter để mở danh sách chọn)',
+          };
         },
       }),
     'dsh-pet: /pet command',

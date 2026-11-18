@@ -250,7 +250,7 @@ export class HelperProcess {
         id: req.id,
         status: 500,
         contentType: 'application/json; charset=utf-8',
-        body: JSON.stringify({ error: `bridge handler error: ${e instanceof Error ? e.message : String(e)}` }),
+        body: JSON.stringify({ error: `Lỗi xử lý cầu nối: ${e instanceof Error ? e.message : String(e)}` }),
       });
     }
   }

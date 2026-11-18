@@ -22,7 +22,7 @@ export interface LocateCityDeps {
 
 /** 定位结果：只有 IP 库给出的大致位置。 */
 export interface CityLocation {
-  /** 城市名；ip-api 给中文，ipwho.is 给英文。 */
+  /** 城市名；两家接口均请求或默认返回英文地名。 */
   readonly city: string;
   /** 一级行政区（省 / 州）；两家都可能给空串。 */
   readonly region: string;
@@ -33,8 +33,8 @@ export interface CityLocation {
 /** 缓存有效期（ms）：IP 与城市的对应关系变得很慢。 */
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 
-/** 首选端点：免费、免 key、中文地名；代价是只能走明文 HTTP。 */
-const IP_API_URL = 'http://ip-api.com/json/?lang=zh-CN&fields=status,city,regionName,country';
+/** 首选端点：免费、免 key、英文地名；代价是只能走明文 HTTP。 */
+const IP_API_URL = 'http://ip-api.com/json/?lang=en&fields=status,city,regionName,country';
 
 /** 兜底端点：HTTPS、免 key，城市为英文。 */
 const IP_WHO_URL = 'https://ipwho.is/';

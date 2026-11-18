@@ -241,9 +241,6 @@ export function historyStampOf(ts: number, now: Date): string {
   if (Number.isNaN(at.getTime()) || Number.isNaN(now.getTime())) return '';
   // 越南语写「日/月[/年]」：只调换拼接顺序，跨年才带年份的判断不变
   const date =
-    at.getDate() +
-    '/' +
-    (at.getMonth() + 1) +
-    (at.getFullYear() === now.getFullYear() ? '' : '/' + at.getFullYear());
+    at.getDate() + '/' + (at.getMonth() + 1) + (at.getFullYear() === now.getFullYear() ? '' : '/' + at.getFullYear());
   return date + ' ' + pad2(at.getHours()) + ':' + pad2(at.getMinutes());
 }

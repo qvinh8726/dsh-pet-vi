@@ -151,7 +151,9 @@ async function run(logger: StandaloneLogger, options: { port: number }): Promise
     logger.info(line);
   }
   if (context.failures.length > 0) {
-    logger.warn(`Có ${context.failures.length} mục khởi tạo thất bại (xem log phía trên); route vẫn dùng được, các endpoint liên quan sẽ báo lỗi rõ ràng`);
+    logger.warn(
+      `Có ${context.failures.length} mục khởi tạo thất bại (xem log phía trên); route vẫn dùng được, các endpoint liên quan sẽ báo lỗi rõ ràng`,
+    );
   }
 }
 

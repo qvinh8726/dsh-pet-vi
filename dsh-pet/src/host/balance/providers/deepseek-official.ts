@@ -20,7 +20,7 @@ export const deepseekOfficial: BalanceProvider = {
   credential: { mode: 'ref', ref: 'DEEPSEEK_API_KEY' },
   async fetch({ key, provider }) {
     const res = await fetchWithRetry('https://api.deepseek.com/user/balance', key);
-    if (!res.ok) throw new Error('deepseek balance HTTP ' + res.status);
+    if (!res.ok) throw new Error('Tra số dư DeepSeek trả về HTTP ' + res.status);
     const body: unknown = await res.json();
     const infos = (body as { balance_infos?: unknown })?.balance_infos;
     if (!Array.isArray(infos) || infos.length === 0)

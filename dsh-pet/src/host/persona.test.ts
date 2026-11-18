@@ -51,7 +51,10 @@ describe('composeSystemPrompt —— 分段拼装', () => {
     const lines = out.split('\n');
     assert.equal(lines[0], '你是小女仆');
     assert.equal(lines[1], 'Tên của em là "蓝毛".');
-    assert.ok(lines[2].startsWith('【Hiện tại】Bây giờ là Thứ Tư ngày 21/10/2026 14:15, buổi chiều, ngày thường'), '第三行必须是时间背景');
+    assert.ok(
+      lines[2].startsWith('【Hiện tại】Bây giờ là Thứ Tư ngày 21/10/2026 14:15, buổi chiều, ngày thường'),
+      '第三行必须是时间背景',
+    );
     assert.equal(lines.length, 3, '不带历史说明时不多不少三段');
   });
 

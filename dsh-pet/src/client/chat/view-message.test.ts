@@ -7,10 +7,11 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { avatarNode, messageNode } from './view-message.ts';
+import { avatarNode, messageNode, roundNode } from './view-message.ts';
 import { ROUTE_PATH } from '../../shared/constants.ts';
 import type { ChatMessageView } from './api.ts';
 import type { ChatPanelRuntime } from './runtime.ts';
+import type { ChatPanelState } from './types.ts';
 import { zh } from './locales/zh.ts';
 
 interface Node {
@@ -22,6 +23,44 @@ const h = ((tag: unknown, props: Record<string, unknown>) => ({ tag, props })) a
 
 /** 中文桩：本文件不断言文案，只用它满足运行时契约。 */
 const t = ((key: string) => (zh as Record<string, string>)[key] ?? key) as unknown as ChatPanelRuntime['t'];
+
+describe('roundNode —— 动作显示名与播放标识', () => {
+  test('内置动作显示越南语，重播仍发送原始动画标识', () => {
+    const played: string[] = [];
+    const state = {
+      selected: [],
+      selecting: false,
+      assetRoot: 'main',
+      avatarVersion: 1,
+      speaking: null,
+      showImage: () => {},
+      playAction: (id: string) => played.push(id),
+    } as unknown as ChatPanelState;
+    const translate = ((key: string, params?: Record<string, string | number>) => {
+      let value = (zh as Record<string, string>)[key] ?? key;
+      for (const [name, replacement] of Object.entries(params ?? {})) {
+        value = value.replace('{' + name + '}', String(replacement));
+      }
+      return value;
+    }) as ChatPanelRuntime['t'];
+    const node = roundNode({ h, t: translate } as ChatPanelRuntime, state, {
+      ts: 1,
+      assistant: { ...message, action: '优雅女仆舞' },
+    }) as Node;
+    const body = (node.props.children as Node[])[1];
+    const time = (body.props.children as Node[])[2];
+    const action = (time.props.children as Node[])[2];
+    assert.equal(action.props['aria-label'], 'Phát động tác: Điệu múa hầu gái thanh lịch');
+    let stopped = false;
+    (action.props.onClick as (event: { stopPropagation: () => void }) => void)({
+      stopPropagation: () => {
+        stopped = true;
+      },
+    });
+    assert.equal(stopped, true);
+    assert.deepEqual(played, ['优雅女仆舞']);
+  });
+});
 
 const message: ChatMessageView = { role: 'assistant', text: '在的', ts: 1 };
 

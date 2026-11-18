@@ -53,7 +53,8 @@ export async function handleChatRoutes(deps: PetRouteDeps, input: RouteInput): P
       let tsList: number[] | undefined;
       if (method === 'DELETE') {
         const parsed = parseTsList(url.searchParams.getAll('ts'));
-        if (parsed === null) return failResult('bad-request', 'ts phải là số nguyên không âm (mốc thời gian tính bằng mili giây)');
+        if (parsed === null)
+          return failResult('bad-request', 'ts phải là số nguyên không âm (mốc thời gian tính bằng mili giây)');
         tsList = parsed.length > 0 ? parsed : undefined;
       }
       // pet 必填且必须真实存在：空串会让人设/配图按 main 条目取，记忆以那个（不存在的）id
@@ -146,15 +147,22 @@ async function admitImage(deps: PetRouteDeps, raw: unknown): Promise<ImageAdmiss
   const sink = deps.optionalService('attachments') as PetImageSink | undefined;
   // 独立模式没有附件服务：图片能力直接不可用，不做假存储（契约见 API.md）
   if (typeof sink?.saveImages !== 'function') {
-    return { ok: false, res: failResult('bad-request', 'Chế độ hiện tại không hỗ trợ hình ảnh (thiếu dịch vụ tệp đính kèm)') };
+    return {
+      ok: false,
+      res: failResult('bad-request', 'Chế độ hiện tại không hỗ trợ hình ảnh (thiếu dịch vụ tệp đính kèm)'),
+    };
   }
   const maxBytes = sink.imageLimits?.maxImageBytes;
   if (maxBytes !== undefined && parsed.bytes.length > maxBytes) {
-    return { ok: false, res: failResult('bad-request', `Ảnh quá lớn (tối đa ${maxBytes} byte, hãy nén ảnh hoặc giảm độ phân giải)`) };
+    return {
+      ok: false,
+      res: failResult('bad-request', `Ảnh quá lớn (tối đa ${maxBytes} byte, hãy nén ảnh hoặc giảm độ phân giải)`),
+    };
   }
   try {
     const [ref] = await sink.saveImages([{ data: parsed.bytes, mediaType: parsed.mediaType }]);
-    if (ref === undefined) return { ok: false, res: failResult('generate-error', 'Dịch vụ tệp đính kèm không trả về tham chiếu ảnh') };
+    if (ref === undefined)
+      return { ok: false, res: failResult('generate-error', 'Dịch vụ tệp đính kèm không trả về tham chiếu ảnh') };
     return { ok: true, ref };
   } catch (e) {
     // 存储失败不是调用方的参数问题：回 generate-error，避免被当成 bad-request 而排错方向
