@@ -65,12 +65,12 @@ export async function fetchJson(url: string, options: FetchJsonOptions): Promise
     try {
       return await fetchOnce(fetchImpl, url, timeoutMs, options.label);
     } catch (e) {
-      last = e instanceof FetchJsonError ? e : new FetchJsonError('network', options.label + ' 请求失败', e);
+      last = e instanceof FetchJsonError ? e : new FetchJsonError('network', options.label + ': yêu cầu thất bại', e);
       if ((last.code !== 'timeout' && last.code !== 'network') || attempt === RETRIES) break;
       await sleep(RETRY_DELAY_MS);
     }
   }
-  throw last ?? new FetchJsonError('network', options.label + ' 请求失败');
+  throw last ?? new FetchJsonError('network', options.label + ': yêu cầu thất bại');
 }
 
 /** 单次抓取：区分超时、状态码、JSON 语法与传输错误。 */
@@ -85,17 +85,17 @@ async function fetchOnce(fetchImpl: typeof fetch, url: string, timeoutMs: number
   } catch (e) {
     // AbortSignal.timeout 抛出的异常 name 是 TimeoutError；其余（断网、DNS）都算网络错误
     const timedOut = signal.aborted || (e instanceof Error && e.name === 'TimeoutError');
-    throw new FetchJsonError(timedOut ? 'timeout' : 'network', label + (timedOut ? ' 请求超时' : ' 请求失败'), e);
+    throw new FetchJsonError(timedOut ? 'timeout' : 'network', label + (timedOut ? ': yêu cầu quá thời gian' : ': yêu cầu thất bại'), e);
   }
-  if (!response.ok) throw new FetchJsonError('http-status', label + ' 返回 HTTP ' + response.status);
+  if (!response.ok) throw new FetchJsonError('http-status', label + ': trả về HTTP ' + response.status);
   try {
     return await response.json();
   } catch (e) {
     if (signal.aborted || (e instanceof Error && e.name === 'TimeoutError')) {
-      throw new FetchJsonError('timeout', label + ' 请求超时', e);
+      throw new FetchJsonError('timeout', label + ': yêu cầu quá thời gian', e);
     }
-    if (e instanceof SyntaxError) throw new FetchJsonError('bad-json', label + ' 返回的不是 JSON', e);
-    throw new FetchJsonError('network', label + ' 响应读取失败', e);
+    if (e instanceof SyntaxError) throw new FetchJsonError('bad-json', label + ': phản hồi không phải JSON', e);
+    throw new FetchJsonError('network', label + ': đọc phản hồi thất bại', e);
   }
 }
 

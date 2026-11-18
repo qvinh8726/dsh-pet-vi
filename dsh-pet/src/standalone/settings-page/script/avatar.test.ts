@@ -165,7 +165,7 @@ test('内置条目：照样显示预览，但没有上传按钮', async () => {
     '内置条目不得出现文件选择框',
   );
   assert.equal(
-    box.children.some((child) => child.textContent === '上传头像'),
+    box.children.some((child) => child.textContent === 'Tải ảnh đại diện lên'),
     false,
     '内置条目不得出现上传按钮',
   );

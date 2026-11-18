@@ -38,7 +38,7 @@ export async function handleCharacterRoutes(deps: PetRouteDeps, input: RouteInpu
   // 参数叫 root 而不是 pet：这里要的是素材根（目录前缀），不是 pets[].id（同 /logo 与 /pet-avatar）。
   const assetRoot = (input.url.searchParams.get('root') ?? '').trim();
   if (assetRoot === '') {
-    return { kind: 'text', status: 400, body: 'dsh-pet: expected /dsh-pet-7340/character?root=<素材根>' };
+    return { kind: 'text', status: 400, body: 'dsh-pet: expected /dsh-pet-7340/character?root=<asset root>' };
   }
   // 素材根是标识符不是路径片段：含分隔符/保留字符即拒，早于任何路径拼接。
   if (!isValidPetId(assetRoot)) return { kind: 'text', status: 400, body: 'dsh-pet: invalid asset root' };

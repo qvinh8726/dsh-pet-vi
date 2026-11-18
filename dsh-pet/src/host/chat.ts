@@ -86,9 +86,9 @@ function historyMarkersOf(message: ChatMemoryMessage): string {
  *  交给模型选而不是随机抽：对话有真实上下文（用户输入 + 历史），按语境挑才贴合。 */
 function imageInstruction(pool: MemeEntry[]): string {
   return (
-    '\n\n[配图] 回复结尾可选附一张表情包给用户看，从下列清单里挑最贴合当前语境的：\n' +
+    '\n\n[Kèm meme] Cuối câu trả lời có thể kèm một meme cho chủ nhân xem (không bắt buộc), chọn cái hợp với ngữ cảnh hiện tại nhất trong danh sách dưới đây:\n' +
     memeCatalog(pool) +
-    '\n挑中就在回复最后另起一行写 [图:名称]（名称原样照抄）；没有合适的就完全不要写这个标记。'
+    '\nNếu chọn được thì xuống một dòng mới ở cuối câu trả lời và viết [图:tên] (chép nguyên văn tên trong danh sách, giữ nguyên chữ 图); không có cái nào hợp thì tuyệt đối đừng viết dấu đánh dấu này.'
   );
 }
 
@@ -129,11 +129,11 @@ export async function generateChat(input: ChatGenerateInput): Promise<ChatGenera
   // 候选链：配置的模型优先 → 当前对话的模型兜底（chatModel 留空时链上只有后者）
   const candidates = modelCandidates(ctx, preferred);
   if (candidates.length === 0) {
-    return { ok: false, reason: 'provider-missing', message: '当前对话未配置模型' };
+    return { ok: false, reason: 'provider-missing', message: 'Cuộc trò chuyện hiện tại chưa cấu hình mô hình' };
   }
   const llm = (ctx as { llm?: { stream(o: unknown): AsyncIterable<unknown> } }).llm;
   if (!llm || typeof llm.stream !== 'function') {
-    return { ok: false, reason: 'generate-error', message: 'LLM 服务不可用' };
+    return { ok: false, reason: 'generate-error', message: 'Dịch vụ LLM không khả dụng' };
   }
   // 依次尝试：配置的模型失败（凭据被删 / 模型下架 / 该服务商没配 key）时回落到当前对话的模型
   // 重试一次——那才是用户当前真正在用的模型，报错更有意义。

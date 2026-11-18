@@ -50,8 +50,8 @@ describe('composeSystemPrompt —— 分段拼装', () => {
     const out = composeSystemPrompt({ prompt: '你是小女仆', name: '蓝毛', id: 'main', now: NOW });
     const lines = out.split('\n');
     assert.equal(lines[0], '你是小女仆');
-    assert.equal(lines[1], '你的名字是“蓝毛”。');
-    assert.ok(lines[2].startsWith('【当下】现在是2026年10月21日星期三 14:15，下午，工作日'), '第三行必须是时间背景');
+    assert.equal(lines[1], 'Tên của em là "蓝毛".');
+    assert.ok(lines[2].startsWith('【Hiện tại】Bây giờ là Thứ Tư ngày 21/10/2026 14:15, buổi chiều, ngày thường'), '第三行必须是时间背景');
     assert.equal(lines.length, 3, '不带历史说明时不多不少三段');
   });
 
@@ -60,10 +60,10 @@ describe('composeSystemPrompt —— 分段拼装', () => {
     const lines = out.split('\n');
     assert.equal(lines.length, 4, '带历史说明时是四段');
     assert.ok(
-      lines[3].startsWith('【历史】对话记录里，主人的话前面标着 [月日 时:分]'),
+      lines[3].startsWith('【Lịch sử】Trong lịch sử trò chuyện, trước lời của chủ nhân có ghi [ngày/tháng giờ:phút]'),
       `第四行必须是【历史】：${lines[3]}`,
     );
-    assert.ok(lines[3].includes('不要写时间'), '必须明确禁止在回复正文里写时间');
+    assert.ok(lines[3].includes('không được ghi thời gian'), '必须明确禁止在回复正文里写时间');
   });
 
   test('historyTimes 但时间非法 → 【历史】也不加（它整句在引用“现在”）', () => {
@@ -74,50 +74,50 @@ describe('composeSystemPrompt —— 分段拼装', () => {
       now: new Date('nope'),
       historyTimes: true,
     });
-    assert.equal(out, '你的名字是“蓝毛”。');
+    assert.equal(out, 'Tên của em là "蓝毛".');
   });
 
   test('historyTimes 缺省 / false → 不出现【历史】（碎碎念没有历史）', () => {
     for (const parts of [{}, { historyTimes: false }]) {
       const out = composeSystemPrompt({ prompt: '你是小女仆', name: '蓝毛', id: 'main', now: NOW, ...parts });
-      assert.ok(!out.includes('【历史】'));
+      assert.ok(!out.includes('【Lịch sử】'));
     }
   });
 
   test('没有人设 → 不以换行开头（只有名字 + 时间）', () => {
     const out = composeSystemPrompt({ prompt: '', name: '蓝毛', id: 'main', now: NOW });
-    assert.ok(out.startsWith('你的名字是“蓝毛”。'), `实际开头：${JSON.stringify(out.slice(0, 12))}`);
-    assert.equal(out.split('\n')[0], '你的名字是“蓝毛”。');
+    assert.ok(out.startsWith('Tên của em là "蓝毛".'), `实际开头：${JSON.stringify(out.slice(0, 12))}`);
+    assert.equal(out.split('\n')[0], 'Tên của em là "蓝毛".');
   });
 
   test('name 为空 → 用 id（与 mergePet「缺 name 按 id 处理」同一语义）', () => {
     const out = composeSystemPrompt({ prompt: '', name: '', id: 'pet-7', now: NOW });
-    assert.ok(out.startsWith('你的名字是“pet-7”。'));
+    assert.ok(out.startsWith('Tên của em là "pet-7".'));
   });
 
   test('name 与 id 都空 → 整段名字声明省略（不留空行、不留空引号）', () => {
     const out = composeSystemPrompt({ prompt: '你是小女仆', name: '', id: '', now: NOW });
-    assert.ok(out.startsWith('你是小女仆\n【当下】'), `实际：${JSON.stringify(out.slice(0, 20))}`);
-    assert.ok(!out.includes('你的名字是'));
-    assert.ok(!out.includes('“”'));
+    assert.ok(out.startsWith('你是小女仆\n【Hiện tại】'), `实际：${JSON.stringify(out.slice(0, 20))}`);
+    assert.ok(!out.includes('Tên của em là'));
+    assert.ok(!out.includes('""'));
   });
 
   test('时间非法（NaN）→ 整行不加，且不留尾部换行', () => {
     const out = composeSystemPrompt({ prompt: '你是小女仆', name: '蓝毛', id: 'main', now: new Date('nope') });
-    assert.equal(out, '你是小女仆\n你的名字是“蓝毛”。');
+    assert.equal(out, '你是小女仆\nTên của em là "蓝毛".');
   });
 
   test('多行人设原样保留（不压平、不截断）', () => {
     const prompt = '第一行\n第二行\n第三行';
     const out = composeSystemPrompt({ prompt, name: '蓝毛', id: 'main', now: new Date('nope') });
-    assert.equal(out, prompt + '\n你的名字是“蓝毛”。');
+    assert.equal(out, prompt + '\nTên của em là "蓝毛".');
   });
 
   test('时间背景每次现算：同一秒之外的两个时刻产出不同的时间行', () => {
     const a = composeSystemPrompt({ prompt: '', name: '蓝毛', id: 'main', now: new Date(2026, 9, 21, 9, 0) });
     const b = composeSystemPrompt({ prompt: '', name: '蓝毛', id: 'main', now: new Date(2026, 9, 21, 21, 0) });
-    assert.match(a, /上午/);
-    assert.match(b, /晚上/);
+    assert.match(a, /giữa buổi sáng/);
+    assert.match(b, /buổi tối/);
     assert.notEqual(a, b);
   });
 });
@@ -135,19 +135,19 @@ describe('composeSystemPrompt —— 环境段（城市与天气）', () => {
         weather: { summary: '阴', temperatureC: 13.1, apparentC: 12.9, humidityPercent: 84, windKph: 2 },
       },
     });
-    assert.ok(out.includes('你在江西省南昌市（按网络粗估，不一定准）'), `实际：${out}`);
-    assert.ok(out.includes('外面阴，气温 13.1°C'));
+    assert.ok(out.includes('Em đang ở 江西省南昌市 (ước lượng theo mạng, chưa chắc chính xác)'), `实际：${out}`);
+    assert.ok(out.includes('thời tiết bên ngoài: 阴, nhiệt độ 13.1°C'));
   });
 
   test('只有城市：给出“没查到”的交代，不写任何温度', () => {
     const out = composeSystemPrompt({ prompt: '', name: '蓝毛', id: 'main', now: NOW, env: { city: '南昌市' } });
-    assert.ok(out.includes('外面的天气这次没查到'));
-    assert.ok(!out.includes('气温'), '没有数据时不该出现气温');
+    assert.ok(out.includes('lần này chưa tra được thời tiết bên ngoài'));
+    assert.ok(!out.includes('nhiệt độ'), '没有数据时不该出现气温');
   });
 
   test('不传 env：与加入环境前的输出一致（地点与天气都不出现）', () => {
     const out = composeSystemPrompt({ prompt: '', name: '蓝毛', id: 'main', now: NOW });
-    assert.ok(!out.includes('你在'));
-    assert.ok(!out.includes('外面'));
+    assert.ok(!out.includes('Em đang ở'));
+    assert.ok(!out.includes('bên ngoài'));
   });
 });

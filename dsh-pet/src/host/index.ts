@@ -43,7 +43,7 @@ export const inject = ['webServer', 'agentDefaultModel', 'credentials', 'llm', '
 
 /** 检索查询的改写提示词：结合最近几轮还原指代，只要一条能拿去检索的查询，不要解释、不要多行。 */
 const REWRITE_QUERY_SYSTEM =
-  '把用户这句话改写成一条用于检索长期记忆的查询：结合最近几轮对话还原「它」「那个」「继续」这类指代，保留检索需要的名词与限定词，去掉寒暄、语气词与称呼，不要解释、不要引号、不要换行。只输出这条查询本身。';
+  'Viết lại câu này của người dùng thành một truy vấn để tìm kiếm trong trí nhớ dài hạn: dựa vào vài lượt trò chuyện gần nhất để làm rõ các từ chỉ thay như "nó", "cái đó", "tiếp đi", giữ lại danh từ và từ hạn định cần cho việc tìm kiếm, bỏ lời chào hỏi, từ cảm thán và cách xưng hô; không giải thích, không dùng dấu ngoặc kép, không xuống dòng. Chỉ xuất ra đúng truy vấn đó.';
 
 /** 宿主插件主体：注册 `/dsh-pet-7340` 前缀路由与斜杠命令（/balance /pet /chat）；ctx 暂用 any（peer 类型包本地不可解析）。 */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- DSH 注入的 ctx（webServer/locale 等 service 无静态类型）

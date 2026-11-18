@@ -14,8 +14,8 @@ const TTS_ENDPOINT = 'https://api.deepseek.com/v1/tools/tts';
 
 /** 官方声明的音色：`id` 就是请求里的 `voice_id`，其余字段只用于展示。 */
 const VOICES = [
-  { id: 'stella', name: '海星', tag: '女声' },
-  { id: 'tide', name: '暗潮', tag: '男声' },
+  { id: 'stella', name: 'Sao Biển', tag: 'Giọng nữ' },
+  { id: 'tide', name: 'Sóng Ngầm', tag: 'Giọng nam' },
 ] as const;
 
 /** 取 DEEPSEEK_API_KEY 的回调；没配置时返回 undefined。 */

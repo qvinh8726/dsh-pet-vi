@@ -78,7 +78,7 @@ export function createRequestSecurity(): RequestSecurity {
         base.username ||
         base.password
       ) {
-        throw new Error('设置地址必须是本机 HTTP 地址');
+        throw new Error('Địa chỉ trang cài đặt phải là địa chỉ HTTP trên máy này');
       }
       return `${base.origin}/standalone-ai/#token=${token}`;
     },
@@ -86,7 +86,7 @@ export function createRequestSecurity(): RequestSecurity {
       const host = req.headers.host;
       const port = req.socket.localPort;
       if (!port || (host !== `127.0.0.1:${port}` && host !== `localhost:${port}`)) {
-        return rejectRequest(res, 403, '仅允许当前本机地址');
+        return rejectRequest(res, 403, 'Chỉ cho phép địa chỉ trên máy này');
       }
       // 文件页渲染器也要带令牌：沙箱网页同样会发来 null 来源。
       // 同一渲染器加载媒体时可能完全不带 Origin，只有这种情况才放行。
@@ -100,12 +100,12 @@ export function createRequestSecurity(): RequestSecurity {
         ((req.headers.origin !== undefined && req.headers.origin !== `http://${host}`) ||
           req.headers['sec-fetch-site'] === 'cross-site')
       ) {
-        return rejectRequest(res, 403, '不允许跨站请求');
+        return rejectRequest(res, 403, 'Không cho phép yêu cầu từ trang khác');
       }
       try {
         if (publicRead(req) && !fileOrigin) return true;
       } catch {
-        return rejectRequest(res, 400, '请求地址无效');
+        return rejectRequest(res, 400, 'Địa chỉ yêu cầu không hợp lệ');
       }
       // 页内请求走请求头；刷新后地址栏令牌已被清掉，改用首次访问换来的 HttpOnly cookie。
       const header = req.headers['x-dsh-pet-token'];
@@ -113,7 +113,7 @@ export function createRequestSecurity(): RequestSecurity {
       const supplied = fromHeader ? header : readTokenCookie(req);
       // 先按固定形状校验，再走定时安全比较，避免长度与内容泄漏。
       if (!TOKEN_SHAPE.test(supplied) || !timingSafeEqual(Buffer.from(supplied), Buffer.from(token))) {
-        return rejectRequest(res, 403, '请从桌宠菜单重新打开设置');
+        return rejectRequest(res, 403, 'Hãy mở lại cài đặt từ menu của pet');
       }
       if (fromHeader && readTokenCookie(req) !== token) {
         // 会话级 cookie：不设 Max-Age，关掉浏览器即失效，同一进程内刷新继续可用。

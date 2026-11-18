@@ -214,11 +214,11 @@ function landingPage(port: number): string {
   const pets = (info.pets as Array<Record<string, unknown>>) ?? [];
   const petLines = pets.length
     ? pets
-        .map((pet) => `<li>${escapeHtml(String(pet.name ?? pet.id))}（${escapeHtml(String(pet.display))}）</li>`)
+        .map((pet) => `<li>${escapeHtml(String(pet.name ?? pet.id))} (${escapeHtml(String(pet.display))})</li>`)
         .join('')
-    : '<li>（未读到宠物，检查配置文件）</li>';
+    : '<li>(Không đọc được pet nào, hãy kiểm tra file cấu hình)</li>';
   return `<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><title>dsh-pet</title>
+<html lang="vi"><head><meta charset="utf-8"><title>dsh-pet</title>
 <style>
   body{font:14px/1.7 "Segoe UI",system-ui,sans-serif;margin:0;padding:32px;background:#f6f8fa;color:#1f2328}
   main{max-width:720px;margin:0 auto;background:#fff;border:1px solid #d0d7de;border-radius:12px;padding:28px 32px}
@@ -227,16 +227,16 @@ function landingPage(port: number): string {
   ul{margin:6px 0;padding-left:20px} a{color:#0969da}
 </style></head>
 <body><main>
-  <h1>dsh-pet 桌宠</h1>
-  <div class="sub">版本 ${escapeHtml(String(info.version))} · 端口 ${port}</div>
-  <h2>宠物</h2><ul>${petLines}</ul>
-  <h2>配置文件</h2>
+  <h1>dsh-pet</h1>
+  <div class="sub">Phiên bản ${escapeHtml(String(info.version))} · Cổng ${port}</div>
+  <h2>Pet</h2><ul>${petLines}</ul>
+  <h2>File cấu hình</h2>
   <p><code>${escapeHtml(String(info.configFile))}</code></p>
-  <p>改完配置后从托盘退出、重新打开应用即可生效（本模式没有「重载配置」菜单）。</p>
-  <h2>AI 设置</h2>
-  <p>AI 模型与密钥的配置页需要令牌，请<strong>右键桌宠 →「打开 AI 设置」</strong>，会直接打开已授权的页面。</p>
-  <h2>状态</h2>
-  <p><a href="/health">/health</a> · <a href="/standalone-ai/">配置页（未授权时读写会返回 403）</a></p>
+  <p>Sửa cấu hình xong, hãy thoát từ khay hệ thống rồi mở lại ứng dụng để áp dụng (chế độ này không có menu "Tải lại cấu hình").</p>
+  <h2>Cài đặt AI</h2>
+  <p>Trang cấu hình mô hình AI và khóa API cần token, hãy <strong>chuột phải vào pet → "Mở cài đặt AI"</strong> để mở thẳng trang đã được cấp quyền.</p>
+  <h2>Trạng thái</h2>
+  <p><a href="/health">/health</a> · <a href="/standalone-ai/">Trang cấu hình (chưa được cấp quyền thì đọc/ghi sẽ trả về 403)</a></p>
 </main></body></html>`;
 }
 

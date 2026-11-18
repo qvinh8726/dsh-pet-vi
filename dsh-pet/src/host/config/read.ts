@@ -71,7 +71,7 @@ export function readPetConfigEntry(
  */
 export function readAllConfig(paths: ConfigPaths): Record<string, Record<string, unknown>> {
   const base = readJsonc(paths.defaultFile);
-  if (!base) throw new Error('dsh-pet: 内置默认配置缺失或解析失败（安装损坏）：' + paths.defaultFile);
+  if (!base) throw new Error('dsh-pet: cấu hình mặc định tích hợp bị thiếu hoặc không đọc được (bản cài đặt bị hỏng): ' + paths.defaultFile);
   const basePets = Array.isArray(base.pets) ? (base.pets as Record<string, unknown>[]) : [];
   const seenIds = new Set<string>();
   const out: Record<string, Record<string, unknown>> = {};

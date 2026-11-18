@@ -52,16 +52,18 @@ export interface WeatherFacts {
  */
 function phraseOf(entry: Entry, delta: number): string {
   const span = entry.span ?? DEFAULT_SPAN;
-  if (delta > 0) return delta === 1 ? '明天就是' + entry.name : '快要过' + entry.name + '了';
-  if (delta === 0) return '今天是' + (entry.spoken ?? entry.name);
+  if (delta > 0) return delta === 1 ? 'ngày mai là ' + entry.name : 'sắp đến ' + entry.name + ' rồi';
+  if (delta === 0) return 'hôm nay là ' + (entry.spoken ?? entry.name);
   // 节期内（长假分段说，避免十几天重复同一句）：进入节日体的第 daysIn + 1 天
   const daysIn = -delta;
   if (daysIn < span) {
-    return span - daysIn === 1 ? entry.name + '假期最后一天了' : '还在' + entry.name + '假期里';
+    return span - daysIn === 1
+      ? entry.name + ' chỉ còn hôm nay là ngày nghỉ cuối'
+      : 'vẫn đang trong kỳ nghỉ ' + entry.name;
   }
   // 节后：rest 是「结束后第几天」（0 起）
   const rest = daysIn - span;
-  return rest <= 1 ? entry.name + '刚过完' : entry.name + '这么快就过完了';
+  return rest <= 1 ? entry.name + ' vừa mới qua' : entry.name + ' trôi qua nhanh thật';
 }
 
 /**
@@ -95,16 +97,16 @@ function seasonCandidateOf(date: Date): Candidate | undefined {
     if (today < from) {
       const ahead = from - today;
       if (ahead > SEASON_AHEAD) continue;
-      return { clause: ahead === 1 ? '明天就放' + name + '了' : '快要放' + name + '了', priority };
+      return { clause: ahead === 1 ? 'ngày mai là bắt đầu ' + name + ' rồi' : 'sắp đến ' + name + ' rồi', priority };
     }
     if (today <= to) {
-      if (today === from) return { clause: name + '开始了', priority };
-      if (to - today < SEASON_ENDING_AHEAD) return { clause: name + '快结束了', priority };
-      return { clause: '正在放' + name, priority };
+      if (today === from) return { clause: name + ' bắt đầu rồi', priority };
+      if (to - today < SEASON_ENDING_AHEAD) return { clause: name + ' sắp kết thúc rồi', priority };
+      return { clause: 'đang trong ' + name, priority };
     }
     const rest = today - to - 1;
     if (rest >= SEASON_AFTER) continue;
-    return { clause: rest <= 1 ? name + '刚结束' : name + '这么快就过完了', priority };
+    return { clause: rest <= 1 ? name + ' vừa kết thúc' : name + ' trôi qua nhanh thật', priority };
   }
   return undefined;
 }
@@ -161,17 +163,18 @@ function placeTextOf(region: string | undefined, city: string | undefined): stri
 
 /** 天气从句：有数据时拼一句口语，没有时给出“别编”的交代。 */
 function weatherClauseOf(weather: WeatherFacts | undefined): string {
-  if (weather === undefined) return '外面的天气这次没查到，主人问起就说不知道、别编';
+  if (weather === undefined)
+    return 'lần này chưa tra được thời tiết bên ngoài, chủ nhân có hỏi thì cứ nói là không biết, đừng bịa';
   return (
-    '外面' +
+    'thời tiết bên ngoài: ' +
     weather.summary +
-    '，气温 ' +
+    ', nhiệt độ ' +
     numText(weather.temperatureC) +
-    '°C，体感 ' +
+    '°C, cảm giác như ' +
     numText(weather.apparentC) +
-    '°C，湿度 ' +
+    '°C, độ ẩm ' +
     numText(weather.humidityPercent) +
-    '%，风速 ' +
+    '%, gió ' +
     numText(weather.windKph) +
     ' km/h'
   );
@@ -193,32 +196,34 @@ export function timeContextOf(date: Date, env?: TimeContextEnv): string {
   const holiday = holidayClauseOf(date);
   // 地点带“粗估”括号：城市来自 IP 而不是主人亲口说的，不说明的话模型会当成事实报出来
   const placeName = placeTextOf(env?.region, env?.city);
-  const place = placeName === undefined ? '' : '你在' + placeName + '（按网络粗估，不一定准），';
-  const weather = env === undefined ? '' : '，' + weatherClauseOf(env.weather);
+  const place =
+    placeName === undefined ? '' : 'Em đang ở ' + placeName + ' (ước lượng theo mạng, chưa chắc chính xác). ';
+  const weather = env === undefined ? '' : ', ' + weatherClauseOf(env.weather);
+  // 越南语日期顺序是「日/月/年」，与中文相反：这里只调换拼接顺序，取值与判断不变
   return (
-    '【当下】' +
+    '【Hiện tại】' +
     place +
-    '现在是' +
-    date.getFullYear() +
-    '年' +
-    (date.getMonth() + 1) +
-    '月' +
+    'Bây giờ là ' +
+    (WEEKDAYS[day] ?? 'Thứ ?') +
+    ' ngày ' +
     date.getDate() +
-    '日' +
-    (WEEKDAYS[day] ?? '星期?') +
+    '/' +
+    (date.getMonth() + 1) +
+    '/' +
+    date.getFullYear() +
     ' ' +
     pad2(hour) +
     ':' +
     pad2(date.getMinutes()) +
-    '，' +
+    ', ' +
     timeSlotOf(hour) +
-    '，' +
+    ', ' +
     dayKindOf(day) +
-    (holiday ? '，' + holiday : '') +
+    (holiday ? ', ' + holiday : '') +
     weather +
-    '。这只是背景，不必刻意报时，也别句句都提节日' +
-    (env === undefined ? '' : '或天气') +
-    '——多数时候正常说话就好，真贴切时才顺口带一句。'
+    '. Đây chỉ là thông tin nền, không cần cố ý báo giờ, cũng đừng câu nào cũng nhắc đến ngày lễ' +
+    (env === undefined ? '' : ' hay thời tiết') +
+    '. Phần lớn thời gian cứ nói chuyện bình thường, khi nào thật sự hợp thì mới tiện nhắc một câu. Luôn trả lời bằng tiếng Việt.'
   );
 }
 
@@ -234,11 +239,11 @@ export function timeContextOf(date: Date, env?: TimeContextEnv): string {
 export function historyStampOf(ts: number, now: Date): string {
   const at = new Date(ts);
   if (Number.isNaN(at.getTime()) || Number.isNaN(now.getTime())) return '';
+  // 越南语写「日/月[/年]」：只调换拼接顺序，跨年才带年份的判断不变
   const date =
-    (at.getFullYear() === now.getFullYear() ? '' : at.getFullYear() + '年') +
-    (at.getMonth() + 1) +
-    '月' +
     at.getDate() +
-    '日';
+    '/' +
+    (at.getMonth() + 1) +
+    (at.getFullYear() === now.getFullYear() ? '' : '/' + at.getFullYear());
   return date + ' ' + pad2(at.getHours()) + ':' + pad2(at.getMinutes());
 }

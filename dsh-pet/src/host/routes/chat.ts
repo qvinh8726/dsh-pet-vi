@@ -45,7 +45,7 @@ export async function handleChatRoutes(deps: PetRouteDeps, input: RouteInput): P
       if (roundsRaw !== null && roundsRaw.trim() !== '') {
         const n = Number(roundsRaw);
         if (!Number.isInteger(n) || n < 0 || n > 200) {
-          return failResult('bad-request', 'rounds 必须是 0–200 的整数（不传则用配置）');
+          return failResult('bad-request', 'rounds phải là số nguyên 0–200 (không truyền thì dùng cấu hình)');
         }
         roundsOverride = n;
       }
@@ -53,7 +53,7 @@ export async function handleChatRoutes(deps: PetRouteDeps, input: RouteInput): P
       let tsList: number[] | undefined;
       if (method === 'DELETE') {
         const parsed = parseTsList(url.searchParams.getAll('ts'));
-        if (parsed === null) return failResult('bad-request', 'ts 必须是非负整数（毫秒时间戳）');
+        if (parsed === null) return failResult('bad-request', 'ts phải là số nguyên không âm (mốc thời gian tính bằng mili giây)');
         tsList = parsed.length > 0 ? parsed : undefined;
       }
       // pet 必填且必须真实存在：空串会让人设/配图按 main 条目取，记忆以那个（不存在的）id
@@ -124,8 +124,8 @@ async function postChat(deps: PetRouteDeps, petId: string, body: string | undefi
     return invalidJson();
   }
   const text = typeof parsed.text === 'string' ? parsed.text.trim() : '';
-  if (!text) return failResult('bad-request', '消息为空');
-  if (text.length > 2000) return failResult('bad-request', '消息过长（限 2000 字）');
+  if (!text) return failResult('bad-request', 'Tin nhắn trống');
+  if (text.length > 2000) return failResult('bad-request', 'Tin nhắn quá dài (tối đa 2000 ký tự)');
   // 图片缺省时直接返回空结论，下面的调用与加入图片前逐字一致（回归测试钉的就是这条）
   const admitted = await admitImage(deps, parsed.attachment);
   if (!admitted.ok) return admitted.res;
@@ -146,15 +146,15 @@ async function admitImage(deps: PetRouteDeps, raw: unknown): Promise<ImageAdmiss
   const sink = deps.optionalService('attachments') as PetImageSink | undefined;
   // 独立模式没有附件服务：图片能力直接不可用，不做假存储（契约见 API.md）
   if (typeof sink?.saveImages !== 'function') {
-    return { ok: false, res: failResult('bad-request', '当前模式不支持图片（缺少附件服务）') };
+    return { ok: false, res: failResult('bad-request', 'Chế độ hiện tại không hỗ trợ hình ảnh (thiếu dịch vụ tệp đính kèm)') };
   }
   const maxBytes = sink.imageLimits?.maxImageBytes;
   if (maxBytes !== undefined && parsed.bytes.length > maxBytes) {
-    return { ok: false, res: failResult('bad-request', `图片过大（上限 ${maxBytes} 字节，请压缩或降低分辨率）`) };
+    return { ok: false, res: failResult('bad-request', `Ảnh quá lớn (tối đa ${maxBytes} byte, hãy nén ảnh hoặc giảm độ phân giải)`) };
   }
   try {
     const [ref] = await sink.saveImages([{ data: parsed.bytes, mediaType: parsed.mediaType }]);
-    if (ref === undefined) return { ok: false, res: failResult('generate-error', '附件服务未返回图片引用') };
+    if (ref === undefined) return { ok: false, res: failResult('generate-error', 'Dịch vụ tệp đính kèm không trả về tham chiếu ảnh') };
     return { ok: true, ref };
   } catch (e) {
     // 存储失败不是调用方的参数问题：回 generate-error，避免被当成 bad-request 而排错方向

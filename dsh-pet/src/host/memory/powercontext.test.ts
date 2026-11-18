@@ -258,12 +258,12 @@ describe('PowerContext —— 召回', () => {
       const provider = createPowerContextMemory({ endpoint: () => stub.endpoint, token: () => '' });
       const result = await provider.recall?.(recallRequest('介绍一下你的家人'), new AbortController().signal);
       assert.ok(result, '两层都有命中时应该返回请求体');
-      assert.ok(result.userText.includes('[主题记忆]'), '主题段要有自己的标题');
-      assert.ok(result.userText.includes('- 家庭成员特长：姐姐缝扣子手巧，弟弟专拆遥控器'), '主题行带标题与摘要');
-      assert.ok(result.userText.includes('[原子记忆]'), '原子段要有自己的标题');
+      assert.ok(result.userText.includes('[Trí nhớ theo chủ đề]'), '主题段要有自己的标题');
+      assert.ok(result.userText.includes('- 家庭成员特长: 姐姐缝扣子手巧，弟弟专拆遥控器'), '主题行带标题与摘要');
+      assert.ok(result.userText.includes('[Trí nhớ chi tiết]'), '原子段要有自己的标题');
       assert.ok(result.userText.includes('[preference] 用户不吃香菜'), '原子记忆的 kind 与正文都要在');
       assert.ok(
-        result.userText.indexOf('[主题记忆]') < result.userText.indexOf('[原子记忆]'),
+        result.userText.indexOf('[Trí nhớ theo chủ đề]') < result.userText.indexOf('[Trí nhớ chi tiết]'),
         '主题段必须排在原子段之前',
       );
       assert.ok(result.userText.endsWith('\n\n介绍一下你的家人'), '用户原话仍在证据块之后');
@@ -285,7 +285,7 @@ describe('PowerContext —— 召回', () => {
       const result = await provider.recall?.(recallRequest(), new AbortController().signal);
       assert.ok(result, '一层失败不该让整轮召回作废');
       assert.ok(result.userText.includes('用户养了一只猫'));
-      assert.ok(!result.userText.includes('[主题记忆]'), '没有主题命中就不该出现主题段标题');
+      assert.ok(!result.userText.includes('[Trí nhớ theo chủ đề]'), '没有主题命中就不该出现主题段标题');
     } finally {
       await stub.close();
     }

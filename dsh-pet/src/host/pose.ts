@@ -40,15 +40,15 @@ export function normalizePoseInput(
   raw: unknown,
 ): { ok: true; pose: PoseInput } | { ok: false; reason: 'bad-request'; message: string } {
   const o = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : null;
-  if (!o) return { ok: false, reason: 'bad-request', message: '请求体必须是对象：{ x, y, facing }' };
+  if (!o) return { ok: false, reason: 'bad-request', message: 'Request body phải là object: { x, y, facing }' };
   if (typeof o.x !== 'number' || !Number.isFinite(o.x)) {
-    return { ok: false, reason: 'bad-request', message: 'x 必须是有限数字（归一化横坐标）' };
+    return { ok: false, reason: 'bad-request', message: 'x phải là số hữu hạn (tọa độ ngang đã chuẩn hóa)' };
   }
   if (typeof o.y !== 'number' || !Number.isFinite(o.y)) {
-    return { ok: false, reason: 'bad-request', message: 'y 必须是有限数字（归一化纵坐标）' };
+    return { ok: false, reason: 'bad-request', message: 'y phải là số hữu hạn (tọa độ dọc đã chuẩn hóa)' };
   }
   if (o.facing !== 'left' && o.facing !== 'right') {
-    return { ok: false, reason: 'bad-request', message: 'facing 必须是 left / right' };
+    return { ok: false, reason: 'bad-request', message: 'facing phải là left / right' };
   }
   return { ok: true, pose: { x: o.x, y: o.y, facing: o.facing } };
 }

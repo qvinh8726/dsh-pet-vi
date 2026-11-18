@@ -37,7 +37,7 @@ describe('buildMoreBranch —— 「更多」：label 唯一平铺，重名收�
       { owner: '小游戏', label: '弹弓' },
     ];
     assert.deepEqual(buildMoreBranch(items), {
-      label: '更多',
+      label: 'Thêm',
       children: [
         { label: '今日积分', action: 'third-party', owner: '状态桥' },
         { label: '弹弓', action: 'third-party', owner: '小游戏' },
@@ -51,7 +51,7 @@ describe('buildMoreBranch —— 「更多」：label 唯一平铺，重名收�
       { owner: '插件B', label: '签到' },
     ];
     assert.deepEqual(buildMoreBranch(items), {
-      label: '更多',
+      label: 'Thêm',
       children: [
         { label: '插件A', children: [{ label: '签到', action: 'third-party', owner: '插件A' }] },
         { label: '插件B', children: [{ label: '签到', action: 'third-party', owner: '插件B' }] },
@@ -67,7 +67,7 @@ describe('buildMoreBranch —— 「更多」：label 唯一平铺，重名收�
       { owner: '插件B', label: '查积分' },
     ];
     assert.deepEqual(buildMoreBranch(items), {
-      label: '更多',
+      label: 'Thêm',
       children: [
         {
           label: '插件A',
@@ -94,7 +94,7 @@ describe('buildMoreBranch —— 「更多」：label 唯一平铺，重名收�
       { owner: '插件B', label: '签到' },
     ];
     assert.deepEqual(buildMoreBranch(items), {
-      label: '更多',
+      label: 'Thêm',
       children: [
         { label: '插件A', children: [{ label: '签到', action: 'third-party', owner: '插件A' }] },
         { label: '弹弓', action: 'third-party', owner: '小游戏' },
@@ -111,11 +111,11 @@ describe('buildMoreBranch —— 「更多」：label 唯一平铺，重名收�
       ],
     };
     assert.deepEqual(buildMoreBranch(readMenuItems(data, 'desktop')), {
-      label: '更多',
+      label: 'Thêm',
       children: [{ label: '签到', action: 'third-party', owner: '插件B' }],
     });
     assert.deepEqual(buildMoreBranch(readMenuItems(data, 'web')), {
-      label: '更多',
+      label: 'Thêm',
       children: [{ label: '签到', action: 'third-party', owner: '插件A' }],
     });
   });

@@ -33,8 +33,8 @@ async function run(logger: StandaloneLogger, options: { port: number }): Promise
   // 包内默认配置缺失时宿主半侧每个请求都会失败，先给可操作的诊断。
   if (!existsSync(paths.defaultFile)) {
     logger.error(
-      `包内默认配置缺失：${paths.defaultFile}。若你是在直接跑源码（包根被解析成了 src/），` +
-        '请改用构建产物：npm run bundle 后 node lib/standalone.js（或 npm run standalone）。',
+      `Thiếu cấu hình mặc định trong gói: ${paths.defaultFile}. Nếu bạn đang chạy thẳng mã nguồn (gốc gói bị hiểu thành src/), ` +
+        'hãy dùng bản build: chạy npm run bundle rồi node lib/standalone.js (hoặc npm run standalone).',
     );
     process.exitCode = 1;
     return;
@@ -92,7 +92,7 @@ async function run(logger: StandaloneLogger, options: { port: number }): Promise
   const shutdown = async (reason: string): Promise<void> => {
     if (shuttingDown) return;
     shuttingDown = true;
-    logger.info(`收尾（${reason}）…`);
+    logger.info(`Đang dọn dẹp (${reason})…`);
     // 先释放插件注册的 effect（停 Helper、清周期定时器），再关服务。
     try {
       await context.dispose();
@@ -100,13 +100,13 @@ async function run(logger: StandaloneLogger, options: { port: number }): Promise
       await server.close();
       releaseRuntime();
     }
-    logger.info('已退出。');
+    logger.info('Đã thoát.');
   };
   const requestShutdown = (reason: string): void => {
     shutdown(reason)
       .then(() => process.exit(0))
       .catch((error: unknown) => {
-        logger.error(`收尾失败：${error instanceof Error ? error.message : String(error)}`);
+        logger.error(`Dọn dẹp thất bại: ${error instanceof Error ? error.message : String(error)}`);
         process.exit(1);
       });
   };
@@ -121,37 +121,37 @@ async function run(logger: StandaloneLogger, options: { port: number }): Promise
   let configSource = paths.userFile;
   try {
     pets = flattenPetList(readAllConfig(paths));
-    if (!existsSync(paths.userFile)) configSource = `${paths.userFile}（不存在 → 用包内默认）`;
+    if (!existsSync(paths.userFile)) configSource = `${paths.userFile} (không tồn tại → dùng mặc định trong gói)`;
   } catch (error) {
     logger.warn(
-      `读配置失败（服务照常运行，相关端点会显式报错）：${error instanceof Error ? error.message : String(error)}`,
+      `Đọc cấu hình thất bại (dịch vụ vẫn chạy bình thường, các endpoint liên quan sẽ báo lỗi rõ ràng): ${error instanceof Error ? error.message : String(error)}`,
     );
   }
   const desktopVisible = pets.filter(isDesktopVisible);
   for (const line of [
     '',
-    '===== dsh-pet 独立模式（不需要 DSH）=====',
-    `  插件        dsh-pet@${packageVersion(packageRoot)}  ${packageRoot}`,
-    `  路由        http://127.0.0.1:${server.port}${ROUTE_SEGMENT}/`,
-    `  配置        ${configSource}`,
-    `  宠物        ${describePets(pets)}`,
+    '===== dsh-pet chế độ độc lập (không cần DSH) =====',
+    `  Plugin          dsh-pet@${packageVersion(packageRoot)}  ${packageRoot}`,
+    `  Route           http://127.0.0.1:${server.port}${ROUTE_SEGMENT}/`,
+    `  Cấu hình        ${configSource}`,
+    `  Pet             ${describePets(pets)}`,
     desktopVisible.length === 0
-      ? '  桌面小窗    0 只：display 需要 desktop 或 both 才会出现透明小窗（服务仍在运行）'
-      : `  桌面小窗    ${desktopVisible.length} 只`,
+      ? '  Cửa sổ desktop  0 pet: display cần là desktop hoặc both thì mới hiện cửa sổ trong suốt (dịch vụ vẫn đang chạy)'
+      : `  Cửa sổ desktop  ${desktopVisible.length} pet`,
     ai.isReady()
-      ? '  AI          本机 API 已启用；自动碎碎念遵循设置页开关'
-      : '  AI          未配置或未启用，不发送模型请求；右键“打开 AI 设置”后在本机填写',
+      ? '  AI              Đã bật API trên máy; lẩm bẩm tự động theo công tắc ở trang cài đặt'
+      : '  AI              Chưa cấu hình hoặc chưa bật, không gửi yêu cầu tới mô hình; chuột phải chọn "Mở cài đặt AI" rồi nhập trên máy',
     ai.getSettings().service === 'custom'
-      ? '  余额        自定义服务商没有余额接口；要查余额就把服务商换成 DeepSeek 官方 / opencode Go / commandcode'
-      : `  余额        跟随服务商 ${serviceLabel(ai.getSettings().service)}，设置页点「查询余额」取数`,
-    '  不可用      会话工作状态 / DSH 系统通知',
-    '  退出        Ctrl+C、POST /shutdown，或桌面托盘菜单的「退出」',
+      ? '  Số dư           Nhà cung cấp tùy chỉnh không có API tra số dư; muốn tra số dư hãy đổi nhà cung cấp sang DeepSeek chính thức / opencode Go / commandcode'
+      : `  Số dư           Theo nhà cung cấp ${serviceLabel(ai.getSettings().service)}, bấm "Kiểm tra số dư" ở trang cài đặt để xem`,
+    '  Không khả dụng  Trạng thái làm việc của phiên / thông báo hệ thống DSH',
+    '  Thoát           Ctrl+C, POST /shutdown, hoặc mục "Thoát" trong menu khay hệ thống',
     '',
   ]) {
     logger.info(line);
   }
   if (context.failures.length > 0) {
-    logger.warn(`初始化期间有 ${context.failures.length} 项失败（见上方日志）；路由仍可用，相关端点会显式报错`);
+    logger.warn(`Có ${context.failures.length} mục khởi tạo thất bại (xem log phía trên); route vẫn dùng được, các endpoint liên quan sẽ báo lỗi rõ ràng`);
   }
 }
 

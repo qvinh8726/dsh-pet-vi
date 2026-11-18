@@ -247,7 +247,7 @@ export function createChatMemory(deps: ChatMemoryInput) {
     const found = findPetInstance(cfg, petId);
     // 宠物可能在「校验那次读」与这里之间被删（配置随时会变，两次读之间就是窗口）：
     // 明确失败、不生成不写 S——写下去就是一只已不存在宠物的幽灵叶子（常驻到进程重启）。
-    if (!found) return { ok: false, reason: 'unknown-pet', message: '没有这只桌宠：' + petId };
+    if (!found) return { ok: false, reason: 'unknown-pet', message: 'Không có pet này: ' + petId };
     // 每一类语音由自己的开关决定：周期调度看 voiceWhisperEnabled，手动触发（右键菜单、
     // 斜杠命令）看 voiceEnabled。叶子不带 voiceTo = 谁都不念，气泡照旧弹。
     const whisperVoiceOn = cfg.main?.voiceWhisperEnabled === true;
@@ -260,7 +260,7 @@ export function createChatMemory(deps: ChatMemoryInput) {
     // 点名了却没命中 = 配置写错或图已被删：明确失败，不静默换成另一张（点了 A 却看到 B 会以为坏了）。
     const forced = image === undefined ? undefined : matchMeme(pool, image);
     if (image !== undefined && forced === undefined) {
-      return { ok: false, reason: 'unknown-image', message: '表情包不在池内：' + image };
+      return { ok: false, reason: 'unknown-image', message: 'Meme không có trong kho: ' + image };
     }
     const meme = forced ?? (found.conf.whisperImageEnabled === true ? pickMeme(pool) : undefined);
     // 模型：条目配置的 whisperModel 优先（留空 = 不指定）；生成侧失败会回落到当前对话的模型重试一次
@@ -418,7 +418,7 @@ export function createChatMemory(deps: ChatMemoryInput) {
     const epochAtStart = deletedEpoch.get(petId) ?? 0;
     // 读上下文只占一次短锁：召回与模型调用都在锁外。
     const context = await withMemoryLock(() => readContext(petId, env));
-    if (context === null) return { ok: false, reason: 'unknown-pet', message: '没有这只桌宠：' + petId };
+    if (context === null) return { ok: false, reason: 'unknown-pet', message: 'Không có pet này: ' + petId };
     const { cfg, found, pool, actions, list, system } = context;
     // 记忆实现：配置里的 id 决定用谁；未注册的 id 在解析时就回落内置，这里补一条日志说明。
     const memoryConf = found.conf.memory;
@@ -538,7 +538,7 @@ export function createChatMemory(deps: ChatMemoryInput) {
       const cfg = readAllConfig(configPaths);
       const found = findPetInstance(cfg, petId);
       // 与对话同一支：宠物随时可能被删，明确失败，不在文件里留没人消费的分桶
-      if (!found) return { ok: false as const, reason: 'unknown-pet' as const, message: '没有这只桌宠：' + petId };
+      if (!found) return { ok: false as const, reason: 'unknown-pet' as const, message: 'Không có pet này: ' + petId };
       // 删除代数 +1：正在生成的那一轮据此放弃写回，避免「删完又冒出来」
       deletedEpoch.set(petId, (deletedEpoch.get(petId) ?? 0) + 1);
       const mem = await readMemory();

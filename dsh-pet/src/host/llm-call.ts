@@ -20,11 +20,11 @@ export const PET_CALL_IDENTITY = 'dsh-pet';
  */
 export function noTextReason(finish: unknown): string {
   const { kind, failure } = (finish ?? {}) as { kind?: unknown; failure?: unknown };
-  if (kind === 'aborted') return '生成已取消';
-  if (kind === 'max-tokens') return '输出达到上限，未产出正文';
-  if (kind !== 'error') return '模型未返回文本';
+  if (kind === 'aborted') return 'Đã hủy tạo nội dung';
+  if (kind === 'max-tokens') return 'Đầu ra chạm giới hạn, chưa sinh được nội dung';
+  if (kind !== 'error') return 'Mô hình không trả về văn bản';
   const { message, code } = (failure ?? {}) as { message?: unknown; code?: unknown };
   if (typeof message === 'string' && message.trim() !== '') return message;
   if (typeof code === 'string' && code.trim() !== '') return code;
-  return '未提供失败原因';
+  return 'Không rõ nguyên nhân lỗi';
 }

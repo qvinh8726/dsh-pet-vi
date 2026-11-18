@@ -16,23 +16,23 @@ const PROBE_MAX_CHARS = 40;
 
 /** 三项必填的提示文案；都填了返回 null。 */
 function missingField(baseUrl: string, model: string, apiKey: string): string | null {
-  if (!baseUrl) return '请先填写接口地址（Base URL）';
-  if (!model) return '请先填写模型名称';
-  if (!apiKey) return '请先填写 API 密钥';
+  if (!baseUrl) return 'Hãy nhập địa chỉ API (Base URL) trước';
+  if (!model) return 'Hãy nhập tên mô hình trước';
+  if (!apiKey) return 'Hãy nhập khóa API trước';
   return null;
 }
 
 /** 把探测失败翻成可操作的一句话；原始 message 只在兜底分支透出。 */
 function describeFailure(error: unknown, controller: AbortController): string {
-  if (controller.signal.aborted) return '连接超时（15 秒未响应）：请检查网络连通性或服务器状态';
-  if (isAuthenticationFailure(error)) return '身份验证失败 (HTTP 401/403)：请检查 API 密钥是否正确';
-  if (isRateLimitFailure(error)) return '请求受限或配额超限 (HTTP 429)：请检查 API 账户余额或调用频率';
+  if (controller.signal.aborted) return 'Hết thời gian kết nối (15 giây không phản hồi): hãy kiểm tra mạng hoặc trạng thái máy chủ';
+  if (isAuthenticationFailure(error)) return 'Xác thực thất bại (HTTP 401/403): hãy kiểm tra khóa API có đúng không';
+  if (isRateLimitFailure(error)) return 'Bị giới hạn yêu cầu hoặc vượt hạn mức (HTTP 429): hãy kiểm tra số dư tài khoản API hoặc tần suất gọi';
   const raw = error instanceof Error ? error.message : String(error);
-  if (raw.includes('404')) return '接口路径或模型不存在 (HTTP 404)：请检查接口地址（通常以 /v1 结尾）与模型名称';
+  if (raw.includes('404')) return 'Đường dẫn API hoặc mô hình không tồn tại (HTTP 404): hãy kiểm tra địa chỉ API (thường kết thúc bằng /v1) và tên mô hình';
   if (raw.includes('ECONNREFUSED') || raw.includes('fetch failed')) {
-    return '无法连接到目标服务器：请检查地址与端口是否正确、服务器是否正在运行';
+    return 'Không kết nối được tới máy chủ: hãy kiểm tra địa chỉ và cổng có đúng không, máy chủ có đang chạy không';
   }
-  return `连接失败：${raw}`;
+  return `Kết nối thất bại: ${raw}`;
 }
 
 /**
@@ -74,14 +74,14 @@ export async function testAiConnection(
     );
     let reply = '';
     for await (const chunk of probe) {
-      if (chunk.refusal) return { ok: false, message: '模型拒绝回答该测试请求' };
+      if (chunk.refusal) return { ok: false, message: 'Mô hình từ chối trả lời yêu cầu kiểm tra này' };
       if (!chunk.text) continue;
       reply += chunk.text;
       if (reply.length >= PROBE_MAX_CHARS) break;
     }
     return reply.trim()
-      ? { ok: true, message: '连接成功！模型响应正常。', reply: reply.trim() }
-      : { ok: true, message: '连接成功！接口已成功响应。', reply: '(模型返回了空白内容)' };
+      ? { ok: true, message: 'Kết nối thành công! Mô hình phản hồi bình thường.', reply: reply.trim() }
+      : { ok: true, message: 'Kết nối thành công! API đã phản hồi.', reply: '(Mô hình trả về nội dung trống)' };
   } catch (error) {
     return { ok: false, message: describeFailure(error, controller) };
   } finally {

@@ -23,7 +23,7 @@ function waitForFrame(video: HTMLVideoElement): Promise<void> {
  */
 export async function captureDisplayFrame(): Promise<EncodedImage> {
   const media = navigator.mediaDevices;
-  if (!media || typeof media.getDisplayMedia !== 'function') throw new Error('当前环境不支持截屏');
+  if (!media || typeof media.getDisplayMedia !== 'function') throw new Error('Không hỗ trợ chụp màn hình');
   const stream = await media.getDisplayMedia({ video: true, audio: false });
   try {
     const video = document.createElement('video');

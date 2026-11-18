@@ -64,7 +64,7 @@ describe('queryWeather —— 查询路径', () => {
       humidityPercent: 78,
       windKph: 11.2,
       code: 3,
-      summary: '阴',
+      summary: 'trời âm u',
       observedAt: '2026-11-11T20:30',
     });
     assert.ok(fake.calls[0].includes('geocoding-api.open-meteo.com'), '第一次应先查地名');
@@ -107,7 +107,7 @@ describe('queryWeather —— 查询路径', () => {
     const snapshot = await queryWeather('深圳市', { fetchImpl: fake.impl, sleep: NO_SLEEP });
 
     assert.equal(snapshot?.city, '深圳', '应拿到去掉后缀后的命中结果');
-    assert.equal(snapshot?.summary, '阴');
+    assert.equal(snapshot?.summary, 'trời âm u');
     assert.ok(decodeURIComponent(fake.calls[1]).includes('name=深圳'), '第二次搜索应是不带“市”的名字');
   });
 
@@ -118,7 +118,7 @@ describe('queryWeather —— 查询路径', () => {
     const snapshot = await queryWeather('扬州', { fetchImpl: fake.impl, sleep: NO_SLEEP });
 
     assert.equal(snapshot?.city, '扬州市', '应拿到补“市”后的命中结果');
-    assert.equal(snapshot?.summary, '阴');
+    assert.equal(snapshot?.summary, 'trời âm u');
     assert.ok(decodeURIComponent(fake.calls[1]).includes('name=扬州市'), '第二次搜索应是补了“市”的名字');
   });
 

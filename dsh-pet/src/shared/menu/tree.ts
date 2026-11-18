@@ -20,10 +20,10 @@ export const isSleepAllowedAction = (action: string | undefined): boolean =>
 
 /** 四个显示位置的菜单文案；键是 {@link DISPLAY_ORDER} 的元素，顺序以那边为准。 */
 const DISPLAY_LABELS: Readonly<Record<PetDisplay, string>> = {
-  web: '仅网页',
-  desktop: '仅桌面',
-  both: '两者',
-  none: '都不',
+  web: 'Chỉ trình duyệt',
+  desktop: 'Chỉ desktop',
+  both: 'Cả hai',
+  none: 'Ẩn',
 };
 
 /** 「显示位置」子菜单：两端注入同一份，文案与设置页的显示位置下拉框一致。
@@ -31,7 +31,7 @@ const DISPLAY_LABELS: Readonly<Record<PetDisplay, string>> = {
  *  「都不」是单向门（恢复入口是设置页），其余三个值都能从某一端改回来。
  *  右侧键帽由 `1`-`4` 数字键的同一份顺序派生，改顺序只改 {@link DISPLAY_ORDER}。 */
 export const displayMenuBranch = (): MenuBranch => ({
-  label: '显示位置',
+  label: 'Vị trí hiển thị',
   children: DISPLAY_ORDER.map((display, index): MenuLeaf => ({
     label: DISPLAY_LABELS[display],
     action: 'set-display',
@@ -41,7 +41,7 @@ export const displayMenuBranch = (): MenuBranch => ({
 });
 
 /** 第三方菜单项统一收在这个一级菜单下（宿主自己的菜单项不进这里）。 */
-export const MORE_MENU_LABEL = '更多';
+export const MORE_MENU_LABEL = 'Thêm';
 
 /** 从 /state 的 sections.menu.data 里读出本端要显示的第三方菜单项。
  *  target 等于本端身份或 both 才收；target 缺失或不认识时按 both 处理——老宿主没有这个字段，
@@ -98,9 +98,9 @@ export function buildMoreBranch(items: readonly MenuMoreItem[]): MenuBranch | nu
 
 /** 事件名 → 分类标签（无映射时用事件名本身）。 */
 const EVENT_LABELS: Record<string, string> = {
-  balance: '余额档位',
-  whisper: '碎碎念',
-  workStatus: '工作状态',
+  balance: 'Mức số dư',
+  whisper: 'Lẩm bẩm',
+  workStatus: 'Trạng thái làm việc',
 };
 
 /** 把动画名包成叶子。 */
@@ -110,11 +110,11 @@ export const leaf = (anim: string): MenuLeaf => ({ label: anim, anim });
 export function buildMenuTree(animations: Animations): MenuNode[] {
   const groups: MenuNode[] = [];
   const pools: Array<[string, string[]]> = [
-    ['待机', animations.idle],
-    ['转向', animations.turn],
-    ['拖拽', animations.drag],
-    ['点击回应', animations.clicks],
-    ['移动', animations.moves.actions.map((m) => m.name)],
+    ['Chờ', animations.idle],
+    ['Quay người', animations.turn],
+    ['Kéo', animations.drag],
+    ['Phản hồi khi bấm', animations.clicks],
+    ['Di chuyển', animations.moves.actions.map((m) => m.name)],
   ];
   for (const [label, pool] of pools) {
     if (pool.length) groups.push({ label, children: pool.map(leaf) });
@@ -136,7 +136,7 @@ export function buildMenuTree(animations: Animations): MenuNode[] {
     if (names.length) groups.push({ label: EVENT_LABELS[key] ?? key, children: names.map(leaf) });
   }
   if (!groups.length) return [];
-  return [{ label: '动作', children: groups }];
+  return [{ label: 'Động tác', children: groups }];
 }
 
 /** 该动画是否属于 noMirror 分类（文字类）：朝右镜像时点播前强制朝左，避免文字镜像。 */

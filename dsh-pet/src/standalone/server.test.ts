@@ -187,7 +187,7 @@ describe('createRequestListener —— 异常收口', () => {
     };
     const res = call(createRequestListener({ routes: [exploding], logger: silent, security }), '/dsh-pet-7340/config');
     assert.equal(res.status, 500);
-    assert.deepEqual(JSON.parse(res.body()), { error: '本机服务暂时无法处理请求' });
+    assert.deepEqual(JSON.parse(res.body()), { error: 'Dịch vụ trên máy tạm thời không xử lý được yêu cầu' });
   });
 
   test('handler 异步拒绝同样收口为 500', async () => {
@@ -201,7 +201,7 @@ describe('createRequestListener —— 异常收口', () => {
     const res = call(createRequestListener({ routes: [exploding], logger: silent, security }), '/dsh-pet-7340/config');
     await new Promise((accept) => setImmediate(accept));
     assert.equal(res.status, 500);
-    assert.match(res.body(), /本机服务暂时无法处理请求/);
+    assert.match(res.body(), /Dịch vụ trên máy tạm thời không xử lý được yêu cầu/);
   });
 
   test('头已发出的失败：断连而不是写坏响应（与插件 sendFile 的错误口径一致）', () => {

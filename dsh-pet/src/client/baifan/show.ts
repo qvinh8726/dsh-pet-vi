@@ -133,7 +133,7 @@ export function createShow(deps: ShowDeps): Show {
     const r = await transport.call('POST', '/anim?pet=' + enc(petId) + '&surface=web&lock=' + enc(lease), body);
     if (r.ok !== true) {
       lock?.noteFailure(r.reason);
-      throw new Error('点播失败：' + String(r.reason ?? 'unknown'));
+      throw new Error('Phát hoạt ảnh thất bại: ' + String(r.reason ?? 'unknown'));
     }
     return typeof r.playbackId === 'string' ? r.playbackId : null;
   }
@@ -325,7 +325,7 @@ export function createShow(deps: ShowDeps): Show {
   async function phaseWalk(): Promise<void> {
     phase = 'walk';
     const geom = currentGeometry();
-    if (geom === null) throw new Error('这一页找不到这只宠物');
+    if (geom === null) throw new Error('Không tìm thấy pet này trên trang');
     groundNormY = bottomNormY(geom);
     const margin = Math.max(60, geom.w / 2);
     const targetPx = margin + Math.random() * Math.max(10, window.innerWidth - margin * 2);
@@ -403,7 +403,7 @@ export function createShow(deps: ShowDeps): Show {
     say(pickLine(LINES.drop), 2200);
     while (alive() && gen === showGen) {
       const geom = currentGeometry();
-      if (geom === null) throw new Error('这一页找不到这只宠物');
+      if (geom === null) throw new Error('Không tìm thấy pet này trên trang');
       groundNormY = bottomNormY(geom);
       const target = scene.nearest(geom.cx, facing);
       const eatPx = CFG.eatPx * (geom.w / CFG.refWidth);
@@ -449,13 +449,13 @@ export function createShow(deps: ShowDeps): Show {
       if (error instanceof Halted) {
         // 正常收场（丢锁 / 卸载）
       } else if (lock?.isLost() === true) {
-        scene.toast('锁丢了，表演结束');
+        scene.toast('Mất khóa, kết thúc màn diễn');
       } else {
         scene.toast(error instanceof Error ? error.message : String(error));
         console.warn('[dsh-pet] 吃白饭异常', error);
       }
     } finally {
-      await halt(lock?.isLost() === true ? '用户接管，已收场' : '');
+      await halt(lock?.isLost() === true ? 'Chủ nhân đã tiếp quản, kết thúc màn diễn' : '');
     }
   }
 
@@ -483,7 +483,7 @@ export function createShow(deps: ShowDeps): Show {
   /** 开一场；先彻底收掉上一场（含放锁），再起新的。 */
   function start(nextPetId: string, assets: ActivityAssets): void {
     if (running || lock?.id() != null) {
-      void halt('重新开始').then(() => begin(nextPetId, assets));
+      void halt('Bắt đầu lại').then(() => begin(nextPetId, assets));
       return;
     }
     begin(nextPetId, assets);
@@ -498,7 +498,7 @@ export function createShow(deps: ShowDeps): Show {
     lock?.stopRenew();
     lock = createLock(transport, petId, alive, scene.toast);
     transport.attach(new AbortController());
-    scene.toast('吃白饭 —— 开饭了');
+    scene.toast('Ăn cơm chực - Tới giờ ăn rồi');
     void runShow();
   }
 

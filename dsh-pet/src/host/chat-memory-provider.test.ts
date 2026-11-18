@@ -66,7 +66,7 @@ describe('listChatMemoryProviders', () => {
   beforeEach(() => resetChatMemoryProviders());
 
   test('内置恒在首位，第三方按注册顺序追加', () => {
-    assert.deepEqual(listChatMemoryProviders(), { providers: [{ id: NATIVE_MEMORY_ID, name: '内置记忆' }] });
+    assert.deepEqual(listChatMemoryProviders(), { providers: [{ id: NATIVE_MEMORY_ID, name: 'Trí nhớ tích hợp' }] });
     registerChatMemoryProvider(provider('a'));
     registerChatMemoryProvider(provider('b'));
     assert.deepEqual(

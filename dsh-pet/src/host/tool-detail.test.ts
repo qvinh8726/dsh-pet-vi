@@ -28,68 +28,68 @@ function oneOf(actual: string | null, expected: readonly string[]): void {
 describe('工具文案 —— 每工具 3 句候选，且带具体对象', () => {
   test('read：文件名必须出现在句子里', () => {
     oneOf(toolDetailFromEvent(call('read', { file_path: 'a.ts' })), [
-      '翻翻 a.ts 看看嘛',
-      'a.ts 里面写了啥呢',
-      '我先瞅瞅 a.ts 哈',
+      'Lật xem a.ts nào',
+      'a.ts viết gì thế nhỉ',
+      'Để em ngó a.ts đã',
     ]);
   });
 
   test('read_image：与 read 用不同的文案（图片 ≠ 文本）', () => {
     oneOf(toolDetailFromEvent(call('read_image', { file_path: 'logo.png' })), [
-      '这 logo.png 长啥样呀',
-      '让我瞧瞧 logo.png 呗',
-      'logo.png 是张什么图呢',
+      'logo.png trông thế nào ta',
+      'Cho em xem logo.png với',
+      'logo.png là ảnh gì nhỉ',
     ]);
   });
 
   test('edit：长路径压成文件名', () => {
     oneOf(toolDetailFromEvent(call('edit', { file_path: 'D:\\Projects\\Web\\pet\\dsh-pet\\src\\host\\index.ts' })), [
-      'index.ts 得改改啦',
-      '我来动动 index.ts 哦',
-      'index.ts 这里要修一下',
+      'index.ts phải sửa chút rồi',
+      'Để em chỉnh index.ts nha',
+      'Chỗ index.ts này cần sửa',
     ]);
   });
 
   test('write / glob / grep / present / skill / web_search / web_fetch 都能出句', () => {
     oneOf(toolDetailFromEvent(call('write', { file_path: 'notes.md' })), [
-      '写点东西到 notes.md',
-      'notes.md 马上写出来',
-      '给 notes.md 添点料',
+      'Viết chút gì vào notes.md',
+      'notes.md viết xong ngay đây',
+      'Thêm chút đồ vào notes.md',
     ]);
     oneOf(toolDetailFromEvent(call('glob', { pattern: '*.ts' })), [
-      '*.ts 都躲哪儿了呢',
-      '找找 *.ts 在不在',
-      '*.ts 藏在哪个角落呀',
+      '*.ts trốn đâu hết rồi',
+      'Tìm xem *.ts có không',
+      '*.ts nấp ở góc nào ta',
     ]);
     oneOf(toolDetailFromEvent(call('grep', { pattern: 'TODO' })), [
-      'TODO 藏哪儿了呢',
-      '搜搜 TODO 在哪',
-      '哪儿有 TODO 呀',
+      'TODO giấu ở đâu nhỉ',
+      'Lục xem TODO ở đâu',
+      'Chỗ nào có TODO ta',
     ]);
     oneOf(toolDetailFromEvent(call('present', { files: [{ path: 'a.png' }] })), [
-      '给你看 a.png 哦',
-      'a.png 拿来给你瞧瞧',
-      '喏，a.png 在这儿',
+      'Cho xem a.png nè',
+      'a.png đây, xem thử nha',
+      'Nè, a.png ở đây',
     ]);
     oneOf(toolDetailFromEvent(call('skill', { name: 'git-commit' })), [
-      '学个新本事 git-commit',
-      'git-commit 这招得记住',
-      '把 git-commit 学起来',
+      'Học chiêu mới git-commit',
+      'Chiêu git-commit phải nhớ kỹ',
+      'Học luôn git-commit thôi',
     ]);
     oneOf(toolDetailFromEvent(call('web_search', { queries: ['electron'] })), [
-      '我去查查 electron',
-      'electron 得搜搜才知道',
-      '上网问问 electron 吧',
+      'Em đi tra electron đây',
+      'electron phải tra mới biết',
+      'Lên mạng hỏi electron thôi',
     ]);
     oneOf(toolDetailFromEvent(call('web_fetch', { url: 'https://github.com/x/y' })), [
-      '去 github.com 瞅瞅有啥',
-      'github.com 这页我翻翻',
-      '看看 github.com 上写了啥',
+      'Qua github.com xem có gì',
+      'Lật xem trang github.com',
+      'Xem github.com viết gì nào',
     ]);
   });
 
   test('workflow：整句不带对象也能出（不需要目标）', () => {
-    oneOf(toolDetailFromEvent(call('workflow')), ['把活排个序，开工咯', '几件事一起安排上', '按顺序一件件来']);
+    oneOf(toolDetailFromEvent(call('workflow')), ['Xếp việc theo thứ tự, bắt đầu nè', 'Lên lịch mấy việc cùng lúc', 'Làm lần lượt từng việc']);
   });
 
   test('拿不到目标 → null（不覆盖已有文案，也不吐半句话）', () => {
@@ -101,50 +101,50 @@ describe('工具文案 —— 每工具 3 句候选，且带具体对象', () =>
 describe('pwsh —— 命令 / 子命令查表', () => {
   test('有语义的命令：cd / git 走表', () => {
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'cd D:\\Projects\\Web\\pet' })), [
-      '先把位置挪一挪',
-      '切到那个目录去',
-      '挪个地方继续干活',
+      'Dời chỗ một chút đã',
+      'Chuyển sang thư mục kia',
+      'Đổi chỗ làm tiếp nào',
     ]);
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'git status -s' })), [
-      '看看现在改了些什么',
-      '查查工作区干不干净',
-      '目前是啥状况呢',
+      'Xem giờ đã sửa những gì',
+      'Xem thư mục làm việc sạch chưa',
+      'Tình hình hiện tại sao rồi',
     ]);
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'git push origin main' })), [
-      '该推上去了吧，我来',
-      '推送一下，交给我',
-      '该让远端知道了',
+      'Đến lúc đẩy lên rồi, để em',
+      'Push một cái, giao em',
+      'Phải cho remote biết rồi',
     ]);
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'git log --oneline -3' })), [
-      '让我康康你的提交历史',
-      '翻翻最近都提交了啥',
-      '看看这些天干了什么',
+      'Để em xem lịch sử commit nha',
+      'Lật xem gần đây commit gì',
+      'Xem mấy hôm nay làm gì',
     ]);
   });
 
   test('git 没命中子命令 → 用通用 git 文案', () => {
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'git frobnicate' })), [
-      '折腾折腾 git 仓库',
-      '跟 git 打个交道',
-      'git 这边动一动',
+      'Vọc vạch repo git',
+      'Làm việc với git chút',
+      'Bên git động đậy chút',
     ]);
   });
 
   test('没有语义的命令（npm / python / node）→ 兜底，带上命令名', () => {
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'npm test' })), [
-      '跑一下 npm 咯',
-      'npm 跑起来了',
-      '让 npm 干点活',
+      'Chạy npm chút nha',
+      'npm chạy rồi nè',
+      'Cho npm làm việc nào',
     ]);
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'python train.py --epochs 10' })), [
-      '跑一下 python 咯',
-      'python 跑起来了',
-      '让 python 干点活',
+      'Chạy python chút nha',
+      'python chạy rồi nè',
+      'Cho python làm việc nào',
     ]);
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'node script.js' })), [
-      '跑一下 node 咯',
-      'node 跑起来了',
-      '让 node 干点活',
+      'Chạy node chút nha',
+      'node chạy rồi nè',
+      'Cho node làm việc nào',
     ]);
   });
 });
@@ -170,7 +170,7 @@ describe('安全与健壮性', () => {
     const detail = toolDetailFromEvent(
       call('pwsh', { command: 'curl -H "Authorization: Bearer sk-live-secret" https://api.example.com' }),
     );
-    oneOf(detail, ['去问问接口有没有人', '敲敲门看看通不通', '请求一下那个地址']);
+    oneOf(detail, ['Hỏi thử API có ai không', 'Gõ cửa xem có thông không', 'Gửi request tới địa chỉ đó']);
     assert.equal(String(detail).includes('sk-live-secret'), false, '凭据不上屏');
     assert.equal(String(detail).includes('api.example.com'), false, '参数不上屏');
   });
@@ -185,26 +185,26 @@ describe('安全与健壮性', () => {
 
   test('原型链上的名字不命中表：constructor / toString / __proto__ 按未知处理', () => {
     for (const name of ['constructor', 'toString', '__proto__', 'valueOf']) {
-      assert.equal(toolDetailFromEvent(call(name)), '这工具是干嘛的', name);
+      assert.equal(toolDetailFromEvent(call(name)), 'Công cụ này để làm gì ta', name);
     }
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'constructor' })), [
-      '跑一下 constructor 咯',
-      'constructor 跑起来了',
-      '让 constructor 干点活',
+      'Chạy constructor chút nha',
+      'constructor chạy rồi nè',
+      'Cho constructor làm việc nào',
     ]);
     // 命令表同理：`git constructor` 命中通用 git 文案，不把 `constructor` 当子命令
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'git constructor' })), [
-      '折腾折腾 git 仓库',
-      '跟 git 打个交道',
-      'git 这边动一动',
+      'Vọc vạch repo git',
+      'Làm việc với git chút',
+      'Bên git động đậy chút',
     ]);
   });
 
   test('arguments 直接是对象（非字符串）也认', () => {
     oneOf(toolDetailFromEvent({ data: { name: 'read', arguments: { file_path: 'x/y.ts' } } }), [
-      '翻翻 x/y.ts 看看嘛',
-      'x/y.ts 里面写了啥呢',
-      '我先瞅瞅 x/y.ts 哈',
+      'Lật xem x/y.ts nào',
+      'x/y.ts viết gì thế nhỉ',
+      'Để em ngó x/y.ts đã',
     ]);
   });
 
@@ -232,44 +232,44 @@ describe('目标过长 —— 换一句不带名字的氛围兜底', () => {
   test('grep 的正则太长（现场截图那条）→ 不塞进句子', () => {
     assert.equal(
       toolDetailFromEvent(call('grep', { pattern: 'WORK_STATE_GAP_MS|busyFlip|workFlushTimer' })),
-      '到处翻翻看',
+      'Lục lọi khắp nơi nè',
     );
   });
 
   test('文件名太长（超过 20 码点）→ 该工具的兜底句', () => {
-    assert.equal(toolDetailFromEvent(call('read', { file_path: 'work-status-lifecycle.test.ts' })), '翻翻代码看看');
+    assert.equal(toolDetailFromEvent(call('read', { file_path: 'work-status-lifecycle.test.ts' })), 'Lật code ra xem nào');
     assert.equal(
       toolDetailFromEvent(call('read_image', { file_path: 'some-very-long-image-name.png' })),
-      '看看这张图是啥',
+      'Xem ảnh này là gì nào',
     );
   });
 
   test('边界：20 码点保留，21 码点回落', () => {
     const twenty = 'a'.repeat(20);
     oneOf(toolDetailFromEvent(call('read', { file_path: twenty })), [
-      `翻翻 ${twenty} 看看嘛`,
-      `${twenty} 里面写了啥呢`,
-      `我先瞅瞅 ${twenty} 哈`,
+      `Lật xem ${twenty} nào`,
+      `${twenty} viết gì thế nhỉ`,
+      `Để em ngó ${twenty} đã`,
     ]);
-    assert.equal(toolDetailFromEvent(call('read', { file_path: 'a'.repeat(21) })), '翻翻代码看看');
+    assert.equal(toolDetailFromEvent(call('read', { file_path: 'a'.repeat(21) })), 'Lật code ra xem nào');
   });
 
   test('命令名太长 → 不带名字的兜底', () => {
-    assert.equal(toolDetailFromEvent(call('pwsh', { command: 'Get-NetTCPConnectionDetail' })), '跑一个命令咯');
+    assert.equal(toolDetailFromEvent(call('pwsh', { command: 'Get-NetTCPConnectionDetail' })), 'Chạy một lệnh nè');
   });
 
   test('短命令名仍然上屏（npm / python 这种有信息量）', () => {
     oneOf(toolDetailFromEvent(call('pwsh', { command: 'npm test' })), [
-      '跑一下 npm 咯',
-      'npm 跑起来了',
-      '让 npm 干点活',
+      'Chạy npm chút nha',
+      'npm chạy rồi nè',
+      'Cho npm làm việc nào',
     ]);
   });
 });
 
 describe('兜底与跳过', () => {
   test('未知工具 → 一句氛围话，不报工具名', () => {
-    assert.equal(toolDetailFromEvent(call('frobnicate')), '这工具是干嘛的');
+    assert.equal(toolDetailFromEvent(call('frobnicate')), 'Công cụ này để làm gì ta');
   });
 
   test('语义已由别处表达的工具 → null（不许盖掉更具体的文案）', () => {

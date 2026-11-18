@@ -30,15 +30,15 @@ describe('formatStamp —— 消息时间展示', () => {
   });
 
   test('昨天 → 前缀「昨天」', () => {
-    assert.equal(formatStamp(at(2026, 10, 27, 23, 5, 9), NOW, t), '昨天 23:05:09');
+    assert.equal(formatStamp(at(2026, 10, 27, 23, 5, 9), NOW, t), 'Hôm qua 23:05:09');
   });
 
   test('同年更早 → 补月日', () => {
-    assert.equal(formatStamp(at(2026, 3, 1, 9, 0, 0), NOW, t), '3月1日 09:00:00');
+    assert.equal(formatStamp(at(2026, 3, 1, 9, 0, 0), NOW, t), '1/3 09:00:00');
   });
 
   test('跨年 → 补年份', () => {
-    assert.equal(formatStamp(at(2025, 12, 31, 23, 59, 0), NOW, t), '2025年12月31日 23:59:00');
+    assert.equal(formatStamp(at(2025, 12, 31, 23, 59, 0), NOW, t), '31/12/2025 23:59:00');
   });
 
   test('没有时间（0 / 非法）→ 空串', () => {

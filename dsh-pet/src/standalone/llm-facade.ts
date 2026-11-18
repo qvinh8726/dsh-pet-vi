@@ -63,7 +63,7 @@ export function createOfflineLlm(): LlmFacade {
       [Symbol.asyncIterator](): AsyncIterator<never> {
         return {
           next: async (): Promise<IteratorResult<never>> => {
-            throw new Error('dsh-pet standalone: 独立模式未接入模型（碎碎念/对话不可用）');
+            throw new Error('dsh-pet standalone: chế độ độc lập chưa kết nối mô hình (không dùng được lẩm bẩm/trò chuyện)');
           },
         };
       },

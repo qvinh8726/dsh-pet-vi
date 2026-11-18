@@ -36,7 +36,7 @@ function dispatch(
     }
     if (pathname === '/' || pathname === '/health') {
       if (method !== 'GET' && method !== 'HEAD') {
-        rejectRequest(res, 405, '仅支持 GET');
+        rejectRequest(res, 405, 'Chỉ hỗ trợ GET');
         return;
       }
       sendJson(res, 200, options.status?.() ?? { name: 'dsh-pet-standalone' }, true);
@@ -44,7 +44,7 @@ function dispatch(
     }
     if (pathname === '/shutdown') {
       if (method !== 'POST') {
-        rejectRequest(res, 405, '停机请使用 POST');
+        rejectRequest(res, 405, 'Muốn dừng dịch vụ hãy dùng POST');
         return;
       }
       if (shutdownSecurity) {
@@ -54,7 +54,7 @@ function dispatch(
           !/^[A-Za-z0-9_-]{43}$/.test(supplied) ||
           !timingSafeEqual(Buffer.from(supplied), Buffer.from(shutdownSecurity.token))
         ) {
-          rejectRequest(res, 403, '停机需要提供令牌');
+          rejectRequest(res, 403, 'Dừng dịch vụ cần có token');
           return;
         }
       }
@@ -69,12 +69,12 @@ function dispatch(
     };
     if (pathname === '/standalone-ai/icon.png') {
       if (method !== 'GET' && method !== 'HEAD') {
-        rejectRequest(res, 405, '仅支持 GET');
+        rejectRequest(res, 405, 'Chỉ hỗ trợ GET');
         return;
       }
       const icon = readSettingsIcon();
       if (!icon) {
-        rejectRequest(res, 404, '图标缺失');
+        rejectRequest(res, 404, 'Thiếu biểu tượng');
         return;
       }
       sendIcon(res, icon);
@@ -82,13 +82,13 @@ function dispatch(
     }
     if (pathname === '/standalone-ai/chat-panel.js') {
       if (method !== 'GET' && method !== 'HEAD') {
-        rejectRequest(res, 405, '仅支持 GET');
+        rejectRequest(res, 405, 'Chỉ hỗ trợ GET');
         return;
       }
       // 构建产物随包发布；缺失只可能是没跑 bundle，明确回 404 而不是给空脚本。
       const chatPanel = readChatPanelScript();
       if (chatPanel === undefined) {
-        rejectRequest(res, 404, '对话面板脚本缺失，请重新构建（npm run bundle）');
+        rejectRequest(res, 404, 'Thiếu script khung trò chuyện, hãy build lại (npm run bundle)');
         return;
       }
       sendAsset(res, chatPanel, 'text/javascript');
@@ -97,7 +97,7 @@ function dispatch(
     const asset = assets[pathname];
     if (asset) {
       if (method !== 'GET' && method !== 'HEAD') {
-        rejectRequest(res, 405, '仅支持 GET');
+        rejectRequest(res, 405, 'Chỉ hỗ trợ GET');
         return;
       }
       sendAsset(res, asset[0], asset[1]);
@@ -123,7 +123,7 @@ function dispatch(
     if (!route) {
       res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
       res.end(
-        `dsh-pet-standalone: 没有匹配的路由（已注册：${options.routes.map((item) => item.path).join(', ') || '无'}）`,
+        `dsh-pet-standalone: không có route nào khớp (đã đăng ký: ${options.routes.map((item) => item.path).join(', ') || 'không có'})`,
       );
       return;
     }
@@ -152,7 +152,7 @@ export function createRequestListener(
     try {
       pathname = new URL(req.url ?? '/', 'http://127.0.0.1').pathname;
     } catch {
-      rejectRequest(res, 400, '请求地址无效');
+      rejectRequest(res, 400, 'Địa chỉ yêu cầu không hợp lệ');
       return;
     }
     secureResponse(res, pathname);
@@ -199,7 +199,7 @@ async function bindFirstFree(server: HttpServer, preferred: number, logger: Stan
       if ((error as NodeJS.ErrnoException).code !== 'EADDRINUSE') throw error;
     }
   }
-  throw new Error(`从 ${preferred} 起连续 ${PORT_SCAN_LIMIT} 个端口都被占用`);
+  throw new Error(`${PORT_SCAN_LIMIT} cổng liên tiếp tính từ ${preferred} đều đã bị chiếm`);
 }
 
 /**

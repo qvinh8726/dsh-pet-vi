@@ -320,7 +320,7 @@ test('public settings are an allowlist even if backend accidentally includes cre
 });
 
 test('settings shell is accessible, self contained, and never saves browser secrets', () => {
-  assert.match(settingsPage, /lang="zh-CN"/);
+  assert.match(settingsPage, /lang="vi"/);
   assert.match(settingsPage, /type="password"/);
   assert.match(settingsPage, /aria-live="polite"/);
   assert.match(settingsPage, /data-tab="config"/);
@@ -337,7 +337,7 @@ test('启动：地址片段被清掉，密钥框清空并显示已保存', async
   const page = await setupPage();
   assert.equal(page.stripped(), '/standalone-ai/');
   assert.equal(page.element('apiKey').value, '');
-  assert.equal(page.element('key-state').textContent, '已保存 · 不回显');
+  assert.equal(page.element('key-state').textContent, 'Đã lưu · không hiển thị lại');
   assert.ok(
     page.aiRequests().every(({ options }) => options.headers['X-DSH-Pet-Token'] === 'process-capability'),
     'AI 请求必须带本次运行的访问令牌',
@@ -397,7 +397,7 @@ test('删除密钥：先弹确认框，取消不发请求，确认才提交 clea
   await settle();
   assert.equal(page.lastAiBody().clearKey, true);
   assert.equal(page.lastAiBody().service, 'deepseek-official', '删的必须是用户当前看到的这家');
-  assert.equal(page.element('key-state').textContent, '尚未设置');
+  assert.equal(page.element('key-state').textContent, 'Chưa thiết lập');
   assert.equal(page.element('key-actions').hidden, true, '没有密钥时不再显示删除入口');
 });
 
@@ -416,7 +416,7 @@ test('拉取模型：用表单草稿请求端点，选中后写回输入框并�
     apiKey: 'draft-key',
   });
   assert.equal(modelRequests()[0].options.headers['X-DSH-Pet-Token'], 'process-capability');
-  assert.match(page.element('model-result').textContent, /已拉取 2 个模型/);
+  assert.match(page.element('model-result').textContent, /Đã lấy 2 mô hình/);
   assert.equal(page.element('model').value, 'x', '拉取本身不得改动已填的模型');
 
   const menus = page.body.children.filter((kid) => kid.className === 'selectMenu');

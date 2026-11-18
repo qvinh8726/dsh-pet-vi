@@ -40,7 +40,7 @@ export function settingsHandler(
   let count = 0;
   return async (req, res) => {
     if (!ai) {
-      rejectRequest(res, 503, '本机 AI 设置尚未就绪');
+      rejectRequest(res, 503, 'Cài đặt AI trên máy chưa sẵn sàng');
       return;
     }
     if (req.method === 'GET') {
@@ -48,7 +48,7 @@ export function settingsHandler(
       return;
     }
     if (req.method !== 'POST') {
-      rejectRequest(res, 405, '仅支持 GET 或 POST');
+      rejectRequest(res, 405, 'Chỉ hỗ trợ GET hoặc POST');
       return;
     }
     if (Date.now() - windowStart >= 60000) {
@@ -58,18 +58,18 @@ export function settingsHandler(
     count += 1;
     // 保存是重操作，按一分钟窗口限流，避免设置页反复重试打爆磁盘。
     if (count > 20) {
-      rejectRequest(res, 429, '保存过于频繁，请稍后再试');
+      rejectRequest(res, 429, 'Lưu quá nhiều lần, vui lòng thử lại sau');
       return;
     }
     if (req.headers['content-type']?.split(';')[0].trim().toLowerCase() !== 'application/json') {
-      rejectRequest(res, 415, '请使用 JSON 保存设置');
+      rejectRequest(res, 415, 'Hãy dùng JSON để lưu cài đặt');
       return;
     }
     try {
       const input = validateSettings(await readJsonBody(req));
       sendJson(res, 200, publicSettings(await ai.saveSettings(input)));
     } catch {
-      rejectRequest(res, 400, '设置未保存：请检查接口地址、模型名称、密钥和数值范围');
+      rejectRequest(res, 400, 'Chưa lưu cài đặt: hãy kiểm tra địa chỉ API, tên mô hình, khóa API và phạm vi giá trị');
     }
   };
 }
@@ -84,15 +84,15 @@ export function testHandler(
 ): (req: IncomingMessage, res: ServerResponse) => Promise<void> {
   return async (req, res) => {
     if (req.method !== 'POST') {
-      rejectRequest(res, 405, '仅支持 POST');
+      rejectRequest(res, 405, 'Chỉ hỗ trợ POST');
       return;
     }
     try {
       const input = asDraft(await readJsonBody(req));
       if (ai?.testConnection) sendJson(res, 200, await ai.testConnection(input));
-      else sendJson(res, 200, { ok: false, message: '当前环境未配置测试能力' });
+      else sendJson(res, 200, { ok: false, message: 'Môi trường hiện tại chưa hỗ trợ kiểm tra kết nối' });
     } catch {
-      sendJson(res, 400, { ok: false, message: '请求格式无效' });
+      sendJson(res, 400, { ok: false, message: 'Định dạng yêu cầu không hợp lệ' });
     }
   };
 }
@@ -107,17 +107,17 @@ export function modelsHandler(
 ): (req: IncomingMessage, res: ServerResponse) => Promise<void> {
   return async (req, res) => {
     if (req.method !== 'POST') {
-      rejectRequest(res, 405, '仅支持 POST');
+      rejectRequest(res, 405, 'Chỉ hỗ trợ POST');
       return;
     }
     if (!ai?.discoverModels) {
-      sendJson(res, 200, { ok: false, code: 'input', message: '当前环境未配置模型清单能力' });
+      sendJson(res, 200, { ok: false, code: 'input', message: 'Môi trường hiện tại chưa hỗ trợ lấy danh sách mô hình' });
       return;
     }
     try {
       sendJson(res, 200, await ai.discoverModels(asDraft(await readJsonBody(req))));
     } catch {
-      sendJson(res, 400, { ok: false, code: 'input', message: '请求格式无效' });
+      sendJson(res, 400, { ok: false, code: 'input', message: 'Định dạng yêu cầu không hợp lệ' });
     }
   };
 }
@@ -134,7 +134,7 @@ export function balanceHandler(
 ): (req: IncomingMessage, res: ServerResponse) => Promise<void> {
   return async (req, res) => {
     if (req.method !== 'POST') {
-      rejectRequest(res, 405, '仅支持 POST');
+      rejectRequest(res, 405, 'Chỉ hỗ trợ POST');
       return;
     }
     if (!ai?.queryBalance) {
@@ -144,7 +144,7 @@ export function balanceHandler(
     try {
       sendJson(res, 200, await ai.queryBalance());
     } catch {
-      sendJson(res, 200, { ok: false, provider: '', reason: 'fetch-error', message: '余额查询失败' });
+      sendJson(res, 200, { ok: false, provider: '', reason: 'fetch-error', message: 'Tra số dư thất bại' });
     }
   };
 }

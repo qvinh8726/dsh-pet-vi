@@ -212,9 +212,9 @@ export async function ensureElectronDownload(options: EnsureElectronOptions = {}
   const startedAt = Date.now();
 
   if (existsSync(exe)) {
-    info(`Electron cache is empty or not a regular file: ${exe}`, 'Electron 缓存无效，准备重新下载');
+    info(`Electron cache is empty or not a regular file: ${exe}`, 'Bộ nhớ đệm Electron không hợp lệ, chuẩn bị tải lại');
   }
-  info(`Electron not found, downloading v${version} (${PLAT}-${process.arch}) ...`, `正在下载 Electron ${version}`);
+  info(`Electron not found, downloading v${version} (${PLAT}-${process.arch}) ...`, `Đang tải Electron ${version}`);
 
   try {
     // 目录创建也可能失败（权限不足、同名文件等），与下载失败一样降级到浏览器宠物。
@@ -248,12 +248,12 @@ export async function ensureElectronDownload(options: EnsureElectronOptions = {}
             const doneMb = (progress.transferred / 1024 / 1024).toFixed(1);
             const totalMb = (progress.total / 1024 / 1024).toFixed(1);
             const percent = Math.min(100, Math.floor((progress.transferred / progress.total) * 100));
-            info(`downloading ${doneMb}MB / ${totalMb}MB`, `Electron 下载 ${percent}% · ${doneMb}/${totalMb}MB`);
+            info(`downloading ${doneMb}MB / ${totalMb}MB`, `Đang tải Electron ${percent}% · ${doneMb}/${totalMb}MB`);
           },
         },
       });
       const seconds = ((Date.now() - startedAt) / 1000).toFixed(1);
-      info(`download complete (${seconds}s), extracting to ${targetDir} ...`, `下载完成（${seconds}s），正在解压`);
+      info(`download complete (${seconds}s), extracting to ${targetDir} ...`, `Tải xong (${seconds}s), đang giải nén`);
       // 解压用官方 extract-zip（electron 43 官方安装同款）：纯 Node + native binding，跨平台一致，
       // 正确处理 symlink 与文件权限，不需要系统 unzip/tar/powershell。
       // 必须动态 import：该包是 N-API 原生模块，预编译产物没有 Android target，静态 import 会在模块
@@ -264,14 +264,14 @@ export async function ensureElectronDownload(options: EnsureElectronOptions = {}
         throw new Error(`Electron zip extracted, but ${ELECTRON_REL} is missing, empty or not a regular file`);
       }
       const readySeconds = ((Date.now() - startedAt) / 1000).toFixed(1);
-      info(`ready in ${readySeconds}s: ${exe}`, `Electron 就绪（${readySeconds}s），正在启动桌宠`, true);
+      info(`ready in ${readySeconds}s: ${exe}`, `Electron đã sẵn sàng (${readySeconds}s), đang khởi động pet`, true);
       return exe;
     } finally {
       clearTimeout(timer);
     }
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error);
-    fail(`ensure failed: ${reason}`, `Electron 下载失败：${reason}`);
+    fail(`ensure failed: ${reason}`, `Tải Electron thất bại: ${reason}`);
     warn('desktop pet unavailable. Set DSH_PET_ELECTRON_PATH to an existing Electron, or retry later.');
     return undefined;
   }

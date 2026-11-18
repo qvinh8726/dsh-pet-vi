@@ -36,14 +36,14 @@ describe('envBubbleView —— 有天气', () => {
 
   test('三行键值按体感 / 湿度 / 风速的顺序，数值都带单位', () => {
     assert.deepEqual(envBubbleView(WITH_WEATHER).rows, [
-      { label: '体感', value: '14.5°C' },
-      { label: '湿度', value: '76%' },
-      { label: '风速', value: '0.8 km/h' },
+      { label: 'Cảm giác', value: '14.5°C' },
+      { label: 'Độ ẩm', value: '76%' },
+      { label: 'Tốc độ gió', value: '0.8 km/h' },
     ]);
   });
 
   test('脚注取观测时刻的时分', () => {
-    assert.equal(envBubbleView(WITH_WEATHER).footer, '观测 08:45');
+    assert.equal(envBubbleView(WITH_WEATHER).footer, 'Cập nhật lúc 08:45');
   });
 
   test('整数不带小数点', () => {
@@ -53,9 +53,9 @@ describe('envBubbleView —— 有天气', () => {
     });
     assert.equal(view.temperature, '20°C');
     assert.deepEqual(view.rows, [
-      { label: '体感', value: '21°C' },
-      { label: '湿度', value: '40%' },
-      { label: '风速', value: '3 km/h' },
+      { label: 'Cảm giác', value: '21°C' },
+      { label: 'Độ ẩm', value: '40%' },
+      { label: 'Tốc độ gió', value: '3 km/h' },
     ]);
   });
 });
@@ -64,14 +64,14 @@ describe('envBubbleView —— 查不到与缺字段', () => {
   test('没有天气：只给一句话，不画空数值', () => {
     const view = envBubbleView({ region: '江西省', city: '南昌市', petId: 'main', ts: 1 });
     assert.equal(view.title, '江西省南昌市');
-    assert.equal(view.emptyText, '暂时查不到天气');
+    assert.equal(view.emptyText, 'Tạm thời chưa xem được thời tiết');
     assert.deepEqual(view.rows, []);
     assert.equal(view.temperature, undefined);
     assert.equal(view.icon, undefined);
   });
 
   test('省市都没有：标题退回「天气」', () => {
-    assert.equal(envBubbleView({ petId: 'main', ts: 1 }).title, '天气');
+    assert.equal(envBubbleView({ petId: 'main', ts: 1 }).title, 'Thời tiết');
   });
 
   test('观测时刻形状不对：不给脚注', () => {

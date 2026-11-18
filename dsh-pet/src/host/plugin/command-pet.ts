@@ -25,8 +25,8 @@ export function registerPetCommand(deps: CommandPetInput): void {
     () =>
       ctx.commands.register({
         name: 'pet',
-        description: '选择桌宠（/chat 对话的目标；支持选择框或手输 id/名字）',
-        input: { hint: '[宠物 id 或名字]（留空查看当前）' },
+        description: 'Chọn pet (đối tượng trò chuyện của /chat; chọn trong danh sách hoặc gõ id/tên)',
+        input: { hint: '[id hoặc tên pet] (để trống để xem pet hiện tại)' },
         handler: ({ rawInput }: { rawInput: string }) => {
           const arg = rawInput.trim();
           let eff: Record<string, unknown>[];
@@ -40,33 +40,33 @@ export function registerPetCommand(deps: CommandPetInput): void {
             const found = eff.find((p) => String(p.id) === cur);
             return {
               kind: 'success',
-              text: '当前桌宠：' + (found ? petDisplayName(found) : cur || '（无可交互桌宠）'),
+              text: 'Pet hiện tại: ' + (found ? petDisplayName(found) : cur || '(không có pet nào để tương tác)'),
             };
           }
           const byId = eff.find((p) => String(p.id) === arg);
           if (byId) {
             setActivePetId(String(byId.id));
-            return { kind: 'success', text: '已选择桌宠：' + petDisplayName(byId) };
+            return { kind: 'success', text: 'Đã chọn pet: ' + petDisplayName(byId) };
           }
           const byName = eff.filter((p) => petDisplayName(p) === arg);
           if (byName.length === 1) {
             setActivePetId(String(byName[0].id));
-            return { kind: 'success', text: '已选择桌宠：' + petDisplayName(byName[0]) };
+            return { kind: 'success', text: 'Đã chọn pet: ' + petDisplayName(byName[0]) };
           }
           if (byName.length > 1) {
             return {
               kind: 'error',
               text:
-                '「' +
-                arg +
-                '」有 ' +
+                'Có ' +
                 byName.length +
-                ' 只桌宠（id：' +
-                byName.map((p) => String(p.id)).join('、') +
-                '），请用 id 指定',
+                ' pet tên "' +
+                arg +
+                '" (id: ' +
+                byName.map((p) => String(p.id)).join(', ') +
+                '), vui lòng chọn bằng id',
             };
           }
-          return { kind: 'error', text: '找不到桌宠「' + arg + '」（id 或名字都行；/pet 回车可打开选择框）' };
+          return { kind: 'error', text: 'Không tìm thấy pet "' + arg + '" (nhập id hoặc tên đều được; gõ /pet rồi Enter để mở danh sách chọn)' };
         },
       }),
     'dsh-pet: /pet command',

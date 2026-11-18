@@ -99,7 +99,7 @@ describe('toolsNode —— 记忆线与刷新入口', () => {
   test('配了记忆轮数 → 出现「记忆线」，点击走 jumpToMemory', () => {
     let jumped = 0;
     const node = toolsNode(h, t, stateOf({ jumpToMemory: () => (jumped += 1) }));
-    const line = buttonByText(node, '记忆线');
+    const line = buttonByText(node, 'Mốc trí nhớ');
     assert.ok(line !== undefined, '工具栏应有「记忆线」按钮');
     assert.equal(line?.props.disabled, false, '有分界线时按钮可用');
     (line?.props.onClick as () => void)();
@@ -108,18 +108,18 @@ describe('toolsNode —— 记忆线与刷新入口', () => {
 
   test('历史没超过记忆轮数 → 「记忆线」置灰（没有线可跳）', () => {
     const node = toolsNode(h, t, stateOf({ hasMemoryLine: false }));
-    assert.equal(buttonByText(node, '记忆线')?.props.disabled, true);
+    assert.equal(buttonByText(node, 'Mốc trí nhớ')?.props.disabled, true);
   });
 
   test('配置里没有记忆轮数 → 不出现「记忆线」（本就不画线）', () => {
     const node = toolsNode(h, t, stateOf({ memoryRounds: undefined, hasMemoryLine: false }));
-    assert.equal(buttonByText(node, '记忆线'), undefined);
+    assert.equal(buttonByText(node, 'Mốc trí nhớ'), undefined);
   });
 
   test('「刷新」始终在，点击走 refresh', () => {
     let refreshed = 0;
     const node = toolsNode(h, t, stateOf({ memoryRounds: undefined, refresh: () => (refreshed += 1) }));
-    const button = buttonByText(node, '刷新');
+    const button = buttonByText(node, 'Tải lại');
     assert.ok(button !== undefined, '工具栏应有「刷新」按钮');
     (button?.props.onClick as () => void)();
     assert.equal(refreshed, 1);

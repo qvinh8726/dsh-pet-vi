@@ -88,7 +88,7 @@ function openSelectMenu(trigger, options, current, onPick, widthOf, search) {
     items.push({ node: item, value: option.value });
   }
   // 过滤后一个都不剩时的说明行；没有搜索框时永远隐藏
-  const emptyRow = make('li', { class: 'selectEmpty', text: '没有匹配的模型' });
+  const emptyRow = make('li', { class: 'selectEmpty', text: 'Không có mô hình phù hợp' });
   emptyRow.setAttribute('role', 'presentation');
   emptyRow.hidden = true;
   menu.append(emptyRow);
@@ -251,20 +251,20 @@ function confirmDialog(options) {
     const panel = make('div', { class: 'dialog' });
     panel.setAttribute('role', 'alertdialog');
     panel.setAttribute('aria-modal', 'true');
-    panel.setAttribute('aria-label', config.title || '确认');
+    panel.setAttribute('aria-label', config.title || 'Xác nhận');
     const text = make('p', { class: 'dialogText', text: config.text || '' });
     // cancelLabel 传 null 表示只提示、不给取消：用于「不能删除最后一只」这类纯说明。
     const cancel =
       config.cancelLabel === null
         ? null
-        : make('button', { type: 'button', class: 'btn', text: config.cancelLabel || '取消' });
+        : make('button', { type: 'button', class: 'btn', text: config.cancelLabel || 'Hủy' });
     const confirm = make('button', {
       type: 'button',
       class: 'btn ' + (config.danger ? 'danger' : 'primary'),
-      text: config.confirmLabel || '确定',
+      text: config.confirmLabel || 'OK',
     });
     const actions = make('div', { class: 'dialogActions' }, cancel ? [cancel, confirm] : [confirm]);
-    panel.append(make('h2', { class: 'dialogTitle', text: config.title || '确认' }), text, actions);
+    panel.append(make('h2', { class: 'dialogTitle', text: config.title || 'Xác nhận' }), text, actions);
     mask.append(panel);
     document.body.append(mask);
 

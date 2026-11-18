@@ -19,19 +19,19 @@ export interface CliOptions {
 }
 
 /** --help 正文。 */
-export const USAGE = `dsh-pet 独立模式（不需要 DSH）
+export const USAGE = `dsh-pet chế độ độc lập (không cần DSH)
 
-用法：dsh-pet-standalone [选项]
+Cách dùng: dsh-pet-standalone [tùy chọn]
 
-选项：
-  --port <端口>   监听端口（默认 ${DEFAULT_STANDALONE_PORT}；被占用时自动向后顺延）
-  --check         只体检：打印配置来源、宠物清单与 Electron 状态，不启动窗口
-  -h, --help      显示本帮助
+Tùy chọn:
+  --port <cổng>   Cổng lắng nghe (mặc định ${DEFAULT_STANDALONE_PORT}; bị chiếm thì tự lùi sang cổng kế tiếp)
+  --check         Chỉ kiểm tra: in nguồn cấu hình, danh sách pet và trạng thái Electron, không mở cửa sổ
+  -h, --help      Hiện trợ giúp này
 
-说明：
-  桌宠在独立模式下以「透明置顶小窗」运行；浏览器内浮层需要有 DSH 网页，独立模式不提供。
-  对话与碎碎念可在本机 AI 设置页配置 API 后显式启用；未配置时不发送模型请求。
-  余额 / DSH 会话工作状态 / 系统通知仍需要 DSH 宿主。
+Ghi chú:
+  Ở chế độ độc lập, pet chạy trong "cửa sổ nhỏ trong suốt luôn nằm trên cùng"; lớp phủ trong trình duyệt cần trang web DSH, chế độ độc lập không có.
+  Trò chuyện và lẩm bẩm có thể bật sau khi cấu hình API ở trang cài đặt AI trên máy; chưa cấu hình thì không gửi yêu cầu tới mô hình.
+  Số dư / trạng thái làm việc của phiên DSH / thông báo hệ thống vẫn cần DSH.
 `;
 
 /**
@@ -52,11 +52,11 @@ export function parseArgs(argv: string[]): { options: CliOptions } | { error: st
       if (arg === '--port') index += 1;
       const value = Number(raw);
       if (!Number.isInteger(value) || value < 1 || value > 65535) {
-        return { error: `--port 需要 1..65535 的整数端口，收到 ${JSON.stringify(raw)}` };
+        return { error: `--port cần một cổng là số nguyên 1..65535, nhận được ${JSON.stringify(raw)}` };
       }
       options.port = value;
     } else {
-      return { error: `未知参数：${arg}` };
+      return { error: `Tham số không xác định: ${arg}` };
     }
   }
   return { options };
@@ -80,7 +80,7 @@ export function configPathsFor(root: string, home: string): ConfigPaths {
 
 /** 宠物列表的展示串：display 原样打印，供用户确认。 */
 export function describePets(pets: Record<string, unknown>[]): string {
-  if (pets.length === 0) return '（没有宠物：配置里 pets 为空）';
+  if (pets.length === 0) return '(không có pet: pets trong cấu hình đang trống)';
   return pets
     .map((pet) => `${String(pet.id ?? '?')}(size=${String(pet.size ?? '?')}, display=${String(pet.display ?? '?')})`)
     .join('  ');

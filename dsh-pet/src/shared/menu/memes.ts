@@ -90,8 +90,8 @@ export function buildMemeBranch(source: MemeGroupSource, thumbOf?: (name: string
   const { chat, other } = groupMemes(source);
   const leaf = (name: string): MenuLeaf => memeLeaf(name, thumbOf);
   const groups: MenuNode[] = [];
-  if (chat.length > 0) groups.push({ label: '纳入对话的配图', children: chat.map(leaf) });
-  if (other.length > 0) groups.push({ label: '其他', children: other.map(leaf) });
+  if (chat.length > 0) groups.push({ label: 'Ảnh dùng trong trò chuyện', children: chat.map(leaf) });
+  if (other.length > 0) groups.push({ label: 'Khác', children: other.map(leaf) });
   if (groups.length === 0) return null;
-  return { label: '配图', children: groups };
+  return { label: 'Meme', children: groups };
 }

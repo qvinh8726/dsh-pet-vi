@@ -100,7 +100,7 @@ describe('currentEnvironment —— UAPI 首选', () => {
     const facts = await currentEnvironment({ fetchImpl: fake.impl, sleep: NO_SLEEP });
 
     assert.equal(facts.city, '南昌市');
-    assert.equal(facts.weather?.summary, '阴', '应来自 Open-Meteo 的回落结果');
+    assert.equal(facts.weather?.summary, 'trời âm u', '应来自 Open-Meteo 的回落结果');
     assert.ok(fake.calls[1]?.includes('ip-api'), 'UAPI 判失败后才该去打 ip-api');
   });
 });
@@ -114,7 +114,7 @@ describe('currentEnvironment —— 回落链路（UAPI 不可用）', () => {
 
     assert.equal(facts.region, '江西省');
     assert.equal(facts.city, '南昌市', '省市分开给，拼成一句话是消费方的事');
-    assert.equal(facts.weather?.summary, '阴');
+    assert.equal(facts.weather?.summary, 'trời âm u');
     assert.equal(facts.weather?.temperatureC, 13.1);
     assert.equal(fake.calls.length, 4, 'UAPI 一次 + 两次定位 + 一次天气里成功的那次');
   });

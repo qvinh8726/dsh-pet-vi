@@ -58,5 +58,5 @@ export function fail(res: ServerResponse, _error: unknown, logger: StandaloneLog
   // 绝不回显或记录服务商错误：其中可能有 API 密钥或带凭据的地址。
   logger.error('独立模式路由处理失败（详细内容已省略以保护凭据）');
   if (res.headersSent) res.destroy();
-  else sendJson(res, 500, { error: '本机服务暂时无法处理请求' });
+  else sendJson(res, 500, { error: 'Dịch vụ trên máy tạm thời không xử lý được yêu cầu' });
 }

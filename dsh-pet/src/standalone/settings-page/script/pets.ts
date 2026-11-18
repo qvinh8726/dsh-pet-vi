@@ -102,7 +102,7 @@ function currentPet() {
 }
 
 function entryTabs(keys) {
-  const tabs = keys.map((key) => tabButton(key === 'main' ? '默认条目' : key, key === state.entry, () => {
+  const tabs = keys.map((key) => tabButton(key === 'main' ? 'Mục mặc định' : key, key === state.entry, () => {
     state.entry = key;
     state.petIndex = 0;
     renderPetsPanel();
@@ -111,8 +111,8 @@ function entryTabs(keys) {
 }
 
 function packNote() {
-  return card('条目说明', null, [
-    make('p', { class: 'cardHint', text: '这个条目来自文件宠物，只保存它自己的实例；全局开关与语音外观在「默认条目」里改。' }),
+  return card('Giới thiệu mục', null, [
+    make('p', { class: 'cardHint', text: 'Mục này đến từ pet dạng file, chỉ lưu các pet của riêng nó; công tắc chung, giọng nói và giao diện chỉnh ở "Mục mặc định".' }),
   ]);
 }
 
@@ -173,25 +173,25 @@ async function savePets() {
   const status = byId('pet-status');
   const saveBtn = byId('pet-save');
   if (state.entry === 'main' && currentPets().length === 0) {
-    setStatus(status, '默认条目至少要保留一只宠物，否则宿主会拒绝保存。', 'error');
+    setStatus(status, 'Mục mặc định phải giữ lại ít nhất một pet, nếu không sẽ bị từ chối lưu.', 'error');
     return;
   }
   saveBtn.disabled = true;
-  setStatus(status, '正在保存…');
+  setStatus(status, 'Đang lưu…');
   try {
     let merged;
     if (state.entry === 'main') {
       merged = await callApi('PUT', '/config', petsBody());
       if (merged && merged.ok === false && merged.reason === 'user-config-unparsable') {
-        const file = merged.userFile ? String(merged.userFile) : '用户配置';
+        const file = merged.userFile ? String(merged.userFile) : 'Cấu hình người dùng';
         const confirmed = await confirmDialog({
-          title: '配置文件无法解析',
-          text: file + '\\n继续保存会按白名单重建这个文件，里面其它内容会丢失。',
-          confirmLabel: '覆盖保存',
+          title: 'Không đọc được file cấu hình',
+          text: file + '\\nNếu tiếp tục lưu, file này sẽ được tạo lại theo danh sách cho phép, các nội dung khác trong đó sẽ mất.',
+          confirmLabel: 'Ghi đè và lưu',
           danger: true,
         });
         if (!confirmed) {
-          setStatus(status, '已取消保存。', 'error');
+          setStatus(status, 'Đã hủy lưu.', 'error');
           return;
         }
         merged = await callApi('PUT', '/config?force=1', petsBody());
@@ -200,13 +200,13 @@ async function savePets() {
       merged = await callApi('POST', '/pet-config', { entry: state.entry, pets: currentPets() });
     }
     if (!merged || merged.ok === false) {
-      setStatus(status, (merged && (merged.message || merged.reason)) || '宿主拒绝了这次保存。', 'error');
+      setStatus(status, (merged && (merged.message || merged.reason)) || 'Lần lưu này đã bị từ chối.', 'error');
       return;
     }
     initDrafts(merged);
     markDirty(false);
     renderPetsPanel();
-    setStatus(status, '已保存到本机。', 'ok');
+    setStatus(status, 'Đã lưu vào máy.', 'ok');
   } catch (error) {
     setStatus(status, error && error.message ? error.message : String(error), 'error');
   } finally {

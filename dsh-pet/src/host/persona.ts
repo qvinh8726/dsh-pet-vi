@@ -17,7 +17,7 @@ import { timeContextOf, type TimeContextEnv } from './time-context.ts';
  * 标在 assistant 上时模型会照抄成自己的说话格式（出现过回复以 `[11:54]` 开头）。
  */
 const HISTORY_TIMES_LINE =
-  '【历史】对话记录里，主人的话前面标着 [月日 时:分]，那是那句话发生的时刻；它只是记录里的时间标注，不是你的说话格式。判断“多久以前”“隔了几天”时按它换算，别把隔了很久的话当成刚说过的。你的回复直接从正文开始，不要写时间、不要加方括号前缀。';
+  '【Lịch sử】Trong lịch sử trò chuyện, trước lời của chủ nhân có ghi [ngày/tháng giờ:phút], đó là thời điểm câu đó được nói; đây chỉ là mốc thời gian trong bản ghi, không phải định dạng nói chuyện của em. Khi cần biết "cách đây bao lâu", "cách mấy ngày" thì dựa vào nó mà tính, đừng coi câu đã nói từ lâu như vừa mới nói. Câu trả lời của em bắt đầu thẳng vào nội dung, không được ghi thời gian, không được thêm tiền tố trong ngoặc vuông.';
 
 /**
  * 某宠物最终生效的人设正文（不含名字与时间）：实例 whisperPrompt → 条目 whisperPrompt → 空串。
@@ -57,7 +57,7 @@ export interface SystemPromptParts {
  */
 export function composeSystemPrompt(parts: SystemPromptParts): string {
   const name = String(parts.name || parts.id);
-  const nameLine = name ? '你的名字是“' + name + '”。' : '';
+  const nameLine = name ? 'Tên của em là "' + name + '".' : '';
   const lines = [parts.prompt, nameLine].filter((line) => line !== '');
   const time = timeContextOf(parts.now, parts.env);
   if (time) {

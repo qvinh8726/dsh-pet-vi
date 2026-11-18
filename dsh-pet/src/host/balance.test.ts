@@ -212,7 +212,7 @@ describe('parseCommandCode —— 必填缺失/非法一律抛错（绝不伪造
   });
 
   test('credits 里三个额度字段全缺 → 抛错（否则分母当 0 会算出「已用 100%」）', () => {
-    assert.throws(() => parseCommandCode({ credits: {} }, undefined, { totalCost: 0 }, 'commandcode'), /额度字段/);
+    assert.throws(() => parseCommandCode({ credits: {} }, undefined, { totalCost: 0 }, 'commandcode'), /trường hạn mức/);
   });
 
   test('缺少 / 非法 totalCost → 抛错', () => {
@@ -346,7 +346,7 @@ describe('queryBalance —— 网络链路（fetch stub）', () => {
         ok: false,
         provider: 'commandcode',
         reason: 'credential-missing',
-        message: '缺少凭证 COMMANDCODE_API_KEY',
+        message: 'Thiếu khóa API COMMANDCODE_API_KEY',
       });
       assert.deepEqual(stub.calls, []);
     } finally {
@@ -489,20 +489,20 @@ describe('deepseek-account —— DSH 账号路由（走账号服务，不是 HT
   });
 
   test('null（未登录）/ failed（查询失败）/ 空钱包 → 一律抛错，绝不伪造 0 余额', () => {
-    assert.throws(() => parseAccountBalance(null, 'deepseek-account'), /未登录/);
-    assert.throws(() => parseAccountBalance(undefined, 'deepseek-account'), /未登录/);
-    assert.throws(() => parseAccountBalance({ status: 'failed' }, 'deepseek-account'), /查询失败/);
+    assert.throws(() => parseAccountBalance(null, 'deepseek-account'), /chưa đăng nhập/);
+    assert.throws(() => parseAccountBalance(undefined, 'deepseek-account'), /chưa đăng nhập/);
+    assert.throws(() => parseAccountBalance({ status: 'failed' }, 'deepseek-account'), /thất bại/);
     assert.throws(
       () => parseAccountBalance({ status: 'ready', value: [], bonusWallets: [] }, 'deepseek-account'),
-      /没有充值钱包/,
+      /không có số dư ví nạp tiền/,
     );
     assert.throws(
       () => parseAccountBalance({ status: 'ready', value: [{ currency: 'CNY', balance: '' }] }, 'deepseek-account'),
-      /非法|balance/,
+      /không hợp lệ|balance/,
     );
     assert.throws(
       () => parseAccountBalance({ status: 'ready', value: [{ currency: 'CNY', balance: 'abc' }] }, 'deepseek-account'),
-      /非法/,
+      /không hợp lệ/,
     );
   });
 
@@ -536,7 +536,7 @@ describe('deepseek-account —— DSH 账号路由（走账号服务，不是 HT
       ok: false,
       provider: 'deepseek-account',
       reason: 'credential-missing',
-      message: '缺少账号服务（deepseek-account）',
+      message: 'Thiếu dịch vụ tài khoản (deepseek-account)',
     });
   });
 

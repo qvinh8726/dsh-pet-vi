@@ -120,10 +120,10 @@ export function pickReminder(todos: readonly TodoRecord[], now: number): DueRemi
  */
 export function spanText(ms: number): string {
   const minutes = Math.max(1, Math.round(Math.abs(ms) / MINUTE_MS));
-  if (minutes < 60) return `${minutes}分钟`;
+  if (minutes < 60) return `${minutes} phút`;
   const hours = Math.max(1, Math.round(minutes / 60));
-  if (hours < 24) return `${hours}小时`;
-  return `${Math.max(1, Math.round(hours / 24))}天`;
+  if (hours < 24) return `${hours} giờ`;
+  return `${Math.max(1, Math.round(hours / 24))} ngày`;
 }
 
 /** 正文超长时按码点截断并补省略号。 */
@@ -144,8 +144,8 @@ export function reminderText(todo: TodoRecord, now: number): string {
   const dueAt = todo.dueAt ?? now;
   if (dueAt <= now) {
     // 刚过点不到一分钟不说「逾期 1 分钟」——那只是四舍五入，读起来像迟到了很久。
-    if (now - dueAt < MINUTE_MS) return `「${label}」到点啦，记得处理`;
-    return `「${label}」已经逾期${spanText(now - dueAt)}啦，记得处理`;
+    if (now - dueAt < MINUTE_MS) return `"${label}" đến giờ rồi nè, nhớ làm nha`;
+    return `"${label}" đã trễ ${spanText(now - dueAt)} rồi đó, nhớ làm nha`;
   }
-  return `「${label}」还有${spanText(dueAt - now)}就到点啦`;
+  return `Còn ${spanText(dueAt - now)} nữa là đến giờ "${label}" rồi nè`;
 }

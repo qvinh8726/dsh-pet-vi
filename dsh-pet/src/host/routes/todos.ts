@@ -70,25 +70,25 @@ export async function handleTodoRoutes(deps: PetRouteDeps, input: RouteInput): P
       const raw = parseObjectBody(body);
       if (raw === null) return invalidJson();
       const text = normalizeTodoText(raw.text);
-      if (text === null) return failResult('bad-request', `text 必须是非空字符串，最多 ${TODO_TEXT_MAX} 个字符`);
+      if (text === null) return failResult('bad-request', `text phải là chuỗi không rỗng, tối đa ${TODO_TEXT_MAX} ký tự`);
       const due = normalizeTodoDueAt(raw.dueAt);
-      if (!due.ok) return failResult('bad-request', 'dueAt 必须是毫秒时间戳或 null');
+      if (!due.ok) return failResult('bad-request', 'dueAt phải là mốc thời gian mili giây hoặc null');
       return okResult({ ok: true, todo: await todos.create({ text, dueAt: due.value }) });
     }
 
     // /todos/{id}：id 是实例内标识，不是文件路径；只做形状校验。
     const id = rest.slice(PREFIX.length + 1);
-    if (id === '' || id.includes('/')) return failResult('bad-request', 'todo id 不合法');
+    if (id === '' || id.includes('/')) return failResult('bad-request', 'todo id không hợp lệ');
 
     if (method === 'PATCH') {
       if (Buffer.byteLength(body ?? '', 'utf8') > TODO_BODY_MAX_BYTES) return payloadTooLarge();
       const raw = parseObjectBody(body);
       if (raw === null) return invalidJson();
       const patch = readPatch(raw);
-      if (patch === null) return failResult('bad-request', 'text / dueAt / done 至少一个字段不合法');
-      if (Object.keys(patch).length === 0) return failResult('bad-request', '没有可更新的字段');
+      if (patch === null) return failResult('bad-request', 'Có ít nhất một trường text / dueAt / done không hợp lệ');
+      if (Object.keys(patch).length === 0) return failResult('bad-request', 'Không có trường nào để cập nhật');
       const todo = await todos.update(id, patch);
-      if (todo === null) return failResult('todo-not-found', '没有这条待办');
+      if (todo === null) return failResult('todo-not-found', 'Không tìm thấy việc cần làm này');
       return okResult({ ok: true, todo });
     }
 
@@ -98,6 +98,6 @@ export async function handleTodoRoutes(deps: PetRouteDeps, input: RouteInput): P
   } catch (error) {
     // 写盘失败（磁盘满 / 权限）：真实原因只进日志，响应里只回分类文案。
     log.warn(`[dsh-pet] 待办读写失败：${error instanceof Error ? error.message : String(error)}`);
-    return failResult('internal-error', 'dsh-pet: 待办读写失败');
+    return failResult('internal-error', 'dsh-pet: đọc/ghi việc cần làm thất bại');
   }
 }

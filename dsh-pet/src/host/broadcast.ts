@@ -74,10 +74,10 @@ function resolvePetId(
   | { ok: true; petId: string; entry: string; conf: Record<string, unknown> }
   | { ok: false; reason: PetFailure; message: string } {
   const petId = String(requested ?? '').trim();
-  if (!petId) return { ok: false, reason: 'pet-required', message: 'pet 必填：要指定操作哪只桌宠' };
+  if (!petId) return { ok: false, reason: 'pet-required', message: 'Thiếu pet: phải chỉ định pet cần thao tác' };
   // 一次查找同时给出存在性与所属条目（entry = 素材根，配图池按它取）：校验与取值同源，后面不必再查
   const found = findPetInstance(cfg, petId);
-  if (!found) return { ok: false, reason: 'unknown-pet', message: '没有这只桌宠：' + petId };
+  if (!found) return { ok: false, reason: 'unknown-pet', message: 'Không có pet này: ' + petId };
   return { ok: true, petId, entry: found.entry, conf: found.conf };
 }
 
@@ -102,7 +102,7 @@ export function decideBroadcast(args: {
   const { cfg, requested, memeDirs } = args;
 
   const text = normalizeBroadcastText(args.text);
-  if (!text) return { ok: false, reason: 'bad-request', message: 'text 为空' };
+  if (!text) return { ok: false, reason: 'bad-request', message: 'text đang trống' };
 
   const who = resolvePetId(cfg, requested);
   if (!who.ok) return { ok: false, reason: who.reason, message: who.message };
@@ -110,7 +110,7 @@ export function decideBroadcast(args: {
 
   const rawImage = typeof args.image === 'string' ? args.image.trim() : '';
   const rawUrl = typeof args.url === 'string' ? args.url.trim() : '';
-  if (rawImage && rawUrl) return { ok: false, reason: 'bad-request', message: 'image 与 url 只能给一个' };
+  if (rawImage && rawUrl) return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong hai: image hoặc url' };
   if (!rawImage && !rawUrl) return { ok: true, petId, text, duration: args.duration, anim: args.anim };
 
   // url 形态：地址合法即放行，不查表情包池——图在第三方手里，池里当然没有；取不到图由消费端
@@ -118,7 +118,7 @@ export function decideBroadcast(args: {
   if (rawUrl) {
     const url = normalizeHttpUrl(rawUrl);
     if (url === null) {
-      return { ok: false, reason: 'bad-request', message: 'url 必须是 http/https 的完整地址' };
+      return { ok: false, reason: 'bad-request', message: 'url phải là địa chỉ http/https đầy đủ' };
     }
     return { ok: true, petId, text, url, duration: args.duration, anim: args.anim };
   }
@@ -127,7 +127,7 @@ export function decideBroadcast(args: {
   // 池按所属条目取（与碎碎念 / 对话同一口径），配图不跨宠物串池。
   const hit = matchMeme(readMemePool(who.conf.memes, memeDirs(who.entry)), rawImage);
   if (!hit) {
-    return { ok: false, reason: 'unknown-image', message: '配图不在表情包池内：' + rawImage };
+    return { ok: false, reason: 'unknown-image', message: 'Ảnh kèm không có trong kho meme: ' + rawImage };
   }
   return { ok: true, petId, text, image: hit.name, duration: args.duration, anim: args.anim };
 }

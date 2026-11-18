@@ -23,7 +23,8 @@ import { POWERCONTEXT_MEMORY_ID } from '../../shared/memory.ts';
 /** scope 标题：一只宠物实例一个 scope，记忆不跨宠物串。 */
 const scopeTitleOf = (petId: string): string => 'dsh-pet:' + petId;
 /** scope 摘要：服务端建 scope 时必填（1–2000 字）。 */
-const scopeSummaryOf = (petId: string): string => '桌面宠物 ' + petId + ' 的对话记忆，由插件自动创建。';
+const scopeSummaryOf = (petId: string): string =>
+  'Trí nhớ trò chuyện của pet ' + petId + ', do plugin tự động tạo.';
 /** scope 的幂等键：一只宠物一份，重复创建只会得到同一个；换掉它会多出一个删不掉的 scope。 */
 const scopeKeyOf = (petId: string): string => 'dsh-pet:' + petId + ':v1';
 
@@ -46,10 +47,11 @@ const QUERY_BYTES = 4_096;
 /** 证据块的总字节上限：超了从尾部丢句子，越靠后的命中分越低。 */
 const EVIDENCE_BYTES = 3_072;
 /** 证据块的表头：明确告诉模型这是检索到的旧信息，冲突时以用户当次输入为准。 */
-const EVIDENCE_HEADER = '以下是从长期记忆里检索到的相关信息，供你参考；与用户这次说的话冲突时，以用户为准：';
+const EVIDENCE_HEADER =
+  'Dưới đây là thông tin liên quan truy xuất từ trí nhớ dài hạn để em tham khảo; nếu mâu thuẫn với điều chủ nhân vừa nói lần này thì lấy lời chủ nhân làm chuẩn:';
 /** 证据块的分层标题：先给概括再给细节，模型更容易把原子条目挂到对的关系上。 */
-const TOPIC_SECTION = '[主题记忆]';
-const ATOM_SECTION = '[原子记忆]';
+const TOPIC_SECTION = '[Trí nhớ theo chủ đề]';
+const ATOM_SECTION = '[Trí nhớ chi tiết]';
 
 /** 一次改写的输入。 */
 export interface RewriteInput {
@@ -176,7 +178,7 @@ export function createPowerContextMemory(deps: PowerContextDeps): ChatMemoryProv
       body: {
         scope_id: scopeId,
         source_id: 'dsh-pet:' + turn.ts,
-        content: '用户：' + turn.userText + '\n宠物：' + turn.replyText,
+        content: 'Người dùng: ' + turn.userText + '\nPet: ' + turn.replyText,
       },
       timeoutMs: CRUD_TIMEOUT_MS,
     });
@@ -310,7 +312,7 @@ function textField(value: unknown): string {
 
 /** 一条主题命中的展示行：`- 标题：摘要`；标题为空时只给摘要。 */
 function topicLine(hit: TopicHit): string {
-  return '- ' + (hit.title === '' ? '' : hit.title + '：') + hit.summary;
+  return '- ' + (hit.title === '' ? '' : hit.title + ': ') + hit.summary;
 }
 
 /** 证据块的一段：段标题与已按分数降序排好的行。 */

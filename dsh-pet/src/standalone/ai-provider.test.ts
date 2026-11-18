@@ -390,16 +390,16 @@ test('testConnection checks parameters and reports success or friendly error', a
     async (ai) => {
       assert.deepEqual(await ai.testConnection({ baseUrl: '', model: 'm', apiKey: 'k' }), {
         ok: false,
-        message: '请先填写接口地址（Base URL）',
+        message: 'Hãy nhập địa chỉ API (Base URL) trước',
       });
       assert.deepEqual(await ai.testConnection({ baseUrl: 'https://example.test/v1', model: '', apiKey: 'k' }), {
         ok: false,
-        message: '请先填写模型名称',
+        message: 'Hãy nhập tên mô hình trước',
       });
       await ai.saveSettings({ clearKey: true });
       assert.deepEqual(await ai.testConnection({ baseUrl: 'https://example.test/v1', model: 'm', apiKey: '' }), {
         ok: false,
-        message: '请先填写 API 密钥',
+        message: 'Hãy nhập khóa API trước',
       });
       const success = await ai.testConnection({
         protocol: 'openai-compatible',
@@ -408,7 +408,7 @@ test('testConnection checks parameters and reports success or friendly error', a
         apiKey: 'test-key',
       });
       assert.equal(success.ok, true);
-      assert.match(success.message, /连接成功/);
+      assert.match(success.message, /Kết nối thành công/);
       assert.equal(success.reply, 'ok');
     },
     async () => {

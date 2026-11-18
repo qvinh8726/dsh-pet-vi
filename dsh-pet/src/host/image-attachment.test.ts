@@ -55,7 +55,7 @@ describe('parseImageAttachment', () => {
   test('含非法字符的 base64 → 拒绝（不能被静默丢弃）', () => {
     const parsed = parseImageAttachment({ mediaType: 'image/png', data: PNG_BASE64 + '!!!' });
     assert.equal(parsed.ok, false);
-    assert.match(parsed.ok ? '' : parsed.message, /不是合法的 base64/);
+    assert.match(parsed.ok ? '' : parsed.message, /không phải base64 hợp lệ/);
   });
 
   test('缺填充（非规范 base64）→ 拒绝', () => {
@@ -72,6 +72,6 @@ describe('parseImageAttachment', () => {
   test('超出字符上限 → 拒绝且提示压缩', () => {
     const parsed = parseImageAttachment({ mediaType: 'image/png', data: 'A'.repeat(900_001) });
     assert.equal(parsed.ok, false);
-    assert.match(parsed.ok ? '' : parsed.message, /过长/);
+    assert.match(parsed.ok ? '' : parsed.message, /quá dài/);
   });
 });

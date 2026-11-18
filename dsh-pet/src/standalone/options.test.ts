@@ -49,7 +49,7 @@ describe('parseArgs —— 独立模式的命令行契约', () => {
   test('未知参数 → error（不静默忽略，避免"我明明传了参数"）', () => {
     const parsed = parseArgs(['--standalone']);
     assert.ok('error' in parsed);
-    assert.match(parsed.error, /未知参数/);
+    assert.match(parsed.error, /Tham số không xác định/);
   });
 });
 
@@ -70,7 +70,7 @@ describe('configPathsFor —— 配置路径推导（host/index.ts 那份的镜�
 
 describe('describePets —— 启动横幅与体检报告共用的展示串', () => {
   test('空列表显式说明原因，不打印空行', () => {
-    assert.match(describePets([]), /pets 为空/);
+    assert.match(describePets([]), /pets trong cấu hình đang trống/);
   });
 
   test('id/size/display 原样打印（独立模式不替用户判断 display）', () => {

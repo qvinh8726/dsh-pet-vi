@@ -111,7 +111,7 @@ const PROVIDER_ID_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
 /** 内置实现：不读文件、不写文件；召回直接把核心拼好的那份交回去。 */
 const nativeProvider: ChatMemoryProvider = {
   id: NATIVE_MEMORY_ID,
-  name: '内置记忆',
+  name: 'Trí nhớ tích hợp',
   recall: (req) => req.prepared,
 };
 
@@ -125,21 +125,21 @@ const providers = new Map<string, ChatMemoryProvider>([[NATIVE_MEMORY_ID, native
  * @throws {TypeError} 任一字段缺失、类型不符、id 形态非法或占用内置标识时。
  */
 function validateMemoryProvider(def: unknown): asserts def is ChatMemoryProvider {
-  if (!def || typeof def !== 'object') throw new TypeError('记忆 provider 定义必须是对象');
+  if (!def || typeof def !== 'object') throw new TypeError('Định nghĩa provider trí nhớ phải là một object');
   const provider = def as Record<string, unknown>;
   if (typeof provider.id !== 'string' || !PROVIDER_ID_PATTERN.test(provider.id)) {
-    throw new TypeError(`provider id 必须是小写 kebab-case，收到 ${JSON.stringify(provider.id)}`);
+    throw new TypeError(`id của provider phải là kebab-case chữ thường, nhận được ${JSON.stringify(provider.id)}`);
   }
-  if (provider.id === NATIVE_MEMORY_ID) throw new TypeError(`不能占用内置实现标识: ${NATIVE_MEMORY_ID}`);
+  if (provider.id === NATIVE_MEMORY_ID) throw new TypeError(`Không được dùng id dành cho bản tích hợp: ${NATIVE_MEMORY_ID}`);
   if (typeof provider.name !== 'string' || provider.name.trim() === '') {
-    throw new TypeError(`provider ${provider.id} 的 name 必须是非空字符串`);
+    throw new TypeError(`name của provider ${provider.id} phải là chuỗi không rỗng`);
   }
   if (typeof provider.recall !== 'function' && typeof provider.capture !== 'function') {
-    throw new TypeError(`provider ${provider.id} 的 recall 与 capture 至少要有一个是函数`);
+    throw new TypeError(`Provider ${provider.id} phải có ít nhất một trong hai hàm recall hoặc capture`);
   }
   const timeoutMs = provider.timeoutMs;
   if (timeoutMs !== undefined && (typeof timeoutMs !== 'number' || !Number.isFinite(timeoutMs) || timeoutMs <= 0)) {
-    throw new TypeError(`provider ${provider.id} 的 timeoutMs 必须是正有限数，收到 ${JSON.stringify(timeoutMs)}`);
+    throw new TypeError(`timeoutMs của provider ${provider.id} phải là số dương hữu hạn, nhận được ${JSON.stringify(timeoutMs)}`);
   }
 }
 
@@ -152,7 +152,7 @@ function validateMemoryProvider(def: unknown): asserts def is ChatMemoryProvider
  */
 export function registerChatMemoryProvider(def: ChatMemoryProvider): () => void {
   validateMemoryProvider(def);
-  if (providers.has(def.id)) throw new TypeError(`记忆 provider id 已被注册: ${def.id}`);
+  if (providers.has(def.id)) throw new TypeError(`id provider trí nhớ đã được đăng ký: ${def.id}`);
   providers.set(def.id, def);
   return () => {
     if (providers.get(def.id) === def) providers.delete(def.id);

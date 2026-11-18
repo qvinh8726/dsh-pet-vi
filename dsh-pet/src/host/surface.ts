@@ -17,7 +17,7 @@ export type Surface = 'web' | 'desktop' | 'both' | 'any';
 export const SURFACES: readonly Surface[] = ['web', 'desktop', 'both', 'any'];
 
 /** 缺省 / 非法时的提示文案。 */
-export const SURFACE_TEXT = 'surface 必填：web / desktop / both / any';
+export const SURFACE_TEXT = 'Thiếu surface: web / desktop / both / any';
 
 /** 取值收窄：只认四个字面量，大小写、空白、非字符串一律不算，不认识返回 null。 */
 export function normalizeSurface(v: unknown): Surface | null {

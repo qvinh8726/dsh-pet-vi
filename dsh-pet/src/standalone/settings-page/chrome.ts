@@ -11,39 +11,39 @@
 
 /** 设置页 HTML。 */
 export const settingsPage = `<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>桌宠设置</title><link rel="icon" type="image/png" href="/standalone-ai/icon.png"><link rel="stylesheet" href="/standalone-ai/settings.css">
+<html lang="vi"><head><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cài đặt pet</title><link rel="icon" type="image/png" href="/standalone-ai/icon.png"><link rel="stylesheet" href="/standalone-ai/settings.css">
 <script src="/standalone-ai/settings.js" defer></script><script src="/standalone-ai/chat-panel.js" defer></script></head><body>
 <main class="shell">
 <aside class="side">
-<div class="brand"><img class="brandLogo" src="/standalone-ai/icon.png" alt=""><span>桌宠</span></div>
-<nav class="nav" aria-label="设置分区"><div class="navList" role="tablist">
-<button type="button" class="navCell" role="tab" id="tab-chat" data-tab="chat" data-title="对话" aria-controls="panel-chat" aria-selected="true"><svg class="navGlyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.4h10a1.1 1.1 0 0 1 1.1 1.1v5.6A1.1 1.1 0 0 1 13 11.2H8.2L5 13.6v-2.4H3a1.1 1.1 0 0 1-1.1-1.1V4.5A1.1 1.1 0 0 1 3 3.4Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="navLabel">对话</span></button>
-<button type="button" class="navCell" role="tab" id="tab-config" data-tab="config" data-title="配置" aria-controls="panel-config" aria-selected="false"><svg class="navGlyph" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M2.6 4.6h10.8M2.6 11.4h10.8"/><circle cx="6.2" cy="4.6" r="1.6" fill="currentColor" stroke="none"/><circle cx="9.8" cy="11.4" r="1.6" fill="currentColor" stroke="none"/></g></svg><span class="navLabel">配置</span></button>
+<div class="brand"><img class="brandLogo" src="/standalone-ai/icon.png" alt=""><span>Pet</span></div>
+<nav class="nav" aria-label="Các mục cài đặt"><div class="navList" role="tablist">
+<button type="button" class="navCell" role="tab" id="tab-chat" data-tab="chat" data-title="Trò chuyện" aria-controls="panel-chat" aria-selected="true"><svg class="navGlyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.4h10a1.1 1.1 0 0 1 1.1 1.1v5.6A1.1 1.1 0 0 1 13 11.2H8.2L5 13.6v-2.4H3a1.1 1.1 0 0 1-1.1-1.1V4.5A1.1 1.1 0 0 1 3 3.4Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="navLabel">Trò chuyện</span></button>
+<button type="button" class="navCell" role="tab" id="tab-config" data-tab="config" data-title="Cấu hình" aria-controls="panel-config" aria-selected="false"><svg class="navGlyph" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M2.6 4.6h10.8M2.6 11.4h10.8"/><circle cx="6.2" cy="4.6" r="1.6" fill="currentColor" stroke="none"/><circle cx="9.8" cy="11.4" r="1.6" fill="currentColor" stroke="none"/></g></svg><span class="navLabel">Cấu hình</span></button>
 </div></nav>
-<div class="sideFoot">独立模式</div>
+<div class="sideFoot">Chế độ độc lập</div>
 </aside>
 <div class="main">
-<div class="topbar"><h1 class="pageTitle" id="page-title">对话</h1><span class="dirty" id="dirty" hidden>有未保存的改动</span></div>
+<div class="topbar"><h1 class="pageTitle" id="page-title">Trò chuyện</h1><span class="dirty" id="dirty" hidden>Có thay đổi chưa lưu</span></div>
 <div class="options">
 <section class="panel" id="panel-config" role="tabpanel" aria-labelledby="tab-config" hidden>
 <div class="scroll">
-<div id="pet-cards"><p class="empty">正在读取本机配置…</p></div>
-<div class="footer"><p class="status" id="pet-status" role="status" aria-live="polite"></p><button class="btn primary" id="pet-save" type="button" disabled>保存</button></div>
+<div id="pet-cards"><p class="empty">Đang đọc cấu hình trên máy…</p></div>
+<div class="footer"><p class="status" id="pet-status" role="status" aria-live="polite"></p><button class="btn primary" id="pet-save" type="button" disabled>Lưu</button></div>
 <form id="settings" aria-describedby="privacy">
-<div class="card"><div class="cardHead"><h2 class="cardTitle">模型连接</h2></div>
-<p class="cardHint">独立模式自己连服务商，不经过 DSH；所有配置只保存在当前机器。</p>
-<div class="field"><span class="fieldLabel" id="service-label">服务商</span><div id="service-host"></div><p class="fieldHint" id="service-note">选定后自动填好协议与地址，密钥和模型按服务分开保存，换服务不会互相覆盖。自定义服务商没有余额接口。</p></div>
-<div class="field"><span class="fieldLabel" id="protocol-label">接口协议</span><div id="protocol-host"></div></div>
-<div class="field"><label for="baseUrl">接口地址（Base URL）</label><input id="baseUrl" name="baseUrl" type="url" placeholder="https://example.com/v1" maxlength="2048" spellcheck="false" aria-describedby="endpoint-note"><p class="fieldHint" id="endpoint-note">服务商提供的基础接口地址，支持 HTTP 与 HTTPS，通常以 /v1 结尾。不要把密钥放进地址。</p></div>
-<div class="field"><label for="model">模型名称</label><div class="combo" id="model-combo"><input id="model" name="model" type="text" maxlength="200" placeholder="填写或拉取服务商的模型 ID，例如 deepseek-chat" spellcheck="false" aria-describedby="model-note"><button id="model-toggle" class="comboToggle" type="button" aria-label="拉取并选择模型" aria-haspopup="listbox" aria-expanded="false"></button></div><p class="fieldHint" id="model-note">可以直接手填；点右侧箭头向端点拉取可用列表后选择。拉取只用本次填写的地址与密钥，不会保存。</p><p class="status" id="model-result" role="status" aria-live="polite"></p></div>
-<div class="field"><label for="apiKey"><span id="key-label">API 密钥</span> <span class="hintInline" id="key-state">尚未读取</span></label><input id="apiKey" name="apiKey" type="password" autocomplete="new-password" maxlength="8192" placeholder="留空保留已保存的密钥" aria-describedby="key-note"><div class="keyActions" id="key-actions" hidden><button id="key-delete" class="btn ghost" type="button">删除已保存的密钥</button></div><p id="key-note" class="fieldHint">密钥只写入本机配置，不会回显。留空会保留这个服务商已保存的那把；要彻底删除请点上面的按钮。</p></div>
-<div class="field"><label for="deepseekApiKey">DeepSeek 语音密钥 <span class="hintInline" id="deepseek-key-state">尚未读取</span></label><input id="deepseekApiKey" name="deepseekApiKey" type="password" autocomplete="new-password" maxlength="4096" placeholder="留空保留已保存的密钥" aria-describedby="deepseek-key-note"><div class="keyActions" id="deepseek-key-actions" hidden><button id="deepseek-key-delete" class="btn ghost" type="button">删除已保存的语音密钥</button></div><p id="deepseek-key-note" class="fieldHint">只给 DeepSeek 语音合成与识别用，和上面的对话密钥分开存——对话走别家服务商时也能单独用 DeepSeek 语音。留空则依次沿用「服务商选 DeepSeek 官方时的那把密钥」，最后才回落 DSH 凭据。</p></div>
-<div class="field"><p class="fieldHint" id="balance-note">余额查询跟随上方服务商，用的是这个服务已保存的那把密钥；自定义服务商没有余额接口。</p><div class="testRow"><button id="balance-btn" class="btn ghost" type="button" disabled>查询余额</button><span id="balance-result" class="status" role="status" aria-live="polite"></span></div></div>
-<div class="testRow"><button id="test-btn" class="btn" type="button">测试连接</button><span id="test-result" class="status" role="status" aria-live="polite"></span></div>
+<div class="card"><div class="cardHead"><h2 class="cardTitle">Kết nối mô hình</h2></div>
+<p class="cardHint">Chế độ độc lập tự kết nối tới nhà cung cấp, không đi qua DSH; mọi cấu hình chỉ lưu trên máy này.</p>
+<div class="field"><span class="fieldLabel" id="service-label">Nhà cung cấp</span><div id="service-host"></div><p class="fieldHint" id="service-note">Chọn xong sẽ tự điền giao thức và địa chỉ; khóa API và mô hình được lưu riêng cho từng nhà cung cấp, đổi qua lại không ghi đè lên nhau. Nhà cung cấp tùy chỉnh không có API tra số dư.</p></div>
+<div class="field"><span class="fieldLabel" id="protocol-label">Giao thức API</span><div id="protocol-host"></div></div>
+<div class="field"><label for="baseUrl">Địa chỉ API (Base URL)</label><input id="baseUrl" name="baseUrl" type="url" placeholder="https://example.com/v1" maxlength="2048" spellcheck="false" aria-describedby="endpoint-note"><p class="fieldHint" id="endpoint-note">Địa chỉ API gốc do nhà cung cấp đưa, hỗ trợ HTTP và HTTPS, thường kết thúc bằng /v1. Đừng đặt khóa API vào địa chỉ.</p></div>
+<div class="field"><label for="model">Tên mô hình</label><div class="combo" id="model-combo"><input id="model" name="model" type="text" maxlength="200" placeholder="Nhập hoặc lấy ID mô hình từ nhà cung cấp, vd deepseek-chat" spellcheck="false" aria-describedby="model-note"><button id="model-toggle" class="comboToggle" type="button" aria-label="Lấy danh sách và chọn mô hình" aria-haspopup="listbox" aria-expanded="false"></button></div><p class="fieldHint" id="model-note">Có thể nhập tay; bấm mũi tên bên phải để lấy danh sách mô hình từ endpoint rồi chọn. Việc lấy danh sách chỉ dùng địa chỉ và khóa API đang nhập, không lưu lại.</p><p class="status" id="model-result" role="status" aria-live="polite"></p></div>
+<div class="field"><label for="apiKey"><span id="key-label">Khóa API</span> <span class="hintInline" id="key-state">Chưa đọc</span></label><input id="apiKey" name="apiKey" type="password" autocomplete="new-password" maxlength="8192" placeholder="Để trống để giữ khóa đã lưu" aria-describedby="key-note"><div class="keyActions" id="key-actions" hidden><button id="key-delete" class="btn ghost" type="button">Xóa khóa đã lưu</button></div><p id="key-note" class="fieldHint">Khóa API chỉ ghi vào cấu hình trên máy, không hiển thị lại. Để trống sẽ giữ khóa đã lưu của nhà cung cấp này; muốn xóa hẳn thì bấm nút phía trên.</p></div>
+<div class="field"><label for="deepseekApiKey">Khóa giọng nói DeepSeek <span class="hintInline" id="deepseek-key-state">Chưa đọc</span></label><input id="deepseekApiKey" name="deepseekApiKey" type="password" autocomplete="new-password" maxlength="4096" placeholder="Để trống để giữ khóa đã lưu" aria-describedby="deepseek-key-note"><div class="keyActions" id="deepseek-key-actions" hidden><button id="deepseek-key-delete" class="btn ghost" type="button">Xóa khóa giọng nói đã lưu</button></div><p id="deepseek-key-note" class="fieldHint">Chỉ dùng cho tổng hợp và nhận dạng giọng nói DeepSeek, lưu riêng với khóa trò chuyện ở trên, nên dù trò chuyện qua nhà cung cấp khác vẫn dùng được giọng nói DeepSeek. Để trống thì lần lượt dùng "khóa đã lưu khi chọn nhà cung cấp DeepSeek chính thức", cuối cùng mới dùng thông tin xác thực của DSH.</p></div>
+<div class="field"><p class="fieldHint" id="balance-note">Tra số dư theo nhà cung cấp ở trên, dùng khóa đã lưu của nhà cung cấp đó; nhà cung cấp tùy chỉnh không có API tra số dư.</p><div class="testRow"><button id="balance-btn" class="btn ghost" type="button" disabled>Kiểm tra số dư</button><span id="balance-result" class="status" role="status" aria-live="polite"></span></div></div>
+<div class="testRow"><button id="test-btn" class="btn" type="button">Kiểm tra kết nối</button><span id="test-result" class="status" role="status" aria-live="polite"></span></div>
 </div>
-<p id="privacy" class="fineprint">所有配置与密钥仅保存在当前机器。</p>
-<div class="footer"><p class="status" id="status" role="status" aria-live="polite">正在读取本机设置…</p><button id="save" class="btn primary" type="submit" disabled>保存</button></div>
+<p id="privacy" class="fineprint">Mọi cấu hình và khóa API chỉ lưu trên máy này.</p>
+<div class="footer"><p class="status" id="status" role="status" aria-live="polite">Đang đọc cài đặt trên máy…</p><button id="save" class="btn primary" type="submit" disabled>Lưu</button></div>
 </form>
 </div>
 </section>
@@ -53,5 +53,5 @@ export const settingsPage = `<!doctype html>
 </div>
 </div>
 </main>
-<noscript>需要启用 JavaScript 才能保存设置。请从桌宠右键菜单打开本页。</noscript>
+<noscript>Cần bật JavaScript để lưu cài đặt. Hãy mở trang này từ menu chuột phải của pet.</noscript>
 </body></html>`;

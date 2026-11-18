@@ -38,7 +38,7 @@ export async function synthesize({ signal, text, voice, rate }: SynthInput): Pro
     // CJS 包经 dynamic import 后可能只露 default，两种形状都认。
     const mod = (await import('@andresaya/edge-tts')) as EdgeTtsModule & { default?: EdgeTtsModule };
     const EdgeTTS = mod.EdgeTTS ?? mod.default?.EdgeTTS;
-    if (!EdgeTTS) throw new VoiceSynthError('依赖未导出 EdgeTTS');
+    if (!EdgeTTS) throw new VoiceSynthError('Thư viện phụ thuộc không xuất EdgeTTS');
     const tts = new EdgeTTS();
     const result = await tts.generate(text, voice, { rate, signal, timeout: SYNTHESIS_TIMEOUT_MS });
     return result.audio;

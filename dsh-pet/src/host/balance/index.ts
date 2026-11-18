@@ -57,7 +57,7 @@ export async function queryBalance(
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
       const timeout = new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error('余额查询超时（20 秒），请稍后重试')), PLUGIN_FETCH_TIMEOUT_MS);
+        timer = setTimeout(() => reject(new Error('Tra số dư quá thời gian (20 giây), vui lòng thử lại sau')), PLUGIN_FETCH_TIMEOUT_MS);
         timer.unref();
       });
       // 超时只结束宿主等待，不宣称取消第三方请求；迟到结果由 race 丢弃。
@@ -73,10 +73,10 @@ export async function queryBalance(
   let key = '';
   if (def.credential.mode === 'ref') {
     const resolved = await resolveKey(def.credential.ref);
-    if (!resolved) return failed(provider, 'credential-missing', '缺少凭证 ' + def.credential.ref);
+    if (!resolved) return failed(provider, 'credential-missing', 'Thiếu khóa API ' + def.credential.ref);
     key = resolved;
   } else if (!resolveAccount) {
-    return failed(provider, 'credential-missing', '缺少账号服务（' + provider + '）');
+    return failed(provider, 'credential-missing', 'Thiếu dịch vụ tài khoản (' + provider + ')');
   }
 
   try {

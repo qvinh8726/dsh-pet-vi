@@ -239,8 +239,8 @@ test('Electron cache validation: an empty file enters the download path and repo
     onLog: (e) => logs.push(e.text),
   });
   assert.equal(result, undefined);
-  assert.ok(logs.some((m) => m.includes('缓存无效')));
-  assert.ok(logs.some((m) => m.includes('下载失败')));
+  assert.ok(logs.some((m) => m.includes('không hợp lệ')));
+  assert.ok(logs.some((m) => m.includes('thất bại')));
 });
 
 describe('hasGraphicalDisplay —— 无图形环境时不拉起 Electron', () => {

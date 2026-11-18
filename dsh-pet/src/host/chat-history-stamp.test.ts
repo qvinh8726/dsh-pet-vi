@@ -55,7 +55,7 @@ describe('generateChat —— 历史消息的时间前缀', () => {
       { role: 'user', content: '睡觉了鲸鲸，午安', ts: oldTs },
       { role: 'assistant', content: '晚安～做个好梦', ts: oldTs },
     ]);
-    assert.match(textOf(sent, 0), /^\[\d{1,2}月\d{1,2}日 \d{2}:\d{2}\] 睡觉了鲸鲸，午安$/);
+    assert.match(textOf(sent, 0), /^\[\d{1,2}\/\d{1,2} \d{2}:\d{2}\] 睡觉了鲸鲸，午安$/);
   });
 
   test('assistant 历史消息不带前缀（模型会照抄自己那侧的格式）', async () => {
@@ -89,7 +89,7 @@ describe('generateChat —— 历史消息的时间前缀', () => {
     const lastYearTs = new Date(year - 1, 11, 31, 23, 59).getTime();
     const sent = await send([{ role: 'user', content: '新年快乐', ts: lastYearTs }]);
     assert.ok(
-      textOf(sent, 0).startsWith(`[${year - 1}年12月31日 23:59] 新年快乐`),
+      textOf(sent, 0).startsWith(`[31/12/${year - 1} 23:59] 新年快乐`),
       `实际：${JSON.stringify(textOf(sent, 0))}`,
     );
   });

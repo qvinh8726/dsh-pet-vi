@@ -28,10 +28,10 @@ export type LockCause = 'expired' | 'released' | 'preempted' | 'unknown';
 
 /** cause → 给人看的一句话（回执里的 message；reason 才是机器读的那个）。 */
 const CAUSE_TEXT: Record<LockCause, string> = {
-  expired: '占用已过期（没有及时续期）',
-  released: '占用已被释放',
-  preempted: '占用已被用户接管（拖拽/点击/隐藏/关闭）',
-  unknown: 'lock 不是当前生效的占用编号',
+  expired: 'Quyền chiếm dụng đã hết hạn (không gia hạn kịp)',
+  released: 'Quyền chiếm dụng đã được giải phóng',
+  preempted: 'Người dùng đã giành lại quyền điều khiển (kéo/nhấp/ẩn/đóng)',
+  unknown: 'lock không phải mã chiếm dụng đang có hiệu lực',
 };
 
 /** 写进 `pets.<id>.lock` 的载荷（渲染端据此冻结 / 解冻）。 */
@@ -73,7 +73,7 @@ export type LockReleaseDecision =
   | { ok: false; reason: 'lock-lost'; cause: LockCause; message: string };
 
 /** ttl 合法性说明（路由与决策层共用同一条规则，免得两处走样）。 */
-const TTL_TEXT = `ttl 必须是 ${LOCK_MIN_TTL_MS}~${LOCK_MAX_TTL_MS} 之间的有限数字（毫秒）`;
+const TTL_TEXT = `ttl phải là số hữu hạn trong khoảng ${LOCK_MIN_TTL_MS}~${LOCK_MAX_TTL_MS} (mili giây)`;
 
 /**
  * ttl 规范化：缺省 / null → `fallback`；合法则原样；非法返回 null。
@@ -164,7 +164,7 @@ export class LockStore {
     if (rec !== null) {
       if (provided && provided === rec.lockId) return { ok: true };
       if (!provided) {
-        return { ok: false, reason: 'lock-required', message: '这只桌宠正被占用，必须带 lock=<lockId>' };
+        return { ok: false, reason: 'lock-required', message: 'Pet này đang bị chiếm dụng, phải kèm lock=<lockId>' };
       }
       return { ok: false, reason: 'lock-lost', cause: 'unknown', message: CAUSE_TEXT.unknown };
     }
@@ -183,7 +183,7 @@ export class LockStore {
   acquire(args: { petId: string; lockId?: unknown; ttl?: unknown }): LockAcquireDecision {
     const { petId } = args;
     const renewId = normalizeLockId(args.lockId);
-    if (renewId === null) return { ok: false, reason: 'bad-request', message: 'lockId 必须是字符串' };
+    if (renewId === null) return { ok: false, reason: 'bad-request', message: 'lockId phải là chuỗi' };
     const rec = this.current(petId);
 
     if (renewId) {
@@ -201,7 +201,7 @@ export class LockStore {
     }
 
     if (rec !== null) {
-      return { ok: false, reason: 'locked', expiresAt: rec.expiresAt, message: '这只桌宠已被占用' };
+      return { ok: false, reason: 'locked', expiresAt: rec.expiresAt, message: 'Pet này đã bị chiếm dụng' };
     }
     const ttl = normalizeLockTtl(args.ttl, LOCK_DEFAULT_TTL_MS);
     if (ttl === null) return { ok: false, reason: 'bad-request', message: TTL_TEXT };
@@ -224,12 +224,12 @@ export class LockStore {
     const { petId } = args;
     const force = args.force === true;
     const releaseId = normalizeLockId(args.lockId);
-    if (releaseId === null) return { ok: false, reason: 'bad-request', message: 'lockId 必须是字符串' };
+    if (releaseId === null) return { ok: false, reason: 'bad-request', message: 'lockId phải là chuỗi' };
     if (force && releaseId) {
-      return { ok: false, reason: 'bad-request', message: 'lockId 与 force 只能给一个' };
+      return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong lockId hoặc force' };
     }
     if (!force && !releaseId) {
-      return { ok: false, reason: 'bad-request', message: 'lockId 或 force 必须给一个' };
+      return { ok: false, reason: 'bad-request', message: 'Phải truyền lockId hoặc force' };
     }
     const rec = this.current(petId);
     if (rec === null) return { ok: true, petId, released: false }; // 幂等：没有锁可撤

@@ -35,6 +35,6 @@ describe('isTodoHotkey —— 裸按 D 才开关面板', () => {
   });
 
   test('菜单提示与按键说的是同一个键', () => {
-    assert.ok(TODO_HOTKEY_HINT.startsWith('D'), `提示应写明 D，实得 ${TODO_HOTKEY_HINT}`);
+    assert.ok(TODO_HOTKEY_HINT.startsWith('Phím D'), `提示应写明 D，实得 ${TODO_HOTKEY_HINT}`);
   });
 });

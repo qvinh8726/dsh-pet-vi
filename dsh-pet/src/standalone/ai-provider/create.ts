@@ -26,7 +26,7 @@ import { testAiConnection } from './test-connection.ts';
  * 自定义排第一且没有地址——它的 profile 永远是用户自己填的那份。
  */
 const SERVICE_CATALOG = [
-  { id: CUSTOM_SERVICE, label: '自定义', keyName: 'CUSTOM_API_KEY' as const, protocol: 'openai-compatible' as const },
+  { id: CUSTOM_SERVICE, label: 'Tùy chỉnh', keyName: 'CUSTOM_API_KEY' as const, protocol: 'openai-compatible' as const },
   ...BUILTIN_SERVICES,
 ];
 
@@ -133,11 +133,11 @@ export function createStandaloneAi(
     deepseekKey: () => store.current().deepseekApiKey,
     testConnection: (input) =>
       runtime.disposed
-        ? Promise.resolve({ ok: false, message: '服务已关闭' })
+        ? Promise.resolve({ ok: false, message: 'Dịch vụ đã đóng' })
         : testAiConnection(runtime.fetcher, store.current(), input),
     discoverModels: (input) =>
       runtime.disposed
-        ? Promise.resolve({ ok: false, code: 'input', message: '服务已关闭' })
+        ? Promise.resolve({ ok: false, code: 'input', message: 'Dịch vụ đã đóng' })
         : discoverModels(runtime.fetcher, store.current(), {
             ...input,
             modelsUrl: discoveryUrl(store.current(), input),

@@ -29,22 +29,22 @@ async function send(url: string, method: string, body?: unknown): Promise<SendRe
       ...(body === undefined ? {} : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }),
     });
     const payload = (await response.json().catch(() => null)) as OkBody | null;
-    if (!response.ok) return { failed: true, message: `请求失败（HTTP ${response.status}）` };
-    if (payload === null) return { failed: true, message: '响应不是 JSON' };
+    if (!response.ok) return { failed: true, message: `Yêu cầu thất bại (HTTP ${response.status})` };
+    if (payload === null) return { failed: true, message: 'Phản hồi không phải JSON' };
     if (payload.ok === false) {
       const reason = typeof payload.message === 'string' ? payload.message : payload.reason;
-      return { failed: true, message: typeof reason === 'string' && reason !== '' ? reason : '请求被拒绝' };
+      return { failed: true, message: typeof reason === 'string' && reason !== '' ? reason : 'Yêu cầu bị từ chối' };
     }
     return { failed: false, body: payload };
   } catch (error) {
-    return { failed: true, message: '连不上桌宠服务：' + (error instanceof Error ? error.message : String(error)) };
+    return { failed: true, message: 'Lỗi kết nối pet: ' + (error instanceof Error ? error.message : String(error)) };
   }
 }
 
 /** 单条响应 → 待办；形状不对时给出可展示的失败。 */
 function readTodo(body: OkBody): TodoResult<TodoItem> {
   const todo = parseTodoItem(body.todo);
-  return todo === null ? { ok: false, message: '响应里没有有效的待办' } : { ok: true, value: todo };
+  return todo === null ? { ok: false, message: 'Phản hồi không có việc cần làm hợp lệ' } : { ok: true, value: todo };
 }
 
 /** 读整张清单。 */

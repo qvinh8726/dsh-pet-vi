@@ -113,7 +113,7 @@ describe('createMenu', () => {
       main: { pets: [{ id: 'pet-1' }], animations: { baifan: ['a', 'b'] } },
     }));
     const { show, starts } = fakeShow();
-    const menu = makeMenu(() => ({ menuEvents: () => ({ ok: true, events: { 吃白饭: 'pet-1' } }) }), transport, show);
+    const menu = makeMenu(() => ({ menuEvents: () => ({ ok: true, events: { 'Ăn cơm chực': 'pet-1' } }) }), transport, show);
 
     menu.tick();
     await flush();
@@ -157,7 +157,7 @@ describe('createMenu', () => {
   test('点播：被点的宠物不属于任何条目 → 不开演', async () => {
     const { transport } = fakeTransport(() => ({ main: { pets: [{ id: 'other' }], animations: { baifan: ['a'] } } }));
     const { show, starts } = fakeShow();
-    const menu = makeMenu(() => ({ menuEvents: () => ({ ok: true, events: { 吃白饭: 'pet-1' } }) }), transport, show);
+    const menu = makeMenu(() => ({ menuEvents: () => ({ ok: true, events: { 'Ăn cơm chực': 'pet-1' } }) }), transport, show);
 
     menu.tick();
     await flush();
@@ -168,7 +168,7 @@ describe('createMenu', () => {
   test('dispose 后：不再读点击', async () => {
     const { transport, calls } = fakeTransport(() => ({ ok: true }));
     const { show } = fakeShow();
-    const menu = makeMenu(() => ({ menuEvents: () => ({ ok: true, events: { 吃白饭: 'pet-1' } }) }), transport, show);
+    const menu = makeMenu(() => ({ menuEvents: () => ({ ok: true, events: { 'Ăn cơm chực': 'pet-1' } }) }), transport, show);
 
     menu.dispose();
     menu.tick();

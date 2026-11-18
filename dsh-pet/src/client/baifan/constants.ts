@@ -13,7 +13,7 @@ export const ROUTE = '/dsh-pet-7340';
 export const OWNER = 'dsh-pet-baifan';
 
 /** 菜单项文案；宿主按文案回传点击，属于协议的一部分。 */
-export const LABEL = '吃白饭';
+export const LABEL = 'Ăn cơm chực';
 
 /** 玩法 id：对应配置里的 animations.<id>。 */
 export const ACTIVITY = 'baifan';
@@ -65,13 +65,13 @@ export const CFG = {
 
 /** 台词池：只在合适的节拍上说一句，其余时间闭嘴，否则气泡会糊在演出上。 */
 export const LINES = {
-  start: ['开饭了——', '白饭时间到！', '饿了饿了饿了'],
-  down: ['等我下去……', '下面有饭香', '让一让，我下去了'],
-  expect: ['饭呢？饭呢？', '快点快点', '……还没好吗'],
-  drop: ['掉下来了！', '接住！', '来了来了'],
-  bowl: ['碗饭最香', '这个碗我要了', '再来一碗'],
-  ball: ['饭团饭团', '一口一个', '捏得刚好'],
-  full: ['嗝——还能吃！', '这点不够塞牙缝', '再来十份'],
+  start: ['Tới giờ ăn rồi~', 'Giờ cơm trắng đến rồi!', 'Đói quá đói quá đói quá'],
+  down: ['Đợi em xuống nha...', 'Dưới kia thơm mùi cơm', 'Tránh ra nào, em xuống đây'],
+  expect: ['Cơm đâu? Cơm đâu?', 'Nhanh lên nhanh lên', '...Vẫn chưa xong hả'],
+  drop: ['Rơi xuống rồi!', 'Bắt lấy!', 'Tới rồi tới rồi'],
+  bowl: ['Cơm bát là ngon nhất', 'Bát này của em nha', 'Thêm bát nữa đi'],
+  ball: ['Cơm nắm cơm nắm', 'Một miếng một viên', 'Nắm vừa khéo luôn'],
+  full: ['Ợ~ vẫn ăn được nữa!', 'Chừng này chưa đủ dính răng', 'Cho em thêm mười phần'],
 } as const;
 
 /** 样式表去重标记（与 dsh-pet 的 data-plugin-css 约定一致）。 */

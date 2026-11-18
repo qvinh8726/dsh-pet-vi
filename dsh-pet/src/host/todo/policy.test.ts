@@ -157,10 +157,10 @@ describe('pickReminder —— 一拍只挑最急的一条', () => {
 
 describe('spanText / truncateTodoText / reminderText', () => {
   test('时长写成人话，最小单位是 1 分钟', () => {
-    assert.equal(spanText(0), '1分钟');
-    assert.equal(spanText(25 * MINUTE), '25分钟');
-    assert.equal(spanText(2 * HOUR), '2小时');
-    assert.equal(spanText(3 * DAY), '3天');
+    assert.equal(spanText(0), '1 phút');
+    assert.equal(spanText(25 * MINUTE), '25 phút');
+    assert.equal(spanText(2 * HOUR), '2 giờ');
+    assert.equal(spanText(3 * DAY), '3 ngày');
   });
 
   test('正文按码点截断并补省略号', () => {
@@ -170,13 +170,13 @@ describe('spanText / truncateTodoText / reminderText', () => {
 
   test('未到期与逾期两种说法', () => {
     const dueAt = 10 * HOUR;
-    assert.equal(reminderText(todo({ dueAt }), dueAt - 2 * HOUR), '「交周报」还有2小时就到点啦');
-    assert.equal(reminderText(todo({ dueAt }), dueAt + 2 * HOUR), '「交周报」已经逾期2小时啦，记得处理');
+    assert.equal(reminderText(todo({ dueAt }), dueAt - 2 * HOUR), 'Còn 2 giờ nữa là đến giờ "交周报" rồi nè');
+    assert.equal(reminderText(todo({ dueAt }), dueAt + 2 * HOUR), '"交周报" đã trễ 2 giờ rồi đó, nhớ làm nha');
   });
 
   test('刚过点不到一分钟：说「到点啦」，不说逾期', () => {
     const dueAt = 10 * HOUR;
-    assert.equal(reminderText(todo({ dueAt }), dueAt + 10 * 1000), '「交周报」到点啦，记得处理');
+    assert.equal(reminderText(todo({ dueAt }), dueAt + 10 * 1000), '"交周报" đến giờ rồi nè, nhớ làm nha');
   });
 
   test('超长正文在提醒里被截断', () => {

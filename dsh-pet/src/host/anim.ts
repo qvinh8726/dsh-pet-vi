@@ -133,8 +133,8 @@ export function decideAnim(args: {
 
   const name = typeof args.name === 'string' ? args.name.trim() : '';
   const rawUrl = typeof args.url === 'string' ? args.url.trim() : '';
-  if (name && rawUrl) return { ok: false, reason: 'bad-request', message: 'name 与 url 只能给一个' };
-  if (!name && !rawUrl) return { ok: false, reason: 'bad-request', message: 'name 或 url 必须给一个' };
+  if (name && rawUrl) return { ok: false, reason: 'bad-request', message: 'Chỉ được truyền một trong hai: name hoặc url' };
+  if (!name && !rawUrl) return { ok: false, reason: 'bad-request', message: 'Phải truyền name hoặc url' };
 
   // facing 可选：没给（undefined / null 都算，复用 body 模板时两种都常见）→ 不动朝向，保持宠物
   // 当前朝向，而不是回落 left。给了就必须合法：非法值不静默忽略（与 /position 的 mode 同一口径，
@@ -142,25 +142,25 @@ export function decideAnim(args: {
   let facing: PetFacing | undefined;
   if (args.facing !== undefined && args.facing !== null) {
     const f = petFacing(args.facing);
-    if (f === null) return { ok: false, reason: 'bad-request', message: 'facing 必须是 left / right' };
+    if (f === null) return { ok: false, reason: 'bad-request', message: 'facing phải là left / right' };
     facing = f;
   }
 
   // pet 必填且必须真实存在（与 /broadcast、/position 同一口径）：绝不默认退到「当前桌宠」——
   // 那是有效宠物列表第一只，落点随用户 /pet 操作而变，第三方无从预期。
   const petId = String(requested ?? '').trim();
-  if (!petId) return { ok: false, reason: 'pet-required', message: 'pet 必填：要指定操作哪只桌宠' };
+  if (!petId) return { ok: false, reason: 'pet-required', message: 'Thiếu pet: phải chỉ định pet cần thao tác' };
   // 一次查找同时给出「存在性」与「所属条目」（动画池按条目取）：校验与取值用同一份结果，
   // 后面不必再查一次。
   const found = findPetInstance(cfg, petId);
-  if (!found) return { ok: false, reason: 'unknown-pet', message: '没有这只桌宠：' + petId };
+  if (!found) return { ok: false, reason: 'unknown-pet', message: 'Không có pet này: ' + petId };
 
   // url 形态：地址合法即放行，不查动画池、也不要求素材真的取得到——播放端对取不到的地址没有
   // 兜底（浏览器 fetch 失败 / 桌面 video error），会经回执如实报 failed，而不是在这里猜。
   if (rawUrl) {
     const url = normalizeHttpUrl(rawUrl);
     if (url === null) {
-      return { ok: false, reason: 'bad-request', message: 'url 必须是 http/https 的完整地址' };
+      return { ok: false, reason: 'bad-request', message: 'url phải là địa chỉ http/https đầy đủ' };
     }
     return { ok: true, petId, url, facing };
   }
@@ -169,7 +169,7 @@ export function decideAnim(args: {
   // 所以必须在这里拦住，而不是写进 S 让前端白跑一趟。
   const allowed = animationNames(found.conf.animations);
   if (!allowed.includes(name)) {
-    return { ok: false, reason: 'unknown-animation', message: '没有这个动画：' + name };
+    return { ok: false, reason: 'unknown-animation', message: 'Không có hoạt ảnh này: ' + name };
   }
 
   return { ok: true, petId, name, facing };

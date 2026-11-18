@@ -58,7 +58,7 @@ export interface ServiceDef {
 export const BUILTIN_SERVICES: readonly ServiceDef[] = [
   {
     id: 'deepseek-official',
-    label: 'DeepSeek 官方',
+    label: 'DeepSeek chính thức',
     keyName: 'DEEPSEEK_API_KEY',
     protocol: 'openai-compatible',
     baseUrl: 'https://api.deepseek.com',
@@ -119,7 +119,7 @@ export function serviceKeyName(service: string): KeyName {
  * @returns 内置服务的中文名；自定义与未知值为「自定义」。
  */
 export function serviceLabel(service: string): string {
-  return builtinService(service)?.label ?? '自定义';
+  return builtinService(service)?.label ?? 'Tùy chỉnh';
 }
 
 /** 地址归一：去首尾空白与尾斜杠，再抹掉末尾的版本段，供「是否同一家」比较。 */

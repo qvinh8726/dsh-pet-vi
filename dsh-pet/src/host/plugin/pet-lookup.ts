@@ -63,7 +63,7 @@ export function createPetLookup(deps: PetLookupInput) {
     if (lock.locked(petId)) return null;
     const text = refuseText(petId);
     if (text !== undefined) state.writePet(petId, 'say', { text, anim: false });
-    return failResult('sleeping', '桌宠正在睡觉，先叫醒它');
+    return failResult('sleeping', 'Pet đang ngủ, hãy đánh thức trước đã');
   };
 
   /**
@@ -84,7 +84,7 @@ export function createPetLookup(deps: PetLookupInput) {
   const surfaceMismatch = (pet: Record<string, unknown>, petId: string, want: Surface): RouteResult | null => {
     const display = String(pet.display ?? '');
     if (displayCovers(want, display)) return null;
-    return failResult('pet-not-displayed', petId + ' 的显示模式是 ' + display + '，不满足 surface=' + want, {
+    return failResult('pet-not-displayed', petId + ' đang ở chế độ hiển thị ' + display + ', không khớp surface=' + want, {
       display,
     });
   };
@@ -127,7 +127,7 @@ export function createPetLookup(deps: PetLookupInput) {
       res: failResult(reason, message),
     });
     const petId = String(params.get('pet') ?? '').trim();
-    if (!petId) return fail('pet-required', 'pet 必填：要指定操作哪只桌宠');
+    if (!petId) return fail('pet-required', 'Thiếu tham số pet: cần chỉ định pet muốn thao tác');
     // surface 分两步：参数级校验在读盘之前（必然失败的请求不碰磁盘），显示模式校验在找到宠物之后。
     let want: Surface | null = null;
     if (opts?.surface === true) {
@@ -138,7 +138,7 @@ export function createPetLookup(deps: PetLookupInput) {
     // 一次查找同时给出「存在性」与「所属条目」（entry 即素材根，/chat 读记忆分桶要用）+ 条目配置
     // （/chat 取 chatMemoryRounds 要用）——调用方拿到的就是校验时那份快照里的值，不必再查一次。
     const found = findPetInstance(cfg(), petId);
-    if (!found) return fail('unknown-pet', '没有这只桌宠：' + petId);
+    if (!found) return fail('unknown-pet', 'Không có pet này: ' + petId);
     if (want !== null) {
       const mismatch = surfaceMismatch(found.pet, petId, want);
       if (mismatch) return { ok: false, res: mismatch };

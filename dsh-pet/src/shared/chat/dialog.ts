@@ -72,7 +72,7 @@ function bindSend(binding: SendBinding): void {
   const doSend = (): void => {
     if (binding.isClosed() || sending) return;
     if (binding.isEncoding()) {
-      binding.notify('图片还在处理，稍等一下');
+      binding.notify('Ảnh vẫn đang xử lý, đợi chút nha');
       return;
     }
     const text = binding.input.value.trim();
@@ -83,12 +83,12 @@ function bindSend(binding: SendBinding): void {
       .then((state) => {
         if (state.ok) binding.onOk();
         else {
-          binding.err.textContent = '对话失败：' + (state.message ?? state.reason);
+          binding.err.textContent = 'Trò chuyện thất bại: ' + (state.message ?? state.reason);
           binding.err.style.display = 'block';
         }
       })
       .catch((e) => {
-        binding.err.textContent = '对话异常：' + String(e && e.message ? e.message : e);
+        binding.err.textContent = 'Lỗi trò chuyện: ' + String(e && e.message ? e.message : e);
         binding.err.style.display = 'block';
       })
       .finally(() => {

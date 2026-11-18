@@ -194,7 +194,7 @@ test('设置页对话面板脚本：产物缺失时 → 404 并提示重新构�
   try {
     const response = await fetch(server.base + '/standalone-ai/chat-panel.js');
     assert.equal(response.status, 404);
-    assert.match(await response.text(), /重新构建/);
+    assert.match(await response.text(), /build lại/);
   } finally {
     await server.close();
   }
